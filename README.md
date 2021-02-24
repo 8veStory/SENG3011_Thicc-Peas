@@ -3,7 +3,7 @@
 
 ## Team Members
 
-* Hao CHeong
+* Hao Cheong
 * Brandon Green
 * Fanrui Li
 * Ryan Vu Anh Nguyen
