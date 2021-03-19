@@ -102,8 +102,8 @@ let outbreaks = {
         reported_cases: 17,
         hospitalisations: 2,
         deaths: 0,
-        start_date: "07-06-20",
-        end_date: "12-06-20",
+        start_date: "2020-07-06",
+        end_date: "2020-08-12",
         investigation_status: false
     },
     2: {
@@ -116,8 +116,8 @@ let outbreaks = {
         reported_cases: 2,
         hospitalisations: 1,
         deaths: 0,
-        start_date: "07-09-20",
-        end_date: "18-09-20",
+        start_date: "2020-09-07",
+        end_date: "2020-09-18",
         investigation_status: false
     },
 }
@@ -157,6 +157,11 @@ app.use(express.json())
  * Retrieve the contents of the log file.
  */
 app.get('/log', (req, res) => {
+    if (!fs.existsSync('log.txt')) {
+        res.send({ logs: []});
+        return;
+    }
+
     fs.readFile('log.txt', (err, data) => {
         file = data.toString();
         logs = file.split("\n");
@@ -170,9 +175,53 @@ app.get('/log', (req, res) => {
  * Send a 200 response and all the outbreaks.
  */
 app.get('/outbreak', (req, res) => {
+    let checkDisease;
+    let checkDates = false;
+    let startdate;
+    let enddate;
+    let disease;
+
+    console.log(req.query);
+    if (req.query.startdate && req.query.enddate) {
+        startdate = Date.parse(req.query.startdate);
+        enddate = Date.parse(req.query.enddate)
+
+        // Check the enddate and startdate are valid.
+        if (!(enddate < startdate)) {
+            checkDates = true;
+        }
+    }
+
+    if (req.query.disease) {
+        disease = req.query.disease;
+        checkDisease = true;
+    }
+
     let results = [];
     for (let key in outbreaks) {
-        results.push(outbreaks[key]);
+        outbreak = outbreaks[key];
+        outbreakStartDate = Date.parse(outbreak.start_date);
+        outbreakEndDate = Date.parse(outbreak.end_date);
+
+        addOutbreak = true;
+        if (checkDates) {
+            // Add entries that fall within the queried start and enddate.
+            if (!(outbreakStartDate <= enddate && outbreakEndDate >= startdate)) {
+                addOutbreak = false;
+            }
+        } 
+
+        if (checkDisease) {
+            console.log(disease);
+            console.log(outbreaks[key].disease_name);
+            if(disease.toLowerCase() != outbreaks[key].disease_name.toLowerCase()) {
+                addOutbreak = false;
+            }
+        }
+
+        if (addOutbreak) {
+            results.push(outbreaks[key]);
+        }
     }
 
     res.status(200).send({
