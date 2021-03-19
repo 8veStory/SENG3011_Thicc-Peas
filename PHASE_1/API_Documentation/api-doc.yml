@@ -1,272 +1,296 @@
 openapi: 3.0.0
 info:
   title: Thicc Peas API
-  version: '1.0'
+  version: 1.0.0-oas3
   description: ''
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app/'
+tags:
+  - name: disease
+    description: Information pertaining to diseases on the CDC.
+  - name: outbreak
+    description: Information regarding outbreaks regarding the CDC.
+  - name: log
+    description: The output logs of the API.
 paths:
-  '/users/{userId}':
+  /disease:
+    get:
+      tags:
+        - disease
+      summary: Get all diseases
+      operationId: get-all-disease
+      responses:
+        '200':
+          description: Successfully retrieved list of all diseases
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diseases'
+                
+  '/disease/{diseaseName}':
     parameters:
       - schema:
-          type: integer
-        name: userId
+          type: string
+        name: diseaseName
         in: path
         required: true
-        description: Id of an existing user.
+        description: Name of an existing disease.
     get:
-      summary: Get User Info by User ID
-      tags: []
+      tags:
+        - disease
+      summary: Get Disease Info by Disease Name
       responses:
         '200':
-          description: User Found
+          description: Disease found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Get User Alice Smith:
-                  value:
-                    id: 142
-                    firstName: Alice
-                    lastName: Smith
-                    email: alice.smith@gmail.com
-                    dateOfBirth: '1997-10-31'
-                    emailVerified: true
-                    signUpDate: '2019-08-24'
+                $ref: '#/components/schemas/Disease'
         '404':
-          description: User Not Found
-      operationId: get-users-userId
-      description: Retrieve the information of the user with the matching user ID.
-    patch:
-      summary: Update User Information
-      operationId: patch-users-userId
-      responses:
-        '200':
-          description: User Updated
+          description: Disease Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                Updated User Rebecca Baker:
-                  value:
-                    id: 13
-                    firstName: Rebecca
-                    lastName: Baker
-                    email: rebecca@gmail.com
-                    dateOfBirth: '1985-10-02'
-                    emailVerified: false
-                    createDate: '2019-08-24'
-        '404':
-          description: User Not Found
-        '409':
-          description: Email Already Taken
-      description: Update the infromation of an existing user.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                  description: 'If a new email is given, the user''s email verified property will be set to false.'
-                dateOfBirth:
-                  type: string
-            examples:
-              Update First Name:
-                value:
-                  firstName: Rebecca
-              Update Email:
-                value:
-                  email: rebecca@gmail.com
-              Update Last Name & Date of Birth:
-                value:
-                  lastName: Baker
-                  dateOfBirth: '1985-10-02'
-        description: Patch user properties to update.
-  /user:
-    post:
-      summary: Create New User
-      operationId: post-user
-      responses:
-        '200':
-          description: User Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-              examples:
-                New User Bob Fellow:
-                  value:
-                    id: 12
-                    firstName: Bob
-                    lastName: Fellow
-                    email: bob.fellow@gmail.com
-                    dateOfBirth: '1996-08-24'
-                    emailVerified: false
-                    createDate: '2020-11-18'
-        '400':
-          description: Missing Required Information
-        '409':
-          description: Email Already Taken
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
-                dateOfBirth:
-                  type: string
-                  format: date
-              required:
-                - firstName
-                - lastName
-                - email
-                - dateOfBirth
-            examples:
-              Create User Bob Fellow:
-                value:
-                  firstName: Bob
-                  lastName: Fellow
-                  email: bob.fellow@gmail.com
-                  dateOfBirth: '1996-08-24'
-        description: Post the necessary fields for the API to create a new user.
-      description: Create a new user.
-  /report:
+                $ref: '#/components/schemas/DiseaseNotFound'
+      operationId: get-disease-diseaseName
+      description: Retrieve the information of the disease with the matching disease name.
+
+  /outbreak:
     get:
       summary: Your GET endpoint
-      tags: []
+      tags:
+        - outbreak
       responses:
         '200':
-          description: OK
+          description: Successfully retrieved list of all outbreaks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Outbreak'
       operationId: get-report
-      description: |+
-        Retreive all report between the start date provided and the end date provide. Added stuff 2
-
+      description: >
+        Retreive all report between the start date provided and the end date
+        provide.
+      # parameters:
+      #   - schema:
+      #       type: string
+      #     in: query
+      #     name: startDate
+      #     description: The earliest date to which reports will be queried
+      #   - schema:
+      #       type: string
+      #     in: query
+      #     name: endDate
+      #     description: The latest date to which reports will be queried
+      #   - schema:
+      #       type: string
+      #     in: query
+      #     name: disease
+      #     description: The disease to which the report will be based on
+          
+  '/outbreak/{outbreakID}':
+    get:
+      tags:
+        - outbreak
+      summary: Find outbreak by ID
+      description: Returns a single outbreak
+      operationId: getOutbreakById
       parameters:
-        - schema:
-            type: string
-          in: query
-          name: startDate
-          description: The earliest date to which reports will be queried
-        - schema:
-            type: string
-          in: query
-          name: endDate
-          description: The latest date to which reports will be queried
-        - schema:
-            type: string
-          in: query
-          name: disease
-          description: The disease to which the report will be based on
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                reportID:
-                  type: string
-                disease_name:
-                  type: string
-                locations:
-                  type: array
-                  items:
-                    type: string
-                reported_cases:
-                  type: integer
-                hospitilisation:
-                  type: integer
-                deaths:
-                  type: integer
-                startDate:
-                  type: string
-                endDate:
-                  type: string
-                investigationStatus:
-                  type: boolean
-            examples:
-              Example 1:
-                value:
-                  reportID: string
-                  disease_name: string
-                  locations:
-                    - 'Lidcombe, NSW, Australia'
-                  reported_cases: 17
-                  hospitilisation: 2
-                  deaths: 0
-                  startDate: string
-                  endDate: string
-                  investigationStatus: true
-          application/xml:
-            schema:
-              type: object
-              properties: {}
-          multipart/form-data:
-            schema:
-              type: object
-              properties: {}
-          text/html:
-            schema:
-              type: object
-              properties: {}
-          text/plain:
-            schema:
-              type: object
-              properties: {}
-        description: The returned details of the requested report
+        - name: outbreakID
+          in: path
+          description: ID of outbreak to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successfully return outbreak
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outbreaks'
+        '404':
+          description: Outbreak not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiseaseNotFound'
+  
+  /log:
+    get:
+      tags:
+        - log
+      summary: Find outbreak by ID
+      description: Returns all the API's logs
+      operationId: getLogs
+      responses:
+        '200':
+          description: Successfully return log files
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'
+
+
 components:
   schemas:
-    User:
-      title: User
+    Log:
+      title: Log
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            type: string
+            example: "2021-03-19T03:59:40.577Z | ::1 requested '/outbreak' - Status Code: 200"
+      
+  
+    OutbreakNotFound:
+      title: OutbreakNotFound
+      type: object
+      properties:
+        message:
+          type: string
+          example: No outbreaks match the ID 90
+          
+    DiseaseNotFound:
+      title: DiseaseNotFound
+      type: object
+      properties:
+        message:
+          type: string
+          example: No disease match the name COVOD-19
+  
+    Outbreak:
+      title: Outbreak
       type: object
       description: ''
       x-examples:
-        Alice Smith:
-          id: 142
-          firstName: Alice
-          lastName: Smith
-          email: alice.smith@gmail.com
-          dateOfBirth: '1997-10-31'
-          emailVerified: true
-          signUpDate: '2019-08-24'
+        Covid-19:
+          reportID: 1
+          disease_id: 1
+          disease_name: covid-19
+          locations:
+            - 'Lidcombe, NSW, Australia'
+          reported_cases: 17
+          hospitilisation: 2
+          deaths: 0
+          startDate: '1997-10-31'
+          endDate: '2019-08-24'
+          investigationStatus: true
       properties:
-        id:
+        reportID:
           type: integer
-          description: Unique identifier for the given user.
-        firstName:
+          example: 1
+          description: Unique identifier for the report.
+        disease_name:
           type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
-        dateOfBirth:
+          example: covid-19
+        locations:
+          type: array
+          items:
+            type: string
+          example:
+            - 'Lidcombe, NSW, Australia'
+        reported_cases:
+          type: integer
+          example: 17
+        hospitilisation:
+          type: integer
+          example: 2
+        deaths:
+          type: integer
+          example: 0
+        startDate:
           type: string
           format: date
           example: '1997-10-31'
-        emailVerified:
-          type: boolean
-          description: Set to true if the user's email has been verified.
-        createDate:
+        endDate:
           type: string
           format: date
-          description: The date that the user was created.
-      required:
-        - id
-        - firstName
-        - lastName
-        - email
-        - emailVerified
+          example: '1997-10-31'
+        investigationStatus:
+          type: boolean
+          example: true
+
+    Outbreaks:
+      type: array
+      items:
+        type: object
+        properties:
+          reportID:
+            type: integer
+            example: 1
+            description: Unique identifier for the report.
+          disease_name:
+            type: string
+            example: covid-19
+          locations:
+            type: array
+            items:
+              type: string
+            example:
+              - 'Lidcombe, NSW, Australia'
+          reported_cases:
+            type: integer
+            example: 17
+          hospitilisation:
+            type: integer
+            example: 2
+          deaths:
+            type: integer
+            example: 0
+          startDate:
+            type: string
+            format: date
+            example: '1997-10-31'
+          endDate:
+            type: string
+            format: date
+            example: '1997-10-31'
+          investigationStatus:
+            type: boolean
+            example: true
+        
+    Diseases:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Unique identifier for the given disease.
+            example: 2
+          name:
+            type: string
+            example: Listeria
+          symptoms:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Fever
+  
+    Disease:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given disease.
+          example: 2
+        name:
+          type: string
+          example: Listeria
+        symptoms:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: Fever
