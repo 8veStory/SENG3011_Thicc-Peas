@@ -219,62 +219,12 @@ components:
     Outbreaks:
       type: array
       items:
-        type: object
-        properties:
-          reportID:
-            type: integer
-            example: 1
-            description: Unique identifier for the report.
-          disease_name:
-            type: string
-            example: covid-19
-          locations:
-            type: array
-            items:
-              type: string
-            example:
-              - 'Lidcombe, NSW, Australia'
-          reported_cases:
-            type: integer
-            example: 17
-          hospitilisation:
-            type: integer
-            example: 2
-          deaths:
-            type: integer
-            example: 0
-          startDate:
-            type: string
-            format: date
-            example: '1997-10-31'
-          endDate:
-            type: string
-            format: date
-            example: '1997-10-31'
-          investigationStatus:
-            type: boolean
-            example: true
+        $ref: '#/components/schemas/Outbreak'
         
     Diseases:
       type: array
       items:
-        type: object
-        properties:
-          id:
-            type: integer
-            description: Unique identifier for the given disease.
-            example: 2
-          name:
-            type: string
-            example: Listeria
-          symptoms:
-            type: array
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Fever
+        $ref: '#/components/schemas/Disease'
   
     Disease:
       type: object
