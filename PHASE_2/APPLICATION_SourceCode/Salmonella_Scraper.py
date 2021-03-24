@@ -2,9 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import os
+import json
 
 # Dealing with different representation of a country name (Abbreviations)
 # Dealing with subset
+jsonList = []
+
 
 def RcChecker(soupHandler): #Returns true if uses RC, False else
     aag=soupHandler.findAll('div', class_="card-body bg-tertiary")
@@ -23,7 +26,7 @@ def RcChecker(soupHandler): #Returns true if uses RC, False else
 
 def getMainText(soupHandler):
     aag=soupHandler.find_all('div', class_="card-body bg-white")
-
+    mainText = ""
     if (RcChecker(soupHandler)):
         reqDiv = aag[3:4]
         #print(reqDiv)
@@ -42,7 +45,9 @@ def getMainText(soupHandler):
 
     for d in reqDiv:
         for p in d.find_all('p'):
-            print(p.text)
+            mainText = mainText + p.text
+
+    return mainText
 
 page = requests.get("https://www.cdc.gov/salmonella/outbreaks.html")
 soup = BeautifulSoup(page.content, 'html.parser')
@@ -77,6 +82,8 @@ for y in filterALinks:
 legalLinksWhite = []
 
 for y in legalLinks:
+    jsonData = {}
+    jsonDataInt = {}
     url = y
     pageUrl = requests.get(url)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
@@ -87,28 +94,39 @@ for y in legalLinks:
     for i in lastDiv:
         liTags = i.find_all("li")
         if (liTags!=[]):
-            print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
-            print("Title: ", soupHandler.find('h1', id="content").text)
-            print("Text: ")
-            getMainText(soupHandler)
-            print("URL: ", url)
+            jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text
+            jsonData['title'] = soupHandler.find('h1', id="content").text
+            jsonData['maintext'] = getMainText(soupHandler)
+            jsonData['url'] = url
+            jsonData['location'] = 'USA'
+            #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
+            #print("Title: ", soupHandler.find('h1', id="content").text)
+            #print("Text: ")
+            #getMainText(soupHandler)
+            #print("URL: ", url)
             for li in liTags:
-               print(" - ", li.text.rstrip().lstrip())
-            print("")
-        else:
-            legalLinksWhite.append(y)
+                #print(" - ", li.text.rstrip().lstrip())
+                #print("")
+                jsonList.append(json.dumps(jsonData))
+            else:
+                legalLinksWhite.append(y)
 
 
 for z in legalLinksWhite:
     url = z
     pageUrl = requests.get(url)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
-    print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
-    print("Title: ", soupHandler.find('h1', id="content").text)
-    print("Text: ")
+    jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text
+    jsonData['title'] = soupHandler.find('h1', id="content").text
+    jsonData['maintext'] = getMainText(soupHandler)
+    jsonData['url'] = url
+    jsonData['location'] = 'USA'
+    #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
+    #print("Title: ", soupHandler.find('h1', id="content").text)
+    #print("Text: ")
     getMainText(soupHandler)
     aag = soupHandler.findAll('div', class_="card-body pt-0 bg-white")
-    print("URL2: ", url)
+    #print("URL2: ", url)
     lastDiv = aag[2:3]
     if lastDiv==[]:
         lastDiv = aag[1:]
@@ -116,6 +134,11 @@ for z in legalLinksWhite:
         liTags = i.find_all("li")
         if (liTags!=[]):
             for li in liTags:
-                print(" - ", li.text.rstrip().lstrip())
-    print("")
+                #print(" - ", li.text.rstrip().lstrip())
+                jsonList.append(json.dumps(jsonData))
+    #print("")
 
+for i in jsonList:
+    print(i)
+
+print(type(jsonList[0]))
