@@ -58,7 +58,7 @@ class scraped_data_xlsx_to_firestore:
             for row in self.workbook[sheet_name].iter_rows(2):
 
                 # Send Article
-                article_id          = row[0].value
+                placeholder_article_id          = row[0].value
                 url                 = row[1].value
                 headline            = row[2].value
                 main_text           = row[3].value
@@ -68,13 +68,14 @@ class scraped_data_xlsx_to_firestore:
                 if (date_of_publication is not None and not isinstance(date_of_publication, datetime)):
                     parsed_date_of_publication = datetime.strptime(date_of_publication, "%Y-%m-%d")
 
-                if article_id is not None:
+                article_id_hash = None
+                if placeholder_article_id is not None:
                     # If the row is not empty then send the article to the FireStore.
-                    self.client.write_article(article_id, url, headline, main_text, parsed_date_of_publication)
+                    article_id_hash = self.client.write_article_auto_id(url, headline, main_text, parsed_date_of_publication)
 
                 # Send Report
-                report_id        = row[6].value
-                article_id       = row[7].value
+                placeholder_report_id        = row[6].value
+                # article_id       = row[7].value
                 disease_id       = row[8].value
                 event_date       = row[9].value
                 location         = row[10].value
@@ -86,11 +87,9 @@ class scraped_data_xlsx_to_firestore:
                 if (event_date is not None and not isinstance(event_date, datetime)):
                     parsed_event_date = datetime.strptime(event_date, "%Y-%m-%d")
 
-
-
-                if report_id is not None:
+                if placeholder_report_id is not None:
                     # If the row is not empty then send the report to the FireStore.
-                    self.client.write_report(report_id, article_id, disease_id, location, parsed_event_date, reported_cases, hospitalisations, deaths)
+                    self.client.write_report_auto_id(article_id_hash, disease_id, location, parsed_event_date, reported_cases, hospitalisations, deaths)
 
 if __name__ == "__main__":
     # Initialise sender
