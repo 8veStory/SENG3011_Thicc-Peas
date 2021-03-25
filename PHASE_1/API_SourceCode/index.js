@@ -178,6 +178,29 @@ function log(req, res, extraMessage = "") {
     });
 }
 
+function create_report_result(reportData) {
+    diseasePromise = db.collection(FS_DISEASES_COLLECTION).where('disease_id', '==', reportData.disease_id).get();
+    articlePromise = db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', reportData.article_id).get();
+
+    // Wait for the 2 requests fetch the report's disease and article to finish.
+    return Promise.all([diseasePromise, articlePromise]).then((results) => {
+        diseaseData = results[0].docs[0].data();
+        articleData = results[1].docs[0].data();
+        if (articleData.date_of_publication) articleData.date_of_publication = new Date(Date.parse(articleData.date_of_publication.toDate().toString()));
+
+        // Create report result
+        let result = {
+            report_id: reportData.report_id,
+            article: articleData,
+            disease: diseaseData,
+            location: reportData.location,
+            statistics: reportData.statistics,
+            event_date: new Date(Date.parse(reportData.event_date.toDate().toString()))
+        };
+        return result;
+    });
+}
+
 
 // ENDPOINTS
 /**
@@ -190,18 +213,18 @@ app.use(express.json())
  * Retrieve the contents of the log file.
  */
 app.get('/log', (req, res) => {
-    if (!fs.existsSync('log.txt')) {
-        res.send({ logs: []});
-        return;
-    }
+        if (!fs.existsSync('log.txt')) {
+            res.send({ logs: [] });
+            return;
+        }
 
-    fs.readFile('log.txt', (err, data) => {
-        file = data.toString();
-        logs = file.split("\n");
+        fs.readFile('log.txt', (err, data) => {
+            file = data.toString();
+            logs = file.split("\n");
 
-        res.send({ logs: logs });
+            res.send({ logs: logs });
+        })
     })
-})
 
 /**
  * Endpoint: GET '/reports'
@@ -220,217 +243,217 @@ app.get('/log', (req, res) => {
  * - 400 BAD REQUEST: Invalid query parameters used or badly formatted request.
  */
 app.get('/reports', async (req, res) => {
-    // Mandatory
-    let start_date;
-    let end_date;
-    let location;
-    let key_terms;
+        // Mandatory
+        let start_date;
+        let end_date;
+        let location;
+        let key_terms;
 
-    // TODO later...
-    let report_id;
+        // Query Parameters
+        if (req.query.start_date) start_date = new Date(Date.parse(req.query.start_date));
+        if (req.query.end_date) end_date = new Date(Date.parse(req.query.end_date));
+        if (req.query.location) location = req.query.location.toLowerCase();
+        if (req.query.key_terms) key_terms = req.query.key_terms.split(',').map(term => term.toLowerCase());
 
-    // Query Parameters
-    if (req.query.start_date) start_date = new Date(Date.parse(req.query.start_date));
-    if (req.query.end_date) end_date = new Date(Date.parse(req.query.end_date));
-    if (req.query.location) location = req.query.location.toLowerCase();
-    if (req.query.key_terms) key_terms = req.query.key_terms.split(',').map(term => term.toLowerCase());
+        // Check Query Parameter Constraints
+        if ((start_date && end_date) && (end_date <= start_date)) {
+            // Date range must be valid.
+            res.status(400).send(`End date '${end_date}' should be behind start date '${start_date}.'`);
+        }
 
-    // Check Query Parameter Constraints
-    if ((start_date && end_date) && (end_date <= start_date)) {
-        // Date range must be valid.
-        res.status(400).send(`End date '${end_date}' should be behind start date '${start_date}.'`);
-    }
+        // Get reports according to the correct date ranges.
+        let reportQueryRef = db.collection(FS_REPORTS_COLLECTION);
+        if (start_date) reportQueryRef = reportQueryRef.where('event_date', '>=', start_date);
+        if (end_date) reportQueryRef = reportQueryRef.where('event_date', '<=', end_date);
 
-    // Get reports according to the correct date ranges.
-    let reportQueryRef = db.collection(FS_REPORTS_COLLECTION);
-    if (start_date) reportQueryRef = reportQueryRef.where('event_date', '>=', start_date);
-    if (end_date) reportQueryRef = reportQueryRef.where('event_date', '<=', end_date);
+        reportQueryRef.get().then(queryResults => {
+            let report_result_promises = [];
+            let report_results = [];
 
-    reportQueryRef.get().then(queryResults => {
-        let report_result_promises = [];
-        let report_results = [];
-
-        queryResults.forEach(doc => {
-            // Create a promise for every report that is going to be added.
-            report_result_promises.push(new Promise((resolve, reject) => {
-                reportData = doc.data();
-
-                diseasePromise = db.collection(FS_DISEASES_COLLECTION).where('disease_id', '==', reportData.disease_id).get();
-                articlePromise = db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', reportData.article_id).get();
-
-                // Wait for the 2 requests fetch the report's disease and article to finish.
-                Promise.all([diseasePromise, articlePromise]).then((results) => {
+            queryResults.forEach(doc => {
+                // Create a promise for every report that is going to be added.
+                report_result_promises.push(new Promise((resolve, reject) => {
                     reportData = doc.data();
-                    diseaseData = results[0].docs[0].data();
-                    articleData = results[1].docs[0].data();
-                    if (articleData.date_of_publication) articleData.date_of_publication = new Date(Date.parse(articleData.date_of_publication.toDate().toString()));
 
-                    // Check location query parameter.
-                    if (location) {
-                        if (!reportData.location.toLowerCase().includes(location)) {
-                            resolve();
-                            return;
-                        }
-                    }
+                    diseasePromise = db.collection(FS_DISEASES_COLLECTION).where('disease_id', '==', reportData.disease_id).get();
+                    articlePromise = db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', reportData.article_id).get();
 
-                    // Check key_terms query parameter.
-                    if (key_terms) {
-                        let contains_terms = false;
-                        for (term of key_terms) {
-                            console.log(term);
-                            if (diseaseData.name && diseaseData.name.toLowerCase().includes(term)) { contains_terms = true; break; }
-                            if (articleData.headline && articleData.headline.toLowerCase().includes(term)) { contains_terms = true; break; }
-                            if (articleData.main_text && articleData.main_text.toLowerCase().includes(term)) { contains_terms = true; break; }
-                        }
-                        if (!contains_terms) {
-                            resolve();
-                            return;
-                        }
-                    }
+                    // Wait for the 2 requests fetch the report's disease and article to finish.
+                    Promise.all([diseasePromise, articlePromise]).then((results) => {
+                        reportData = doc.data();
+                        diseaseData = results[0].docs[0].data();
+                        articleData = results[1].docs[0].data();
+                        if (articleData.date_of_publication) articleData.date_of_publication = new Date(Date.parse(articleData.date_of_publication.toDate().toString()));
 
-                    // Create report result
-                    let result = {
-                        report_id: reportData.report_id,
-                        article: articleData,
-                        disease: diseaseData,
-                        location: reportData.location,
-                        statistics: reportData.statistics,
-                        event_date: new Date(Date.parse(reportData.event_date.toDate().toString()))
-                    };
-                    report_results.push(result);
-                    resolve();
-                });
-            }));
+                        // Check location query parameter.
+                        if (location) {
+                            if (!reportData.location.toLowerCase().includes(location)) {
+                                resolve();
+                                return;
+                            }
+                        }
+
+                        // Check key_terms query parameter.
+                        if (key_terms) {
+                            let contains_terms = false;
+                            for (term of key_terms) {
+                                console.log(term);
+                                if (diseaseData.name && diseaseData.name.toLowerCase().includes(term)) { contains_terms = true; break; }
+                                if (articleData.headline && articleData.headline.toLowerCase().includes(term)) { contains_terms = true; break; }
+                                if (articleData.main_text && articleData.main_text.toLowerCase().includes(term)) { contains_terms = true; break; }
+                            }
+                            if (!contains_terms) {
+                                resolve();
+                                return;
+                            }
+                        }
+
+                        // Create report result
+                        let result = {
+                            report_id: reportData.report_id,
+                            article: articleData,
+                            disease: diseaseData,
+                            location: reportData.location,
+                            statistics: reportData.statistics,
+                            event_date: new Date(Date.parse(reportData.event_date.toDate().toString()))
+                        };
+                        report_results.push(result);
+                        resolve();
+                    });
+                }));
+            });
+
+            // Process each promise.
+            console.log(`Processing ${report_result_promises.length} reports...`);
+            Promise.all(report_result_promises).then(() => {
+                // Once all promises have been resolved, send the data.
+                console.log(`Sending ${report_results.length} reports...`);
+                res.status(200).send(report_results);
+
+                parameter_string = "\nParameters:";
+                if (start_date) parameter_string += `\n\tstart_date: ${start_date.toUTCString()}`;
+                if (end_date) parameter_string += `\n\tend_date: ${end_date}`;
+                if (location) parameter_string += `\n\tlocation: ${location}`;
+                if (key_terms) parameter_string += `\n\tkey_terms: ${key_terms}`;
+
+                log(req, res, parameter_string);
+            }).catch(() => {
+            });
+        });
+    })
+
+app.get('/report/:reportid', (req, res) => {
+        const reportID = req.params.reportid;
+
+        db.collection(FS_REPORTS_COLLECTION).where('report_id', '==', reportID).get().then(result => {
+            if (result.size > 1) console.log(`WARNING: ${reportID} has ${result.size} entries in the DB.`);
+
+            if (result.size == 0) {
+                res.status(404).send(`No reports match the ID ${reportID}`);
+            } else {
+                let reportData = result.docs[0].data();
+                create_report_result(reportData).then(reportResult => {
+                    res.status(200).send(reportResult);
+                })
+            }
+            log(req, res);
         });
 
-        // Process each promise.
-        console.log(`Processing ${report_result_promises.length} reports...`);
-        Promise.all(report_result_promises).then(() => {
-            // Once all promises have been resolved, send the data.
-            console.log(`Sending ${report_results.length} reports...`);
-            res.status(200).send(report_results);
-
-            parameter_string = "\nParameters:";
-            if (start_date) parameter_string += `\n\tstart_date: ${start_date.toUTCString()}`;
-            if (end_date) parameter_string += `\n\tend_date: ${end_date}`;
-            if (location) parameter_string += `\n\tlocation: ${location}`;
-            if (key_terms) parameter_string += `\n\tkey_terms: ${key_terms}`;
-
-            log(req, res, parameter_string);
-        }).catch(() => {
-        });
-    });
-})
-
-app.get('/report/:outbreakid', (req, res) => {
-    const outbreakID = req.params.outbreakid;
-
-    if (!reports[outbreakID]) {
-        res.statusCode = 404;
-        res.send({
-            message: `No reports match the ID ${outbreakID}`
-        });
-        log(req, res);
-        return;
-    }
-    res.send(reports[outbreakID]);
-
-    log(req, res);
-})
+    })
 
 /**
  * Return all diseases.
  */
-app.get('/disease', (req, res) => {
-    console.log(diseases);
+app.get('/diseases', (req, res) => {
+        console.log(diseases);
 
-    res.send(
-        {
-            diseases: [
-                {
-                    id: 1,
-                    name: "COVID-19",
-                    description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
-                    symptoms: [
-                        {
-                            name: "Fever or chills"
-                        },
-                        {
-                            name: "Cough"
-                        },
-                        {
-                            name: "Shortness of breath or difficulty breathing"
-                        },
-                        {
-                            name: "Fatigue"
-                        },
-                        {
-                            name: "Muscle or body aches"
-                        },
-                        {
-                            name: "Headache"
-                        },
-                        {
-                            name: "New loss of taste or smell"
-                        },
-                        {
-                            name: "Sore throat"
-                        },
-                        {
-                            name: "Congestion or runny nose"
-                        },
-                        {
-                            name: "Nausea or vomiting"
-                        },
-                        {
-                            name: "Diarrhea"
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    name: "Listeria",
-                    description: "Listeriosis is a serious infection usually caused by eating food contaminated with the bacterium Listeria monocytogenes. An estimated 1,600 people get listeriosis each year, and about 260 die. The infection is most likely to sicken pregnant women and their newborns, adults aged 65 or older, and people with weakened immune systems.",
-                    symptoms: [
-                        {
-                            name: "Fever"
-                        },
-                        {
-                            name: "Diarrhea"
-                        },
-                        {
-                            name: "Muscle Aches"
-                        },
-                        {
-                            name: "Fatigue"
-                        },
-                        {
-                            name: "Miscarriage"
-                        },
-                    ]
-                },
-                {
-                    id: 3,
-                    name: "Salmonella",
-                    description: "Salmonella are bacteria that make people sick. They were first discovered by an American scientist named Dr. Daniel E. Salmon in 1885. CDC estimates Salmonella bacteria cause about 1.35 million infections, 26,500 hospitalizations, and 420 deaths in the United States every year. Food is the source for most of these illnesses.",
-                    symptoms: [
-                        {
-                            name: "Diarrhea (that can be bloody)"
-                        },
-                        {
-                            name: "Fever"
-                        },
-                        {
-                            name: "Stomach cramps"
-                        },
-                    ]
-                }
-            ]
-        })
+        res.send(
+            {
+                diseases: [
+                    {
+                        id: 1,
+                        name: "COVID-19",
+                        description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
+                        symptoms: [
+                            {
+                                name: "Fever or chills"
+                            },
+                            {
+                                name: "Cough"
+                            },
+                            {
+                                name: "Shortness of breath or difficulty breathing"
+                            },
+                            {
+                                name: "Fatigue"
+                            },
+                            {
+                                name: "Muscle or body aches"
+                            },
+                            {
+                                name: "Headache"
+                            },
+                            {
+                                name: "New loss of taste or smell"
+                            },
+                            {
+                                name: "Sore throat"
+                            },
+                            {
+                                name: "Congestion or runny nose"
+                            },
+                            {
+                                name: "Nausea or vomiting"
+                            },
+                            {
+                                name: "Diarrhea"
+                            }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        name: "Listeria",
+                        description: "Listeriosis is a serious infection usually caused by eating food contaminated with the bacterium Listeria monocytogenes. An estimated 1,600 people get listeriosis each year, and about 260 die. The infection is most likely to sicken pregnant women and their newborns, adults aged 65 or older, and people with weakened immune systems.",
+                        symptoms: [
+                            {
+                                name: "Fever"
+                            },
+                            {
+                                name: "Diarrhea"
+                            },
+                            {
+                                name: "Muscle Aches"
+                            },
+                            {
+                                name: "Fatigue"
+                            },
+                            {
+                                name: "Miscarriage"
+                            },
+                        ]
+                    },
+                    {
+                        id: 3,
+                        name: "Salmonella",
+                        description: "Salmonella are bacteria that make people sick. They were first discovered by an American scientist named Dr. Daniel E. Salmon in 1885. CDC estimates Salmonella bacteria cause about 1.35 million infections, 26,500 hospitalizations, and 420 deaths in the United States every year. Food is the source for most of these illnesses.",
+                        symptoms: [
+                            {
+                                name: "Diarrhea (that can be bloody)"
+                            },
+                            {
+                                name: "Fever"
+                            },
+                            {
+                                name: "Stomach cramps"
+                            },
+                        ]
+                    }
+                ]
+            })
 
-    log(req, res);
-}
-)
+        log(req, res);
+    }
+    )
 
 /**
  * Endpoint: GET '/disease/:diseasename'
@@ -438,24 +461,24 @@ app.get('/disease', (req, res) => {
  * NOTE: By default Express doesn't parse json in the body. So we have to setup a middleware.
  * It is shared code that is run before every endpoint's callback.
  */
-app.get('/disease/:diseasename', (req, res) => {
-    // URL Parameters are located in req.params
-    const { diseasename } = req.params;
-    diseaseKey = diseasename.toLowerCase();
-    if (!diseases[diseaseKey]) {
-        res.statusCode = 404;
-        res.send({
-            message: `No diseases match the name ${diseasename}`
-        });
+app.get('/disease/:diseaseid', (req, res) => {
+        // URL Parameters are located in req.params
+        const { diseasename } = req.params;
+        diseaseKey = diseasename.toLowerCase();
+        if (!diseases[diseaseKey]) {
+            res.statusCode = 404;
+            res.send({
+                message: `No diseases match the name ${diseasename}`
+            });
+            log(req, res);
+            return;
+        }
+        res.send(diseases[diseaseKey]);
         log(req, res);
-        return;
-    }
-    res.send(diseases[diseaseKey]);
-    log(req, res);
-})
+    })
 
 
 app.listen(
-    PORT,
-    () => console.log(`API is alive on http://localhost:${PORT}`)
-);
+        PORT,
+        () => console.log(`API is alive on http://localhost:${PORT}`)
+    );
