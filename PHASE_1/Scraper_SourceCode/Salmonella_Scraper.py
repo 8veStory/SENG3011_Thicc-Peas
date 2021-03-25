@@ -4,12 +4,11 @@ import re
 import os
 import json
 
-# Dealing with different representation of a country name (Abbreviations)
-# Dealing with subset
+#List of python list of all the json data (Each jsonData is a individual report and its corresponding data)
 jsonList = []
 
-
-def RcChecker(soupHandler): #Returns true if uses RC, False else
+#Returns True if the page uses "Reported Cases", else it uses "Case Count"
+def RcChecker(soupHandler):
     aag=soupHandler.findAll('div', class_="card-body bg-tertiary")
     reportedCaseFilter = re.compile(".*Reported Cases.*")
     lastDiv = aag[1:-1]
@@ -19,11 +18,11 @@ def RcChecker(soupHandler): #Returns true if uses RC, False else
         liTags = i.find_all("li")
         if (liTags!=[]):
             for li in liTags:
-                #print(li.text)
                 if (reportedCaseFilter.match(li.text.rstrip().lstrip())):
                     return True
             return False
 
+#Return the main report content of the page (I.E As of March 19, 2020 there has been a large influx of...)
 def getMainText(soupHandler):
     aag=soupHandler.find_all('div', class_="card-body bg-white")
     mainText = ""
@@ -49,11 +48,13 @@ def getMainText(soupHandler):
 
     return mainText
 
+#Requests the salmonella general outbreak page
 page = requests.get("https://www.cdc.gov/salmonella/outbreaks.html")
+
+#Parse the page into HTML to be scraped
 soup = BeautifulSoup(page.content, 'html.parser')
 
-# Looks for all the links that starts with /salmonella #
-#aLinks = soup.findAll('a', href=lambda x: x and x.startswith('/salmonella'))
+# Looks for all the links that starts with /salmonella
 aLinks = soup.findAll('a', href=lambda x: x and x.startswith('/salmonella'))
 
 #Does a conversion from ResultSet into a list using aLinkList.append
@@ -68,9 +69,13 @@ filterALinks = [s for s in aLinksList if indexFilter.match(s)]
 #Removes all the duplicates
 filterALinks = list(dict.fromkeys(filterALinks))
 
+#All links which has the "At a glance box"
 legalLinks = []
 
-#Loops through each valid page
+#All the links which has the "At a glance box" but uses a different class type
+legalLinksWhite = []
+
+#Filter all links for those with "At a glance" boxes
 for y in filterALinks:
     url = "https://www.cdc.gov" + y
     page1 = requests.get(url)
@@ -79,13 +84,11 @@ for y in filterALinks:
     if (aag != []):
         legalLinks.append(url)
 
-legalLinksWhite = []
-
+#Goes through all legal links
 for y in legalLinks:
     jsonData = {}
-    jsonDataInt = {}
-    url = y
-    pageUrl = requests.get(url)
+    #jsonDataInt = {}
+    pageUrl = requests.get(y)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
     aag = soupHandler.findAll('div', class_="card-body bg-tertiary")
     lastDiv = aag[1:2]
@@ -97,7 +100,7 @@ for y in legalLinks:
             jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text
             jsonData['title'] = soupHandler.find('h1', id="content").text
             jsonData['maintext'] = getMainText(soupHandler)
-            jsonData['url'] = url
+            jsonData['url'] = y
             jsonData['location'] = 'USA'
             #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
             #print("Title: ", soupHandler.find('h1', id="content").text)
@@ -109,9 +112,9 @@ for y in legalLinks:
                 #print("")
                 jsonList.append(json.dumps(jsonData))
             else:
-                legalLinksWhite.append(y)
+                legalLinksWhite.append(y) #All the white "At a glance box" class
 
-
+# Goes through all the legal links with white class box and retreive the required data
 for z in legalLinksWhite:
     url = z
     pageUrl = requests.get(url)
@@ -124,7 +127,7 @@ for z in legalLinksWhite:
     #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
     #print("Title: ", soupHandler.find('h1', id="content").text)
     #print("Text: ")
-    getMainText(soupHandler)
+    #getMainText(soupHandler)
     aag = soupHandler.findAll('div', class_="card-body pt-0 bg-white")
     #print("URL2: ", url)
     lastDiv = aag[2:3]
@@ -138,7 +141,8 @@ for z in legalLinksWhite:
                 jsonList.append(json.dumps(jsonData))
     #print("")
 
+#DEBUG Prints out the json list
 for i in jsonList:
     print(i)
 
-print(type(jsonList[0]))
+#print(type(jsonList[0]))
