@@ -1,6 +1,7 @@
 from firebase_admin import credentials, initialize_app, firestore
 from datetime import datetime
 from typing import List
+import os
 import hashlib
 
 class FireStore_Client:
@@ -14,11 +15,18 @@ class FireStore_Client:
      * TODO: DELETE
     """
 
-    def __init__(self):
+    def __init__(self, path_to_firestore_credentials = "../handy-amplifier-307202-7b79308ce4ea.json"):
         """
         Connect to FireStore.
+
+        Parameters:
+            * path_to_firestore_credentials: the path to the Firestore Credentials
+                                             needed to authenticate firebase_admin.
         """
-        self.cred = credentials.Certificate("./handy-amplifier-307202-7b79308ce4ea.json")
+        if not os.path.exists(path_to_firestore_credentials):
+            raise FileNotFoundError(f"'{path_to_firestore_credentials}' doesn't exist. Please add it!")
+
+        self.cred = credentials.Certificate(path_to_firestore_credentials)
         self.default_app = initialize_app(self.cred)
         self.db = firestore.client()
     
@@ -140,6 +148,30 @@ class FireStore_Client:
         })
         print(f"Sending report:\n\treport_id: {report_id}\n\tarticle_id: {article_id}\n\tdisease_id: {disease_id}\n\tlocation: {location}\n\tevent_date: {event_date}\n\treported_cases: {reported_cases}\n\thospitalisations: {hospitalisations}\n\tdeaths: {deaths}")
 
+    def delete_inside_collection(self, collection_name):
+        """
+        Deletes the given collection.
+        """
+        collection_ref = self.db.collection(collection_name)
+        self._delete_inside_collection(collection_ref)
+
+    def _delete_inside_collection(self, collection_ref, batch_size = 300):
+        """
+        Parameters:
+            * collection_ref: reference to a collection you want to delete.
+            * batch_size: max amount of deletions per function stack frame to
+                          reduce out of memory errors.
+        """
+        docs = collection_ref.stream()
+        deleted = 0
+
+        for doc in docs:
+            print(f"Deleting {doc.id} => {doc.to_dict()}")
+            doc.reference.delete()
+            deleted += 1
+        
+        if deleted >= batch_size:
+            return self.delete_inside_collection(collection_ref, batch_size)
 
 if __name__ == "__main__":
     firestore_client = FireStore_Client()
