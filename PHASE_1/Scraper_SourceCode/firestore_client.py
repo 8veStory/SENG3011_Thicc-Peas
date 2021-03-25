@@ -115,8 +115,8 @@ class FireStore_Client:
         Same as 'write_report' except you don't have the report_id.
 
         Returns the report_id hash
-        NOTE: date_of_publication shoud be of format YYYY-MM-DD
         """
+
         strings = [article_id, disease_id, location, str(event_date), str(reported_cases), str(hospitalisations), str(deaths)]
         report_id = hashlib.md5(' '.join(filter(None, strings)).encode('utf-8')).hexdigest()
         self.write_report(report_id, article_id, disease_id, location, event_date, reported_cases, hospitalisations, deaths)
@@ -183,7 +183,7 @@ class FireStore_Client:
             deleted += 1
         
         if deleted >= batch_size:
-            return self.delete_inside_collection(collection_ref, batch_size)
+            return self._delete_inside_collection(collection_ref, batch_size)
 
 if __name__ == "__main__":
     firestore_client = FireStore_Client()
