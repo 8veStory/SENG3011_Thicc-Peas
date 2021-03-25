@@ -1,6 +1,6 @@
 from firebase_admin import credentials, initialize_app, firestore
 from datetime import datetime
-from  typing import List
+from typing import List
 import hashlib
 
 class FireStore_Client:
