@@ -88,6 +88,10 @@ for y in filterALinks:
     if (aag != []):
         legalLinks.append(url)
 
+hospitalFilter = re.compile(".*Hospitalizations: .*")
+deathFilter = re.compile(".*Deaths: .*")
+rcCcFilter = re.compile(".*(Reported Cases: |Case Count: ).*")
+
 #Goes through all legal links
 for y in legalLinks:
     jsonData = {}
@@ -95,10 +99,8 @@ for y in legalLinks:
     pageUrl = requests.get(y)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
 
-    
-
     aag = soupHandler.findAll('div', class_="card-body bg-tertiary")
-    
+    #print("URL: ", y)
     lastDiv = aag[1:2]
     
     if lastDiv==[]:
@@ -106,27 +108,44 @@ for y in legalLinks:
     for i in lastDiv:
         liTags = i.find_all("li")
         if (liTags!=[]):
-
+            #print("URL: ", y)
             jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text.lstrip().rstrip()
             jsonData['title'] = soupHandler.find('h1', id="content").text.lstrip().rstrip()
             jsonData['maintext'] = getMainText(soupHandler)
             jsonData['url'] = y
             jsonData['location'] = 'USA'
 
-            jsonList.append(json.dumps(jsonData))
+            #jsonList.append(json.dumps(jsonData))
 
             #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
             #print("Title: ", soupHandler.find('h1', id="content").text)
             #print("Text: ")
             #getMainText(soupHandler)
             #print("URL: ", url)
+            
             for li in liTags:
-                #print(" - ", li.text.rstrip().lstrip())
+                if(hospitalFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    #print("Hospital Filter Val: ", splitter[1])
+                    jsonData["hospital"] = splitter[1] 
+                elif (deathFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    #print("Death Filter Val: ", splitter[1])
+                    jsonData["death"] = splitter[1] 
+                elif(rcCcFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    #print("RcCc Filter Val: ", splitter[1])
+                    jsonData["rcCc"] = splitter[1] 
+                    #print(" - ", li.text.rstrip().lstrip())
+
                 #print("")
                 #jsonList.append(json.dumps(jsonData))
                 pass
+            jsonList.append(json.dumps(jsonData))
         else:
             legalLinksWhite.append(y) #All the white "At a glance box" class
+
+    
 
 # Goes through all the legal links with white class box and retreive the required data
 for z in legalLinksWhite:
@@ -141,7 +160,7 @@ for z in legalLinksWhite:
     jsonData['url'] = url
     jsonData['location'] = "USA"
 
-    jsonList.append(json.dumps(jsonData))
+    #jsonList.append(json.dumps(jsonData))
 
     #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
     #print("Title: ", soupHandler.find('h1', id="content").text)
@@ -156,7 +175,21 @@ for z in legalLinksWhite:
         liTags = i.find_all("li")
         if (liTags!=[]):
             for li in liTags:
-                pass
+                if(hospitalFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    jsonData["hospital"] = splitter[1] 
+                    #print("Hospital Filter Val: ", splitter[1])
+                elif (deathFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    jsonData["death"] = splitter[1] 
+                    #print("Death Filter Val: ", splitter[1])
+                elif(rcCcFilter.match(li.text.rstrip().lstrip())):
+                    splitter = li.text.rstrip().lstrip().split(": ")
+                    jsonData["rcCc"] = splitter[1] 
+                    #print("RcCc Filter Val: ", splitter[1])
+
+    jsonList.append(json.dumps(jsonData))
+                #pass
                 #print(" - ", li.text.rstrip().lstrip())
                 #jsonList.append(json.dumps(jsonData))
     #print("")
@@ -166,11 +199,18 @@ for z in legalLinksWhite:
 #write_article_auto_id(self, url: str, headline: str, main_text: str, date_of_publication: datetime) -> str:
 for i in jsonList:
     jsonPoint = json.loads(i)
-    firestoreClient.write_article_auto_id(jsonPoint["url"],jsonPoint["title"],jsonPoint["maintext"],(datetime.strptime(jsonPoint['date'], "%B %d, %Y")))
+    #article_id = firestoreClient.write_article_auto_id(jsonPoint["url"],jsonPoint["title"],jsonPoint["maintext"],(datetime.strptime(jsonPoint['date'], "%B %d, %Y")))
     #str(datetime.strptime(soupHandler.find('span', id="last-reviewed-date").text.lstrip().rstrip(), "%B %d, %Y"))
-    #print(str(datetime.strptime(jsonPoint['date'], "%B %d, %Y")))
-    #print(jsonPoint["title"])
-    #print(jsonPoint["maintext"])
-    #print(jsonPoint["url"])
-    #print(jsonPoint["location"])
+    #write_report_auto_id(self, article_id: str, disease_id: str, location: str, event_date: datetime, reported_cases: int = None, hospitalisations: int = None, deaths: int = None) -> str:
+    #print(str(datetime.strptime(jsonPoint.get('date'), "%B %d, %Y")))
+    #print(jsonPoint.get('title'))
+    #print(jsonPoint.get('maintext'))
+    #print(jsonPoint.get('url'))
+    #print(jsonPoint.get('location'))
+    #print(jsonPoint.get('hospital'))
+    #print(jsonPoint.get('death'))
+    #print(jsonPoint.get('rcCc'))
+    article_id = firestoreClient.write_article_auto_id(jsonPoint.get('url'),jsonPoint.get('title'),jsonPoint.get('maintext'),(datetime.strptime(jsonPoint.get('date'), "%B %d, %Y")))
+    firestoreClient.write_report_auto_id(article_id, "777d1c109f5eef1d64c418062a918d33",jsonPoint.get('location'),(datetime.strptime(jsonPoint.get('date'), "%B %d, %Y")),jsonPoint.get('rcCc'),jsonPoint.get('hospital'),jsonPoint.get('death'))
+    #print("")
 
