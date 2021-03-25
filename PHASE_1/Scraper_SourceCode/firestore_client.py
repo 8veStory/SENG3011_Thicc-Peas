@@ -4,6 +4,8 @@ from typing import List
 import os
 import hashlib
 
+import sys
+
 class FireStore_Client:
     """
     Represents a connection to the Thicc Peas' FireStore DB for CDC disease
@@ -186,9 +188,19 @@ class FireStore_Client:
 if __name__ == "__main__":
     firestore_client = FireStore_Client()
 
+    # print(f"url: {sys.argv[1]}")
+    # print(f"headline: {sys.argv[2]}")
+    # print(f"main body: {sys.argv[3]}")
+    # print("date: ", end='')
+    # print(datetime.strptime(sys.argv[4], "%Y-%m-%d"))
+    # print(f"cases: {sys.argv[5]}")
+    # print(f"hospitalisations: {sys.argv[6]}")
+    # print(f"deaths: {sys.argv[7]}")
+    # print("----------------------------------------------------")
+
     # Example for Max.
-    # article_hash = firestore_client.write_article_auto_id("https://www.cdc.gov/ecoli/2020/o157h7-11-20/index.html", "Outbreak of E. coli Infections – Unknown Source 3", "Final Outbreak Information Illustration of a megaphone. For more information, see Symptoms of E. coli Infection.", datetime.strptime("2000-12-18", "%Y-%m-%d"))
-    # firestore_client.write_report_auto_id(article_hash, "44f2a7bb8b2e8a086c4f7d5aa82cd4ff", "US", datetime.strptime("2020-12-18", "%Y-%m-%d"), 18, 6, None)
+    # article_hash = firestore_client.write_article_auto_id(sys.argv[1], sys.argv[2], None, datetime.strptime(sys.argv[4], "%Y-%m-%d"))
+    # firestore_client.write_report_auto_id(article_hash, "44f2a7bb8b2e8a086c4f7d5aa82cd4ff", "US", datetime.strptime(sys.argv[4], "%Y-%m-%d"), sys.argv[5], sys.argv[6], sys.argv[7])
 
     # Other Examples
     firestore_client.write_disease("b4d780dd311fae981c01e339f90afdae", "cholera", ["profuse watery diarrhea", "vomiting"])
