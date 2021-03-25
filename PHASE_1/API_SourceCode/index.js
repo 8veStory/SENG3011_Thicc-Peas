@@ -275,15 +275,13 @@ app.get('/reports', async (req, res) => {
                 report_result_promises.push(new Promise((resolve, reject) => {
                     reportData = doc.data();
 
-                    diseasePromise = db.collection(FS_DISEASES_COLLECTION).where('disease_id', '==', reportData.disease_id).get();
-                    articlePromise = db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', reportData.article_id).get();
-
-                    // Wait for the 2 requests fetch the report's disease and article to finish.
-                    Promise.all([diseasePromise, articlePromise]).then((results) => {
-                        reportData = doc.data();
-                        diseaseData = results[0].docs[0].data();
-                        articleData = results[1].docs[0].data();
-                        if (articleData.date_of_publication) articleData.date_of_publication = new Date(Date.parse(articleData.date_of_publication.toDate().toString()));
+                    // Create a report_result, which is a combination of a report
+                    // with its disease and article. This is what we shall
+                    // send back to the user.
+                    create_report_result(reportData).then(reportResult => {
+                        reportData = doc.data(); // Have to recalculate this ofr some reason. If not then the value is cached across all docs.
+                        articleData = reportResult.article;
+                        diseaseData = reportResult.disease;
 
                         // Check location query parameter.
                         if (location) {
@@ -297,7 +295,6 @@ app.get('/reports', async (req, res) => {
                         if (key_terms) {
                             let contains_terms = false;
                             for (term of key_terms) {
-                                console.log(term);
                                 if (diseaseData.name && diseaseData.name.toLowerCase().includes(term)) { contains_terms = true; break; }
                                 if (articleData.headline && articleData.headline.toLowerCase().includes(term)) { contains_terms = true; break; }
                                 if (articleData.main_text && articleData.main_text.toLowerCase().includes(term)) { contains_terms = true; break; }
@@ -319,7 +316,7 @@ app.get('/reports', async (req, res) => {
                         };
                         report_results.push(result);
                         resolve();
-                    });
+                    })
                 }));
             });
 
@@ -340,145 +337,147 @@ app.get('/reports', async (req, res) => {
             }).catch(() => {
             });
         });
-    })
+})
 
 app.get('/report/:reportid', (req, res) => {
-        const reportID = req.params.reportid;
+    const reportID = req.params.reportid;
 
-        db.collection(FS_REPORTS_COLLECTION).where('report_id', '==', reportID).get().then(result => {
-            if (result.size > 1) console.log(`WARNING: ${reportID} has ${result.size} entries in the DB.`);
+    db.collection(FS_REPORTS_COLLECTION).where('report_id', '==', reportID).get().then(result => {
+        if (result.size > 1) console.log(`WARNING: ${reportID} has ${result.size} entries in the DB.`);
 
-            if (result.size == 0) {
-                res.status(404).send(`No reports match the ID ${reportID}`);
-            } else {
-                let reportData = result.docs[0].data();
-                create_report_result(reportData).then(reportResult => {
-                    res.status(200).send(reportResult);
-                })
-            }
-            log(req, res);
-        });
+        if (result.size == 0) {
+            res.status(404).send(`No reports match the ID ${reportID}`);
+        } else {
+            let reportData = result.docs[0].data();
+            create_report_result(reportData).then(reportResult => {
+                res.status(200).send(reportResult);
+            })
+        }
+        log(req, res);
+    });
 
-    })
+})
 
 /**
+ * TODO:
  * Return all diseases.
  */
 app.get('/diseases', (req, res) => {
-        console.log(diseases);
+    console.log(diseases);
 
-        res.send(
-            {
-                diseases: [
-                    {
-                        id: 1,
-                        name: "COVID-19",
-                        description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
-                        symptoms: [
-                            {
-                                name: "Fever or chills"
-                            },
-                            {
-                                name: "Cough"
-                            },
-                            {
-                                name: "Shortness of breath or difficulty breathing"
-                            },
-                            {
-                                name: "Fatigue"
-                            },
-                            {
-                                name: "Muscle or body aches"
-                            },
-                            {
-                                name: "Headache"
-                            },
-                            {
-                                name: "New loss of taste or smell"
-                            },
-                            {
-                                name: "Sore throat"
-                            },
-                            {
-                                name: "Congestion or runny nose"
-                            },
-                            {
-                                name: "Nausea or vomiting"
-                            },
-                            {
-                                name: "Diarrhea"
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        name: "Listeria",
-                        description: "Listeriosis is a serious infection usually caused by eating food contaminated with the bacterium Listeria monocytogenes. An estimated 1,600 people get listeriosis each year, and about 260 die. The infection is most likely to sicken pregnant women and their newborns, adults aged 65 or older, and people with weakened immune systems.",
-                        symptoms: [
-                            {
-                                name: "Fever"
-                            },
-                            {
-                                name: "Diarrhea"
-                            },
-                            {
-                                name: "Muscle Aches"
-                            },
-                            {
-                                name: "Fatigue"
-                            },
-                            {
-                                name: "Miscarriage"
-                            },
-                        ]
-                    },
-                    {
-                        id: 3,
-                        name: "Salmonella",
-                        description: "Salmonella are bacteria that make people sick. They were first discovered by an American scientist named Dr. Daniel E. Salmon in 1885. CDC estimates Salmonella bacteria cause about 1.35 million infections, 26,500 hospitalizations, and 420 deaths in the United States every year. Food is the source for most of these illnesses.",
-                        symptoms: [
-                            {
-                                name: "Diarrhea (that can be bloody)"
-                            },
-                            {
-                                name: "Fever"
-                            },
-                            {
-                                name: "Stomach cramps"
-                            },
-                        ]
-                    }
-                ]
-            })
+    res.send(
+        {
+            diseases: [
+                {
+                    id: 1,
+                    name: "COVID-19",
+                    description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
+                    symptoms: [
+                        {
+                            name: "Fever or chills"
+                        },
+                        {
+                            name: "Cough"
+                        },
+                        {
+                            name: "Shortness of breath or difficulty breathing"
+                        },
+                        {
+                            name: "Fatigue"
+                        },
+                        {
+                            name: "Muscle or body aches"
+                        },
+                        {
+                            name: "Headache"
+                        },
+                        {
+                            name: "New loss of taste or smell"
+                        },
+                        {
+                            name: "Sore throat"
+                        },
+                        {
+                            name: "Congestion or runny nose"
+                        },
+                        {
+                            name: "Nausea or vomiting"
+                        },
+                        {
+                            name: "Diarrhea"
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Listeria",
+                    description: "Listeriosis is a serious infection usually caused by eating food contaminated with the bacterium Listeria monocytogenes. An estimated 1,600 people get listeriosis each year, and about 260 die. The infection is most likely to sicken pregnant women and their newborns, adults aged 65 or older, and people with weakened immune systems.",
+                    symptoms: [
+                        {
+                            name: "Fever"
+                        },
+                        {
+                            name: "Diarrhea"
+                        },
+                        {
+                            name: "Muscle Aches"
+                        },
+                        {
+                            name: "Fatigue"
+                        },
+                        {
+                            name: "Miscarriage"
+                        },
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Salmonella",
+                    description: "Salmonella are bacteria that make people sick. They were first discovered by an American scientist named Dr. Daniel E. Salmon in 1885. CDC estimates Salmonella bacteria cause about 1.35 million infections, 26,500 hospitalizations, and 420 deaths in the United States every year. Food is the source for most of these illnesses.",
+                    symptoms: [
+                        {
+                            name: "Diarrhea (that can be bloody)"
+                        },
+                        {
+                            name: "Fever"
+                        },
+                        {
+                            name: "Stomach cramps"
+                        },
+                    ]
+                }
+            ]
+        })
 
-        log(req, res);
-    }
-    )
+    log(req, res);
+}
+)
 
 /**
+ * TODO:
  * Endpoint: GET '/disease/:diseasename'
  * Example of a dynamic URL parameter (':diseasename') as it accepts an report diseasename.
  * NOTE: By default Express doesn't parse json in the body. So we have to setup a middleware.
  * It is shared code that is run before every endpoint's callback.
  */
 app.get('/disease/:diseaseid', (req, res) => {
-        // URL Parameters are located in req.params
-        const { diseasename } = req.params;
-        diseaseKey = diseasename.toLowerCase();
-        if (!diseases[diseaseKey]) {
-            res.statusCode = 404;
-            res.send({
-                message: `No diseases match the name ${diseasename}`
-            });
-            log(req, res);
-            return;
-        }
-        res.send(diseases[diseaseKey]);
+    // URL Parameters are located in req.params
+    const { diseasename } = req.params;
+    diseaseKey = diseasename.toLowerCase();
+    if (!diseases[diseaseKey]) {
+        res.statusCode = 404;
+        res.send({
+            message: `No diseases match the name ${diseasename}`
+        });
         log(req, res);
-    })
+        return;
+    }
+    res.send(diseases[diseaseKey]);
+    log(req, res);
+})
 
 
 app.listen(
-        PORT,
-        () => console.log(`API is alive on http://localhost:${PORT}`)
-    );
+    PORT,
+    () => console.log(`API is alive on http://localhost:${PORT}`)
+);
