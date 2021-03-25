@@ -38,6 +38,12 @@ class FireStore_Client:
         # Creates a document with a unique ID inside 'diseases' collection.
         disease_ref = self.db.collection(u'diseases').document()
 
+        # Check for duplicates
+        duplicates = self.db.collection(u'diseases').where(u'disease_id', u'==', disease_id).get()
+        if len(duplicates) > 0:
+            print(f"NOT sending disease {disease_id} as {len(duplicates)} DUPLICATES were found.")
+            return
+
         # Fill out information about the disease.
         disease_ref.set({
             u'disease_id':           disease_id,
@@ -64,6 +70,16 @@ class FireStore_Client:
         """
         disease_ref = self.db.collection(u'articles').document()
 
+        preview_main_text = main_text
+        if (main_text is not None):
+            preview_main_text = main_text[0:50]
+
+        # Check for duplicates
+        duplicates = self.db.collection(u'articles').where(u'article_id', u'==', article_id).get()
+        if len(duplicates) > 0:
+            print(f"NOT sending article {article_id} as {len(duplicates)} DUPLICATES were found.")
+            return
+
         disease_ref.set({
             u'article_id':          article_id,
             u'url':                 url,
@@ -72,9 +88,6 @@ class FireStore_Client:
             u'date_of_publication': date_of_publication
         })
 
-        preview_main_text = main_text
-        if (main_text is not None):
-            preview_main_text = main_text[0:50]
         print(f"Sending article:\n\tarticle_id: {article_id}\n\turl: {url}\n\theadline: {headline}\n\tmain_text: {preview_main_text}\n\tdate_of_publication: {date_of_publication}")
 
     def write_report_auto_id(self, article_id: str, disease_id: str, location: str, event_date: datetime, reported_cases: int = None, hospitalisations: int = None, deaths: int = None) -> str:
@@ -94,6 +107,12 @@ class FireStore_Client:
         Writes a report to the DB.
         """
         disease_ref = self.db.collection(u'reports').document()
+
+        # Check for duplicates
+        duplicates = self.db.collection(u'reports').where(u'report_id', u'==', report_id).get()
+        if len(duplicates) > 0:
+            print(f"NOT sending report {report_id} as {len(duplicates)} DUPLICATES were found.")
+            return
 
         disease_ref.set({
             u'report_id':  report_id,
