@@ -3,6 +3,10 @@ import requests
 import re
 import os
 import json
+from firestore_client import FireStore_Client
+from datetime import datetime
+
+firestoreClient = FireStore_Client()
 
 #List of python list of all the json data (Each jsonData is a individual report and its corresponding data)
 jsonList = []
@@ -90,18 +94,27 @@ for y in legalLinks:
     #jsonDataInt = {}
     pageUrl = requests.get(y)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
+
+    
+
     aag = soupHandler.findAll('div', class_="card-body bg-tertiary")
+    
     lastDiv = aag[1:2]
+    
     if lastDiv==[]:
         lastDiv = aag[1:]
     for i in lastDiv:
         liTags = i.find_all("li")
         if (liTags!=[]):
-            jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text
-            jsonData['title'] = soupHandler.find('h1', id="content").text
+
+            jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text.lstrip().rstrip()
+            jsonData['title'] = soupHandler.find('h1', id="content").text.lstrip().rstrip()
             jsonData['maintext'] = getMainText(soupHandler)
             jsonData['url'] = y
             jsonData['location'] = 'USA'
+
+            jsonList.append(json.dumps(jsonData))
+
             #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
             #print("Title: ", soupHandler.find('h1', id="content").text)
             #print("Text: ")
@@ -110,20 +123,26 @@ for y in legalLinks:
             for li in liTags:
                 #print(" - ", li.text.rstrip().lstrip())
                 #print("")
-                jsonList.append(json.dumps(jsonData))
-            else:
-                legalLinksWhite.append(y) #All the white "At a glance box" class
+                #jsonList.append(json.dumps(jsonData))
+                pass
+        else:
+            legalLinksWhite.append(y) #All the white "At a glance box" class
 
 # Goes through all the legal links with white class box and retreive the required data
 for z in legalLinksWhite:
+    jsonData = {}
     url = z
     pageUrl = requests.get(url)
     soupHandler = BeautifulSoup(pageUrl.content, 'html.parser')
-    jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text
-    jsonData['title'] = soupHandler.find('h1', id="content").text
+
+    jsonData['date'] = soupHandler.find('span', id="last-reviewed-date").text.lstrip().rstrip()
+    jsonData['title'] = soupHandler.find('h1', id="content").text.lstrip().rstrip()
     jsonData['maintext'] = getMainText(soupHandler)
     jsonData['url'] = url
-    jsonData['location'] = 'USA'
+    jsonData['location'] = "USA"
+
+    jsonList.append(json.dumps(jsonData))
+
     #print("Date: ", soupHandler.find('span', id="last-reviewed-date").text)
     #print("Title: ", soupHandler.find('h1', id="content").text)
     #print("Text: ")
@@ -137,12 +156,21 @@ for z in legalLinksWhite:
         liTags = i.find_all("li")
         if (liTags!=[]):
             for li in liTags:
+                pass
                 #print(" - ", li.text.rstrip().lstrip())
-                jsonList.append(json.dumps(jsonData))
+                #jsonList.append(json.dumps(jsonData))
     #print("")
 
 #DEBUG Prints out the json list
+#print("Here")
+#write_article_auto_id(self, url: str, headline: str, main_text: str, date_of_publication: datetime) -> str:
 for i in jsonList:
-    print(i)
+    jsonPoint = json.loads(i)
+    firestoreClient.write_article_auto_id(jsonPoint["url"],jsonPoint["title"],jsonPoint["maintext"],(datetime.strptime(jsonPoint['date'], "%B %d, %Y")))
+    #str(datetime.strptime(soupHandler.find('span', id="last-reviewed-date").text.lstrip().rstrip(), "%B %d, %Y"))
+    #print(str(datetime.strptime(jsonPoint['date'], "%B %d, %Y")))
+    #print(jsonPoint["title"])
+    #print(jsonPoint["maintext"])
+    #print(jsonPoint["url"])
+    #print(jsonPoint["location"])
 
-#print(type(jsonList[0]))
