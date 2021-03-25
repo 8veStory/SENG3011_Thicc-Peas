@@ -1,4 +1,47 @@
-/** POLYFILLS */
+/**
+ * The following example is a basic API created in express.js
+ * 
+ * NOTE: You should try to conform to the OpenAPI Specification, which lets your
+ * API be understood by humans AND machines. You get benefits like easy
+ * documentation to because of SwaggerHub. You can also upload your API easily
+ * to API Gateway on AWS or Google Cloud.
+ */
+
+// IMPORTS
+const admin   = require('firebase-admin');
+const express = require('express');
+const fs      = require('fs');
+const { exit } = require('process');
+const { promises } = require('dns');
+const { response } = require('express');
+const app     = express();
+
+
+// CONSTANTS
+const PORT = process.env.PORT;
+const FS_KEY_PATH = "../handy-amplifier-307202-7b79308ce4ea.json"
+const FS_DISEASES_COLLECTION = "diseases";
+const FS_REPORTS_COLLECTION = "reports";
+const FS_ARTICLES_COLLECTION = "articles";
+
+
+// CONNECT TO FIRESTORE
+let serviceAccount;
+try {
+    serviceAccount = require(FS_KEY_PATH);
+} catch(err) {
+    if (err.code == "MODULE_NOT_FOUND")
+        console.log(`Couldn't find ${FS_KEY_PATH}. Please add it in order to authenticate the FireStore client.`);
+    exit(1);
+}
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+})
+const db = admin.firestore();
+
+
+// POLYFILLS
 if (!Object.entries)
    Object.entries = function( obj ){
       var ownProps = Object.keys( obj ),
@@ -10,11 +53,14 @@ if (!Object.entries)
       return resArray;
    };
 
+
+
+// PLACEHOLDER DATA
 const diseases = {
     "covid-19": {
         id: 1,
         name: "COVID-19",
-        description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the outbreak, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
+        description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
         symptoms: [
             {
                 name: "Fever or chills"
@@ -91,7 +137,7 @@ const diseases = {
     }
 };
 
-let outbreaks = {
+let reports = {
     1: {
         outbreak_id: 1,
         disease_id: 1,
@@ -122,31 +168,18 @@ let outbreaks = {
     },
 }
 
-/**
- * The following example is a basic API created in express.js
- * 
- * NOTE: You should try to conform to the OpenAPI Specification, which lets your
- * API be understood by humans AND machines. You get benefits like easy
- * documentation to because of SwaggerHub. You can also upload your API easily
- * to API Gateway on AWS or Google Cloud.
- */
 
-const express = require('express');
-const fs = require('fs');
-const app = express();
-
-// CONSTANTS
-// const PORT = process.env.PORT;
-const PORT = 3000;
-
-function log(req, res) {
+// HELPER METHODS
+function log(req, res, extraMessage = "") {
     let utcTime = new Date().toJSON();
     result = `\n${utcTime} | ${req.ip} requested '${req.url}' - Status Code: ${res.statusCode}`
     fs.appendFile("log.txt", result, () => {
-        console.log(`${result}`)
+        console.log(`${result + extraMessage}`)
     });
 }
 
+
+// ENDPOINTS
 /**
  * Listen on $PORT for JSON.
  */
@@ -171,78 +204,136 @@ app.get('/log', (req, res) => {
 })
 
 /**
- * Endpoint: GET '/outbreaks'
- * Send a 200 response and all the outbreaks.
+ * Endpoint: GET '/reports'
+ * 
+ * Sends all reports that satisfy the query parameter filters used. By default
+ * (when no query parameters are used) all reports are returned.
+ * 
+ * Query Parameters:
+ * - start_date: ISO date that is the start of the date range to search in. Default: all previous [OPTIONAL]
+ * - end_date:   ISO date that is the end of the date range to search in.   Default: present      [OPTIONAL]
+ * - location:   Location of the report to look for.                        Default: anywhere     [OPTIONAL]
+ * - key_terms:  Comma-delimited list of key terms to search for.           Default: none         [OPTIONAL]
+ * 
+ * Possible Status Codes:
+ * - 200 OK: Sends reports according to the query parameters
+ * - 400 BAD REQUEST: Invalid query parameters used or badly formatted request.
  */
-app.get('/outbreak', (req, res) => {
-    let checkDisease;
-    let checkDates = false;
-    let startdate;
-    let enddate;
-    let disease;
+app.get('/reports', async (req, res) => {
+    // Mandatory
+    let start_date;
+    let end_date;
+    let location;
+    let key_terms;
 
-    console.log(req.query);
-    if (req.query.startdate && req.query.enddate) {
-        startdate = Date.parse(req.query.startdate);
-        enddate = Date.parse(req.query.enddate)
+    // TODO later...
+    let report_id;
 
-        // Check the enddate and startdate are valid.
-        if (!(enddate < startdate)) {
-            checkDates = true;
-        }
+    // Query Parameters
+    if (req.query.start_date) start_date = new Date(Date.parse(req.query.start_date));
+    if (req.query.end_date) end_date = new Date(Date.parse(req.query.end_date));
+    if (req.query.location) location = req.query.location.toLowerCase();
+    if (req.query.key_terms) key_terms = req.query.key_terms.split(',').map(term => term.toLowerCase());
+
+    // Check Query Parameter Constraints
+    if ((start_date && end_date) && (end_date <= start_date)) {
+        // Date range must be valid.
+        res.status(400).send(`End date '${end_date}' should be behind start date '${start_date}.'`);
     }
 
-    if (req.query.disease) {
-        disease = req.query.disease;
-        checkDisease = true;
-    }
+    // Get reports according to the correct date ranges.
+    let reportQueryRef = db.collection(FS_REPORTS_COLLECTION);
+    if (start_date) reportQueryRef = reportQueryRef.where('event_date', '>=', start_date);
+    if (end_date) reportQueryRef = reportQueryRef.where('event_date', '<=', end_date);
 
-    let results = [];
-    for (let key in outbreaks) {
-        outbreak = outbreaks[key];
-        outbreakStartDate = Date.parse(outbreak.start_date);
-        outbreakEndDate = Date.parse(outbreak.end_date);
+    reportQueryRef.get().then(queryResults => {
+        let report_result_promises = [];
+        let report_results = [];
 
-        addOutbreak = true;
-        if (checkDates) {
-            // Add entries that fall within the queried start and enddate.
-            if (!(outbreakStartDate <= enddate && outbreakEndDate >= startdate)) {
-                addOutbreak = false;
-            }
-        } 
+        queryResults.forEach(doc => {
+            // Create a promise for every report that is going to be added.
+            report_result_promises.push(new Promise((resolve, reject) => {
+                reportData = doc.data();
 
-        if (checkDisease) {
-            console.log(disease);
-            console.log(outbreaks[key].disease_name);
-            if(disease.toLowerCase() != outbreaks[key].disease_name.toLowerCase()) {
-                addOutbreak = false;
-            }
-        }
+                diseasePromise = db.collection(FS_DISEASES_COLLECTION).where('disease_id', '==', reportData.disease_id).get();
+                articlePromise = db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', reportData.article_id).get();
 
-        if (addOutbreak) {
-            results.push(outbreaks[key]);
-        }
-    }
+                // Wait for the 2 requests fetch the report's disease and article to finish.
+                Promise.all([diseasePromise, articlePromise]).then((results) => {
+                    reportData = doc.data();
+                    diseaseData = results[0].docs[0].data();
+                    articleData = results[1].docs[0].data();
+                    if (articleData.date_of_publication) articleData.date_of_publication = new Date(Date.parse(articleData.date_of_publication.toDate().toString()));
 
-    res.status(200).send({
-        results
-    })
+                    // Check location query parameter.
+                    if (location) {
+                        if (!reportData.location.toLowerCase().includes(location)) {
+                            resolve();
+                            return;
+                        }
+                    }
 
-    log(req, res);
+                    // Check key_terms query parameter.
+                    if (key_terms) {
+                        let contains_terms = false;
+                        for (term of key_terms) {
+                            console.log(term);
+                            if (diseaseData.name && diseaseData.name.toLowerCase().includes(term)) { contains_terms = true; break; }
+                            if (articleData.headline && articleData.headline.toLowerCase().includes(term)) { contains_terms = true; break; }
+                            if (articleData.main_text && articleData.main_text.toLowerCase().includes(term)) { contains_terms = true; break; }
+                        }
+                        if (!contains_terms) {
+                            resolve();
+                            return;
+                        }
+                    }
+
+                    // Create report result
+                    let result = {
+                        report_id: reportData.report_id,
+                        article: articleData,
+                        disease: diseaseData,
+                        location: reportData.location,
+                        statistics: reportData.statistics,
+                        event_date: new Date(Date.parse(reportData.event_date.toDate().toString()))
+                    };
+                    report_results.push(result);
+                    resolve();
+                });
+            }));
+        });
+
+        // Process each promise.
+        console.log(`Processing ${report_result_promises.length} reports...`);
+        Promise.all(report_result_promises).then(() => {
+            // Once all promises have been resolved, send the data.
+            console.log(`Sending ${report_results.length} reports...`);
+            res.status(200).send(report_results);
+
+            parameter_string = "\nParameters:";
+            if (start_date) parameter_string += `\n\tstart_date: ${start_date.toUTCString()}`;
+            if (end_date) parameter_string += `\n\tend_date: ${end_date}`;
+            if (location) parameter_string += `\n\tlocation: ${location}`;
+            if (key_terms) parameter_string += `\n\tkey_terms: ${key_terms}`;
+
+            log(req, res, parameter_string);
+        }).catch(() => {
+        });
+    });
 })
 
-app.get('/outbreak/:outbreakid', (req, res) => {
+app.get('/report/:outbreakid', (req, res) => {
     const outbreakID = req.params.outbreakid;
 
-    if (!outbreaks[outbreakID]) {
+    if (!reports[outbreakID]) {
         res.statusCode = 404;
         res.send({
-            message: `No outbreaks match the ID ${outbreakID}`
+            message: `No reports match the ID ${outbreakID}`
         });
         log(req, res);
         return;
     }
-    res.send(outbreaks[outbreakID]);
+    res.send(reports[outbreakID]);
 
     log(req, res);
 })
@@ -259,7 +350,7 @@ app.get('/disease', (req, res) => {
                 {
                     id: 1,
                     name: "COVID-19",
-                    description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the outbreak, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
+                    description: "Coronaviruses are a large family of viruses that can cause illness in animals or humans. In humans there are several known coronaviruses that cause respiratory infections. These coronaviruses range from the common cold to more severe diseases such as severe acute respiratory syndrome (SARS), Middle East respiratory syndrome (MERS), and COVID-19. COVID-19 was identified in Wuhan, China in December 2019. COVID-19 is caused by the virus severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2), a new virus in humans causing respiratory illness which can be spread from person-to-person. Early in the report, many patients were reported to have a link to a large seafood and live animal market, however, later cases with no link to the market confirmed person-to-person transmission of the disease. Additionally, travel-related exportation of cases has occurred.",
                     symptoms: [
                         {
                             name: "Fever or chills"
@@ -343,7 +434,7 @@ app.get('/disease', (req, res) => {
 
 /**
  * Endpoint: GET '/disease/:diseasename'
- * Example of a dynamic URL parameter (':diseasename') as it accepts an outbreak diseasename.
+ * Example of a dynamic URL parameter (':diseasename') as it accepts an report diseasename.
  * NOTE: By default Express doesn't parse json in the body. So we have to setup a middleware.
  * It is shared code that is run before every endpoint's callback.
  */
