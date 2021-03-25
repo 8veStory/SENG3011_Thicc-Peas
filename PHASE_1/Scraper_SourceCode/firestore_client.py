@@ -12,8 +12,8 @@ class FireStore_Client:
      * WRITE diseases/articles/reports
      * TODO: READ
      * TODO: DELETE
-    
     """
+
     def __init__(self):
         """
         Connect to FireStore.
@@ -112,6 +112,18 @@ class FireStore_Client:
         duplicates = self.db.collection(u'reports').where(u'report_id', u'==', report_id).get()
         if len(duplicates) > 0:
             print(f"NOT sending report {report_id} as {len(duplicates)} DUPLICATES were found.")
+            return
+
+        # Check if the article_id exists
+        matching_articles = self.db.collection(u'articles').where(u'article_id', u'==', article_id).get()
+        if len(matching_articles) <= 0:
+            print(f"NOT sending report {report_id} as its linked article '{article_id}' does not exist in the DB.")
+            return
+
+        # Check if the disease_id exists
+        matching_articles = self.db.collection(u'diseases').where(u'disease_id', u'==', disease_id).get()
+        if len(matching_articles) <= 0:
+            print(f"NOT sending report {report_id} as its linked disease '{disease_id}' does not exist in the DB.")
             return
 
         disease_ref.set({
