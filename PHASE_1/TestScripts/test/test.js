@@ -14,7 +14,6 @@ const url = 'http://localhost:3000';
 
 /**
  * Test '/diseases' returns the correct diseases
- * TODO: NOT DONE YET!
  */
 describe('GET /diseases', function(){
     it('gives the correct status code and response length.', function(done) {
