@@ -11,7 +11,7 @@
 ## Deliverable 2 Links:
 
 * API: https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app
-* API Documentation: https://app.swaggerhub.com/apis/l9692/111/1.0.1
+* API Documentation: https://app.swaggerhub.com/apis-docs/8veFable/ThiccPeasCDC/1.0.1
 
 ## Contributer Only Links:
 

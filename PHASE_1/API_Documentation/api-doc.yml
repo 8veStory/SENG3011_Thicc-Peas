@@ -5,128 +5,202 @@ info:
   description: ''
 servers:
   # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/l9692/111/1.0.1
   - url: 'https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app/'
+    description: Thicc Peas API deployed on Cloud Run
+  # - url: https://virtserver.swaggerhub.com/l9692/111/1.0.1
+  #   description: SwaggerHub API Auto Mocking
+
+
 tags:
   - name: disease
     description: Information pertaining to diseases on the CDC.
-  - name: outbreak
-    description: Information regarding outbreaks regarding the CDC.
+  - name: article
+    description: Information pertaining to articles on the CDC. An article can contain multiple reports.
+  - name: report
+    description: Information regarding outbreaks/reports regarding the CDC. Report sbelong to articles.
   - name: log
     description: The output logs of the API.
-  - name: report
-    description: Combined information from CDC.
-  - name: article
-    description: Article posted by CDC.
-  - name: location
-    description: Information of the location.
+    
 paths:
-  /disease:
+  /diseases:
     get:
+      summary: Sends all diseases that satisfy the query parameter filters used. By default (when no query parameters are used) all diseases are returned.
       tags:
         - disease
-      summary: Get all diseases
       operationId: get-all-disease
+      parameters:
+        - in: query
+          name: disease_names
+          schema:
+            type: string
+          required: false
+          description:  results are filtered for the given terms in the name symptoms of the disease. Should be a comma-separated list. (e.g. "Zika,Anthrax,ecoli").
+        - in: query
+          name: symptoms
+          schema:
+            type: string
+          required: false
+          description:  results are filtered for the given terms in the symptoms of the the disease. Should be a comma-separated list. (e.g. "vomiting,coughing").
       responses:
         '200':
-          description: Successfully retrieved list of all diseases
+          description: Successfully sent list of all diseases according to query parameters.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Diseases'
+                $ref: '#/components/schemas/Diseases_Results'
+        '400':
+          description: Invalid query parameters used or badly formatted request.
                 
-  '/disease/{diseaseName}':
+  '/disease/{diseaseID}':
     parameters:
-      - schema:
+      - in: path
+        name: diseaseID
+        schema:
           type: string
-        name: diseaseName
-        in: path
         required: true
-        description: Name of an existing disease.
+        description: ID of an existing disease.
+        example: "922866848e1358b4bdc607e4598d9cc5"
     get:
+      summary: Get Disease info by disease id.
+      description: Retrieve the information of the disease with the matching disease name.
       tags:
         - disease
-      summary: Get Disease Info by Disease Name
       responses:
         '200':
-          description: Disease found
+          description: Query completed successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Disease'
-        '404':
-          description: Disease Not Found
-          
-      operationId: get-disease-diseaseName
-      description: Retrieve the information of the disease with the matching disease name.
+                $ref: '#/components/schemas/Disease_Result'
 
-  /outbreak:
+  /reports:
     get:
-      summary: Your GET endpoint
+      summary: Sends all reports that satisfy the query parameter filters used. By default (when no query parameters are used) all reports are returned.
       tags:
-        - outbreak
+        - report
+      operationId: get-all-reports
+      parameters:
+        - in: query
+          name: start_date
+          schema:
+            type: string
+          required: false
+          description:  ISO date that is the start of the date range to search in. (e.g. "2020-12-01"). Optional.
+        - in: query
+          name: end_date
+          schema:
+            type: string
+          required: false
+          description:  ISO date that is the end of the date range to search in. (e.g. "2021-03-01"). Optional.
+        - in: query
+          name: location
+          schema:
+            type: string
+          required: false
+          description:  Location of the report to look for. (e.g. "USA"). Optional.
+        - in: query
+          name: key_terms
+          schema:
+            type: string
+          required: false
+          description:  Comma-delimited list of key terms to search for. (e.g. "hedgehog"). Optional.
       responses:
         '200':
-          description: Successfully retrieved list of all outbreaks
+          description: Successfully sent list of all reports according to query parameters.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Outbreak'
-      operationId: get-report
-      description: >
-        Retreive all report between the start date provided and the end date
-        provide.
-      # parameters:
-      #   - schema:
-      #       type: string
-      #     in: query
-      #     name: startDate
-      #     description: The earliest date to which reports will be queried
-      #   - schema:
-      #       type: string
-      #     in: query
-      #     name: endDate
-      #     description: The latest date to which reports will be queried
-      #   - schema:
-      #       type: string
-      #     in: query
-      #     name: disease
-      #     description: The disease to which the report will be based on
+                $ref: '#/components/schemas/Report_Results'
+        '400':
+          description: Invalid query parameters used or badly formatted request.
           
-  '/outbreak/{outbreakID}':
+  '/report/{reportID}':
+    parameters:
+      - in: path
+        name: reportID
+        schema:
+          type: string
+        required: true
+        description: ID of an existing report.
+        example: "43953358269057c599f87450db9017df"
+    get:
+      summary: Get report info by report id.
+      description: Retrieve the information of the disease with the matching disease name.
+      tags:
+        - report
+      responses:
+        '200':
+          description: Query completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report_Result'
+
+
+  /articles:
+    get:
+      summary: Sends all articles that satisfy the query parameter filters used. By default (when no query parameters are used) all articles are returned.
+      tags:
+        - article
+      operationId: get-all-articles
+      parameters:
+        - in: query
+          name: start_date
+          schema:
+            type: string
+          required: false
+          description:  ISO date that is the start of the date range to search in. (e.g. "2020-12-01"). Optional.
+        - in: query
+          name: end_date
+          schema:
+            type: string
+          required: false
+          description:  ISO date that is the end of the date range to search in. (e.g. "2021-03-01"). Optional.
+        - in: query
+          name: key_terms
+          schema:
+            type: string
+          required: false
+          description:  Comma-delimited list of key terms to search for in the headline and main_text. (e.g. "hedgehog"). Optional.
+      responses:
+        '200':
+          description: Successfully sent list of all reports according to query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article_Results'
+        '400':
+          description: Invalid query parameters used or badly formatted request.
+
+  '/article/{articleID}':
     get:
       tags:
-        - outbreak
-      summary: Find outbreak by ID
-      description: Returns a single outbreak
-      operationId: getOutbreakById
+        - article
+      summary: Find article by url
+      description: Returns article
+      operationId: getArticleByUrl
       parameters:
-        - name: outbreakID
+        - name: articleID
           in: path
-          description: ID of outbreak to return
+          description: ID of the article to return
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+          example: "d0a9d34776afdd95e207e3a60026c5be"
       responses:
         '200':
-          description: Successfully return outbreak
+          description: Successfully executed query
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Outbreaks'
-        '404':
-          description: Outbreak not found
-          
+                $ref: '#/components/schemas/Article_Result'
+
   
   /log:
     get:
       tags:
         - log
-      summary: Find outbreak by ID
+      summary: Gives the API's log files.
       description: Returns all the API's logs
       operationId: getLogs
       responses:
@@ -136,281 +210,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Log'
-  /location:
-    get:
-      tags:
-        - location
-      summary: Find all locations
-      description: Returns all the locations
-      operationId: getLocations
-      responses:
-        '200':
-          description: Successfully return locations
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Locations'
-  '/location/{country}':
-    get:
-      tags:
-        - location
-      summary: Find locations by country
-      description: Returns locations
-      operationId: getLocationsByCountry
-      parameters:
-        - name: country
-          in: path
-          description: country of locations to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return locations
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Locations'
-        '404':
-          description: location not found
-  '/location/{location}':
-    get:
-      tags:
-        - location
-      summary: Find location by name
-      description: Returns location
-      operationId: getLocationByName
-      parameters:
-        - name: location
-          in: path
-          description: name of location to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return location
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Location'
-        '404':
-          description: location not found
-  /article:
-    get:
-      tags:
-        - article
-      summary: Find all articles
-      description: Returns all the report
-      operationId: getArticle
-      responses:
-        '200':
-          description: Successfully return articles
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Articles'
-  '/article/{url}':
-    get:
-      tags:
-        - article
-      summary: Find article by url
-      description: Returns article
-      operationId: getArticleByUrl
-      parameters:
-        - name: url
-          in: path
-          description: url of article to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return article
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Article'
-        '404':
-          description: article not found
-  '/article/{headline}':
-    get:
-      tags:
-        - article
-      summary: Find article by headline
-      description: Returns article
-      operationId: getArticleByHeadline
-      parameters:
-        - name: headline
-          in: path
-          description: headline of article to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return article
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Article'
-        '404':
-          description: article not found
-  '/article/{date_of_publication}':
-    get:
-      tags:
-        - article
-      summary: Find articles by date
-      description: Returns articles
-      operationId: getArticlesByDate
-      parameters:
-        - name: date_of_publication
-          in: path
-          description: date of article to return
-          required: true
-          schema:
-            type: string
-            format: date
-      responses:
-        '200':
-          description: Successfully return articles
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Articles'
-        '404':
-          description: article not found
-  /report:
-    get:
-      tags:
-        - report
-      summary: Find all reports
-      description: Returns all the report
-      operationId: getReport
-      responses:
-        '200':
-          description: Successfully return log files
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reports'
-  '/report/{url}':
-    get:
-      tags:
-        - report
-      summary: Find reports by article url
-      description: Returns reports
-      operationId: getReportByArticleUrl
-      parameters:
-        - name: url
-          in: path
-          description: url of the article of the report to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return report
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Report'
-        '404':
-          description: report not found
-  '/report/{country}':
-    get:
-      tags:
-        - report
-      summary: Find reports by country
-      description: Returns reports
-      operationId: getReportsByCountry
-      parameters:
-        - name: country
-          in: path
-          description: country of reports to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return reports
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reports'
-        '404':
-          description: report not found
-  '/report/{disease_name}':
-    get:
-      tags:
-        - report
-      summary: Find reports by disease name
-      description: Returns reports
-      operationId: getReportsByDiseaseName
-      parameters:
-        - name: disease_name
-          in: path
-          description: disease name of reports to return
-          required: true
-          schema:
-            type: string
 
-      responses:
-        '200':
-          description: Successfully return reports
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reports'
-        '404':
-          description: report not found
-  '/report/{event_date}':
-    get:
-      tags:
-        - report
-      summary: Find reports by ID
-      description: Returns reports
-      operationId: getReportsByDate
-      parameters:
-        - name: event_date
-          in: path
-          description: date of reports to return
-          required: true
-          schema:
-            type: string
-            format: date
-      responses:
-        '200':
-          description: Successfully return reports
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reports'
-        '404':
-          description: report not found
-  '/report/{location}':
-    get:
-      tags:
-        - report
-      summary: Find reports by ID
-      description: Returns reports
-      operationId: getReportsByLocation
-      parameters:
-        - name: location
-          in: path
-          description: location of reports to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successfully return reports
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Reports'
-        '404':
-          description: report not found
 components:
   schemas:
     Log:
@@ -422,41 +222,77 @@ components:
           items:
             type: string
             example: "2021-03-19T03:59:40.577Z | ::1 requested '/outbreak' - Status Code: 200"
-      
-  
-
-  
-    Outbreak:
-      title: Outbreak
+            
+    Disease:
       type: object
-      description: ''
+      properties:
+        disease_id:
+          type: string
+          description: The disease ID.
+          example: "922866848e1358b4bdc607e4598d9cc5"
+        name:
+          type: string
+          description: The disease name.
+          example: "Ebola"
+        symptoms:
+          type: array
+          items:
+            type: string
+            description: A symptom.
+            example: "Fever"
+    
+    Disease_Result:
+      type: object
+      properties:
+        disease_id:
+          type: string
+          description: The disease ID.
+          example: "922866848e1358b4bdc607e4598d9cc5"
+        name:
+          type: string
+          description: The disease name.
+          example: "Ebola"
+        symptoms:
+          type: array
+          items:
+            type: string
+            description: A symptom.
+            example: "Fever"
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
+    
+    
+  
+    Report:
+      title: Report
+      type: object
+      description: 'A reort.'
       x-examples:
         Covid-19:
-          reportID: 1
+          report_id: 1
           disease_id: 1
           disease_name: covid-19
-          locations:
-            - 'Lidcombe, NSW, Australia'
+          location:
+            $ref: '#/components/schemas/Location'
           reported_cases: 17
           hospitilisation: 2
           deaths: 0
-          startDate: '1997-10-31'
-          endDate: '2019-08-24'
+          start_date: '1997-10-31'
+          end_date: '2019-08-24'
           investigationStatus: true
       properties:
-        reportID:
+        report_id:
           type: integer
           example: 1
           description: Unique identifier for the report.
         disease_name:
           type: string
           example: covid-19
-        locations:
-          type: array
-          items:
-            type: string
-          example:
-            - 'Lidcombe, NSW, Australia'
+        location:
+          type: string
+          example: "USA"
         reported_cases:
           type: integer
           example: 17
@@ -466,44 +302,39 @@ components:
         deaths:
           type: integer
           example: 0
-        startDate:
+        start_date:
           type: string
           format: date
           example: '1997-10-31'
-        endDate:
+        end_date:
           type: string
           format: date
           example: '1997-10-31'
-        investigationStatus:
-          type: boolean
-          example: true
     
-    Locations:
-      type: array
-      items:
-        $ref: '#/components/schemas/Location'
-    Outbreaks:
-      type: array
-      items:
-        $ref: '#/components/schemas/Outbreak'
-    Articles:
-      type: array
-      items:
-        $ref: '#/components/schemas/Article'
-    Reports:
-      type: array
-      items:
-        $ref: '#/components/schemas/Report'
-    Diseases:
-      type: array
-      items:
-        $ref: '#/components/schemas/Disease'
+    Report_Result:
+      type: object
+      properties:
+        report_id:
+          type: string
+          example: "1ed7bef50165f63747e64fc1814fb517"
+        article:
+          $ref: '#/components/schemas/Article'
+        desease:
+          $ref: '#/components/schemas/Disease'
+        event_date:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}\.\d{3}Z$'
+          example: "2000-10-08T00:00:00.000Z"
+        location:
+          $ref: '#/components/schemas/Location'
+          
+          
     Article:
       type: object
       properties:
         article_id:
           type: string
-          example: "aHR0cHM6Ly93d3cuY2RjLmdvdi9tbXdyL3ZvbHVtZXMvNjcvd3IvbW02NzE5YTYuaHRtP3NfY2lkPW1tNjcxOWE2X3dOb3RlcyBmcm9tIHRoZSBGaWVsZDogT3V0YnJlYWsgb2YgVmlicmlvIGNob2xlcmFlIEFzc29jaWF0ZWQgd2l0aCBBdHRlbmRpbmcgYSBGdW5lcmFsIOKAlCBDaGVndXR1IERpc3RyaWN0LCBaaW1iYWJ3ZSwgMjAxOE9uIEphbnVhcnkgMTYsIDIwMTgsIHRoZSBaaW1iYWJ3ZSBNaW5pc3RyeSBvZiBIZWFsdGggYW5kIENoaWxkIENhcmUgKE1vSENDKSB3YXMgbm90aWZpZWQgb2YgZml2ZSBhZHVsdHMgd2l0aCB3YXRlcnkgZGlhcnJoZWEgYW5kIHNldmVyZSBkZWh5ZHJhdGlvbiB3aG8gd2VyZSBhZG1pdHRlZCB0byBDaGVndXR1IERpc3RyaWN0IEhvc3BpdGFsLCBNYXNob25hbGFuZCBXZXN0IFByb3ZpbmNlLiBUaHJlZSBvZiB0aGUgZml2ZSBwYXRpZW50cyBkaWVkIHdpdGhpbiBob3VycyBvZiBhZG1pc3Npb24uIFZpYnJpbyBjaG9sZXJhZSBPMSBzZXJvdHlwZSBPZ2F3YSB3YXMgaXNvbGF0ZWQgZnJvbSB0aGUgc3Rvb2wgc2FtcGxlIG9mIG9uZSBkZWNlZGVudCwgcHJvbXB0aW5nIGFuIGludmVzdGlnYXRpb24uIER1cmluZyAyMDA44oCTMjAwOSwgWmltYmFid2UgZXhwZXJpZW5jZWQgb25lIG9mIHRoZSBsYXJnZXN0IGFuZCBkZWFkbGllc3QgY2hvbGVyYSBvdXRicmVha3MgaW4gcmVjZW50IGhpc3RvcnkgKDk4LDU4NSBjYXNlcyBhbmQgNCwyODcgWzQuMyVdIGRlYXRocyksIGR1cmluZyB3aGljaCBDaGVndXR1IHJlcG9ydGVkIGEgY2FzZSBmYXRhbGl0eSByYXRlIChDRlIpID41JSAoMSwyKS4gRHVyaW5nIDIwMTLigJMyMDE2LCBaaW1iYWJ3ZSByZXBvcnRlZCA5MyBjaG9sZXJhIGNhc2VzIGFuZCB0d28gZGVhdGhzIG5hdGlvbndpZGUsIGJ1dCB0aGUgaW5jcmVhc2luZyBwb3B1bGF0aW9uIGRlbnNpdHkgYW5kIGFnaW5nIHdhdGVyIGFuZCBzYW5pdGF0aW9uIGluZnJhc3RydWN0dXJlIGluIENoZWd1dHUgcmFpc2VkIGNvbmNlcm4gYWJvdXQgdGhlIHBvc3NpYmlsaXR5IG9mIGFub3RoZXIgd2lkZXNwcmVhZCBvdXRicmVhay4gTW9IQ0MgaWRlbnRpZmllZCB0aGUgaW5kZXggcGF0aWVudCBhcyBhIHdvbWFuIGFnZWQgNzkgeWVhcnMgd2hvIGRpZWQgb24gSmFudWFyeSA4IGFmdGVyIDIgZGF5cyBvZiB3YXRlcnkgZGlhcnJoZWEuIEJlZm9yZSBoZXIgZGVhdGgsIHNoZSBzb3VnaHQgY2FyZSBhdCBhIHByaXZhdGUgY2xpbmljLCBidXQgY2hvbGVyYSB3YXMgbm90IHN1c3BlY3RlZCBhdCB0aGUgdGltZS4gSW4gYWNjb3JkYW5jZSB3aXRoIGxvY2FsIHByYWN0aWNlLCB3YXRlciB3YXMgZmx1c2hlZCB0aHJvdWdoIHRoZSB3b21hbuKAmXMgYm9keSB0byBjbGVhbnNlIGl0IGluIHByZXBhcmF0aW9uIGZvciBidXJpYWw7IHRoZSB3YXRlciB3YXMgc3Vic2VxdWVudGx5IGRpc2NhcmRlZCBpbnRvIHRoZSBtdW5pY2lwYWwgc2V3ZXIgbmV0d29yayB3aXRob3V0IGZ1cnRoZXIgdHJlYXRtZW50LiBPbmUgcGVyc29uIHdobyBoYWQgYmVlbiBpbnZvbHZlZCBpbiBwcmVwYXJhdGlvbiBvZiB0aGUgYm9keSBhbmQgd2hvIHNlcnZlZCB0cmFkaXRpb25hbCBmb29kIGF0IHRoZSBtdWx0aWRheSBmdW5lcmFsIHJlY2VwdGlvbiBhdCB0aGUgaW5kZXggcGF0aWVudOKAmXMgaG9tZSBkZXZlbG9wZWQgd2F0ZXJ5IGRpYXJyaGVhIDIgZGF5cyBhZnRlciB0aGUgZnVuZXJhbC4gU2l4IG90aGVyIGZ1bmVyYWwgYXR0ZW5kZWVzLCBpbmNsdWRpbmcgYWxsIHRocmVlIGRlY2VkZW50cywgaGFkIHJlcG9ydGVkIGRldmVsb3BpbmcgYWN1dGUgd2F0ZXJ5IGRpYXJyaGVhIHdpdGhpbiA2IGRheXMgb2YgdGhlIGZ1bmVyYWwuIFR3byBvZiB0aGUgcGF0aWVudHMgd2hvIHN1YnNlcXVlbnRseSBkaWVkIGhhZCByZXBvcnRlZCBhc3Npc3Rpbmcgd2l0aCB0aGUgYnVyaWFsLiBXaXRoaW4gNCBkYXlzIG9mIHRoZSBpbmRleCBwYXRpZW504oCZcyBmdW5lcmFsLCB0aGUgb3V0YnJlYWsgaGFkIHNwcmVhZCB0byBsb2NhbCByZXNpZGVudHMgd2hvIHJlcG9ydGVkIG5vIGVwaWRlbWlvbG9naWMgbGlua3MgdG8gdGhlIGZ1bmVyYWwgKEZpZ3VyZSkuIER1cmluZyB0aGlzIHRpbWUsIGludGVybWl0dGVudCBpbnRlcnJ1cHRpb25zIG9mIHRoZSBjaGxvcmluYXRlZCBtdW5pY2lwYWwgd2F0ZXIgc3VwcGx5IGFuZCBsb3cgcHJlc3N1cmUgYXJlYXMgbWlnaHQgaGF2ZSBpbmNyZWFzZWQgdGhlIHVzZSBvZiB1bmNobG9yaW5hdGVkIGJvcmVob2xlcyBhbmQgc2hhbGxvdyB3ZWxscyB0aGF0IGFyZSB2dWxuZXJhYmxlIHRvIGNvbnRhbWluYXRpb24gZnJvbSBhZGphY2VudCwgcG9vcmx5IG1haW50YWluZWQsIHNld2VyIHBpcGVzLCBpbmNsdWRpbmcgdGhvc2UgY29udGFpbmluZyB3YXRlciB1c2VkIHRvIHdhc2ggdGhlIGJvZHkuIE1pY3JvYmlvbG9naWMgdGVzdGluZyBmcm9tIGEgc2hhbGxvdyB3ZWxsIGF0IHRoZSBmdW5lcmFsIHJlY2VwdGlvbiBsb2NhdGlvbiB5aWVsZGVkIGZlY2FsIGNvbGlmb3JtIGJhY3RlcmlhLCBzdWdnZXN0aW5nIGNvbmRpdGlvbnMgY29uZHVjaXZlIHRvIGNob2xlcmEgdHJhbnNtaXNzaW9uLiBBbHRob3VnaCB0aGUgaW5kZXggcGF0aWVudCBoYWQgbm90IHJlcG9ydGVkIGFueSB0cmF2ZWwsIHRoZSBlcGlkZW1pb2xvZ2ljIGludmVzdGlnYXRpb24gcmV2ZWFsZWQgdGhhdCBoZXIgaG9tZSB3YXMgbGVzcyB0aGFuIGEgaGFsZiBtaWxlIGZyb20gdGhlIHNpdGUgb2YgYSBzZXBhcmF0ZSBmdW5lcmFsIHRoYXQgaGFkIHRha2VuIHBsYWNlIG9uIERlY2VtYmVyIDMwLCAyMDE3LiBBbHRob3VnaCB0aGF0IGRlYXRoIHdhcyBub3QgYXNzb2NpYXRlZCB3aXRoIGEgZGlhcnJoZWFsIGlsbG5lc3MsIHR3byBwZXJzb25zIHdobyBhdHRlbmRlZCB0aGUgZnVuZXJhbCBoYWQgdHJhdmVsZWQgMjkyIG1pbGVzICg0NzAga20pIGZyb20gTHVzYWthLCBaYW1iaWEsIHdoZXJlIGEgY2hvbGVyYSBvdXRicmVhayB3YXMgb25nb2luZyAoMykuIFRoZXNlIGF0dGVuZGVlcyBkaWQgbm90IHJlcG9ydCBkaWFycmhlYSBhbmQgd2VyZSBub3QgdGVzdGVkIGZvciBhc3ltcHRvbWF0aWMgY2FycmlhZ2Ugb2YgVi4gY2hvbGVyYWUuIEl0IGlzIG5vdCBrbm93biBob3cgdGhlIGluZGV4IHBhdGllbnQgYmVjYW1lIGluZmVjdGVkOyBob3dldmVyLCBpdCBpcyBsaWtlbHkgdGhhdCBmdW5lcmFsIHByYWN0aWNlcyBlbXBsb3llZCB0byBwcmVwYXJlIGhlciBib2R5IGZvciBidXJpYWwgYW5kIHVuc2FmZSBmb29kIHByZXBhcmF0aW9uIGF0IHRoZSBzdWJzZXF1ZW50IGZ1bmVyYWwgcG90ZW50aWF0ZWQgdGhlIHdpZGVyIGdlb2dyYXBoaWMgZGlzdHJpYnV0aW9uIG9mIHRoaXMgb3V0YnJlYWsuIEZvbGxvd2luZyBhIGNvb3JkaW5hdGVkIHJhcGlkIHJlc3BvbnNlIGVmZm9ydCBpbmNsdWRpbmcgc3VydmVpbGxhbmNlLCBoZWFsdGggcHJvbW90aW9uLCBsYWJvcmF0b3J5IHRlc3RpbmcsIGNhc2UgbWFuYWdlbWVudCB0cmFpbmluZywgYW5kIGVtZXJnZW5jeSB3YXRlciwgc2FuaXRhdGlvbiwgYW5kIGh5Z2llbmUgKFdBU0gpIGFjdGl2aXRpZXMgYnkgTW9IQ0MgYW5kIGludGVybmF0aW9uYWwgcGFydG5lcnMsIHRoZSBaaW1iYWJ3ZSBvdXRicmVhayB3YXMgY29udGFpbmVkIHRvIHVyYmFuIGFuZCBwZXJpLXVyYmFuIGFyZWFzIG9mIENoZWd1dHUuIEEgc2luZ2xlIHN1c3BlY3RlZCBjYXNlIHdhcyBpZGVudGlmaWVkIGFsb25nIHRoZSBtYWpvciBoaWdod2F5IGZyb20gQ2hlZ3V0dSB0byB0aGUgY2FwaXRhbCBvZiBIYXJhcmUsIDYyIG1pbGVzICgxMDAga20pIGF3YXksIGJ1dCBubyBjYXNlcyB3ZXJlIGlkZW50aWZpZWQgaW4gSGFyYXJlLiBBcyBvZiBBcHJpbCA1LCAyMDE4LCBhIHRvdGFsIG9mIDEwNyBjYXNlcywgaW5jbHVkaW5nIDUxIGhvc3BpdGFsaXphdGlvbnMgYW5kIGZvdXIgZGVhdGhzIChDRlIgPSAzLjglKSBoYWQgYmVlbiByZXBvcnRlZCBpbiBaaW1iYWJ3ZTsgOSUgb2YgdGhlIGNhc2VzIG9jY3VycmVkIGluIGNoaWxkcmVuIGFnZWQgPDUgeWVhcnMuIFRoZSBsYXN0IGNhc2Ugd2FzIHJlcG9ydGVkIG9uIEZlYnJ1YXJ5IDE5LiBBcHByb3hpbWF0ZWx5IDYwJSBvZiB0aGUgY2FzZXMgb2NjdXJyZWQgaW4gdGhyZWUgc3VidXJiczogQ2hlZ3V0dSB0b3duc2hpcCAoMTk7IDE3JSksIFBmdXBhamVuYSAoMzE7IDI5JSksIGFuZCBLYWd1dmkgKDEzOyAxMiUpLiBPZiA2NCBzdG9vbCBzcGVjaW1lbnMgdGVzdGVkIGZyb20gSmFudWFyeSAxMCB0byBGZWJydWFyeSAyMSwgbmluZSAoMTQuMSUpIHlpZWxkZWQgVi4gY2hvbGVyYWUgTzEuIEFudGltaWNyb2JpYWwgc3VzY2VwdGliaWxpdHkgdGVzdGluZyBieSBkaXNrIGRpZmZ1c2lvbiBpZGVudGlmaWVkIGVpZ2h0IGlzb2xhdGVzIHdpdGggZGVjcmVhc2VkIHN1c2NlcHRpYmlsaXR5IHRvIGNvdHJpbW94YXpvbGUsIGFuZCB0d28gd2l0aCBkZWNyZWFzZWQgc3VzY2VwdGliaWxpdHkgdG8gdGV0cmFjeWNsaW5lLiBBbGwgaXNvbGF0ZXMgd2VyZSBzdXNjZXB0aWJsZSB0byBjaXByb2Zsb3hhY2luLCBjb25zaWRlcmVkIGZpcnN0IGxpbmUgdGhlcmFweSBmb3Igc2V2ZXJlIGNob2xlcmEgaW4gYWNjb3JkYW5jZSB3aXRoIFppbWJhYndlIG5hdGlvbmFsIGd1aWRlbGluZXMuIEluIHRoZSBzZXR0aW5nIG9mIGNob2xlcmEgZXBpZGVtaWNzLCBsb2NhbGl6ZWQgb3V0YnJlYWtzIGhhdmUgYmVlbiBhc3NvY2lhdGVkIHdpdGggZnVuZXJhbCBnYXRoZXJpbmdzLCBpbmNsdWRpbmcgdHJhbnNwb3J0aW5nIGFuZCB3YXNoaW5nIG9yIHByZXBhcmluZyBhIGJvZHkgZm9yIGJ1cmlhbCBhbmQgY29udGFtaW5hdGlvbiBvZiBzaGFyZWQgbWVhbHMgYXQgYSBmdW5lcmFsICg0LDUpLiBIb3dldmVyLCBvdXRzaWRlIG9mIGVwaWRlbWljcywgY2hvbGVyYSBvdXRicmVha3MgcmFyZWx5IG9yaWdpbmF0ZSBmcm9tIGZ1bmVyYWwgZ2F0aGVyaW5ncyAoNikuIEdpdmVuIHRoZSBpbmNyZWFzZSBpbiByZWdpb25hbCB0cmF2ZWwgdG8gYW5kIGZyb20gY291bnRyaWVzIGV4cGVyaWVuY2luZyBjaG9sZXJhIG91dGJyZWFrcyBhbmQgdGhvc2Ugd2l0aCBlbmRlbWljIGNob2xlcmEgdHJhbnNtaXNzaW9uICg3KSwgdGhlIHBvdGVudGlhbCBmb3IgY2hvbGVyYSBvdXRicmVha3Mgc2hvdWxkIGJlIGNvbnNpZGVyZWQgYW4gZXZlci1wcmVzZW50IHJpc2sgaW4gYXJlYXMgdGhhdCBsYWNrIGFkZXF1YXRlIFdBU0ggaW5mcmFzdHJ1Y3R1cmUuIEVhcmx5IGRldGVjdGlvbiBhbmQgcHJvbW90aW9uIG9mIHNhZmUgaGFuZGxpbmcgb2YgdGhlIGRlYWQgYXJlIHBhcnQgb2YgdGhlIHJvdXRpbmUgcmVjb21tZW5kYXRpb25zIGR1cmluZyBhIGNob2xlcmEgb3V0YnJlYWsuIFRoaXMgb3V0YnJlYWsgaXMgYSByZW1pbmRlciB0aGF0IGV2ZW4gaW4gc2V0dGluZ3Mgd2hlcmUgY2hvbGVyYSBoYXMgYmVlbiBhYnNlbnQsIHB1YmxpYyBtZXNzYWdpbmcgYWJvdXQgc2FmZSBidXJpYWwgYW5kIHNhZmUgZm9vZCBoYW5kbGluZyBuZWVkIHRvIGJlIHByb3ZpZGVkIGF0IGFsbCB0aW1lcy40MzIzOA=="
+          example: "e84f2907d78f8be2cd29bb25013aa702"
         url:
           type: string
           example: "https://www.cdc.gov/hepatitis/outbreaks/2019/hav-berries/index.htm"
@@ -516,50 +347,57 @@ components:
         date_of_publication:
           type: string
           example: "2020-02-19"
+
     Location:
+      type: string
+      example: "USA"
+    Locations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Location'
+    Report_Results:
+      type: array
+      items:
+        $ref: '#/components/schemas/Report_Result'
+    Reports:
+      type: array
+      items:
+        $ref: '#/components/schemas/Report'
+    Article_Results:
+      type: array
+      items:
+        $ref: '#/components/schemas/Article_Result'
+    Articles:
+      type: array
+      items:
+        $ref: '#/components/schemas/Article'
+    Diseases_Results:
+      type: array
+      items:
+        $ref: '#/components/schemas/Disease_Result'
+    Diseases:
+      type: array
+      items:
+        $ref: '#/components/schemas/Disease'
+        
+        
+    Article_Result:
       type: object
       properties:
-        country: 
+        article_id:
           type: string
-          example: "USA"
-        location:
+          example: "e84f2907d78f8be2cd29bb25013aa702"
+        url:
           type: string
-          example: "USA"
-        geonames_id:
-          type: integer
-          example: 1
-    Report:
-      type: object
-      properties:
-        report_id:
+          example: "https://www.cdc.gov/hepatitis/outbreaks/2019/hav-berries/index.htm"
+        headline:
           type: string
-          example: "aHR0cHM6Ly93d3cuY2RjLmdvdi9tbXdyL3ZvbHVtZXMvNjcvd3IvbW02NzE5YTUuaHRtP3NfY2lkPW1tNjcxOWE1X3dDaG9sZXJhIEVwaWRlbWljIOKAlCBMdXNha2EsIFphbWJpYSwgT2N0b2JlciAyMDE34oCTTWF5IDIwMThPbiBPY3RvYmVyIDYsIDIwMTcsIGFuIG91dGJyZWFrIG9mIGNob2xlcmEgd2FzIGRlY2xhcmVkIGluIFphbWJpYSBhZnRlciBsYWJvcmF0b3J5IGNvbmZpcm1hdGlvbiBvZiBWaWJyaW8gY2hvbGVyYWUgTzEsIGJpb3R5cGUgRWwgVG9yLCBzZXJvdHlwZSBPZ2F3YSwgZnJvbSBzdG9vbCBzcGVjaW1lbnMgZnJvbSB0d28gcGF0aWVudHMgd2l0aCBhY3V0ZSB3YXRlcnkgZGlhcnJoZWEuIFRoZSB0d28gcGF0aWVudHMgaGFkIGdvbmUgdG8gYSBjbGluaWMgaW4gTHVzYWthLCB0aGUgY2FwaXRhbCBjaXR5LCBvbiBPY3RvYmVyIDQuIENob2xlcmEgY2FzZXMgaW5jcmVhc2VkIHJhcGlkbHksIGZyb20gc2V2ZXJhbCBodW5kcmVkIGNhc2VzIGluIGVhcmx5IERlY2VtYmVyIDIwMTcgdG8gYXBwcm94aW1hdGVseSAyLDAwMCBieSBlYXJseSBKYW51YXJ5IDIwMTggKEZpZ3VyZSkuIEluIGNvbGxhYm9yYXRpb24gd2l0aCBwYXJ0bmVycywgdGhlIFphbWJpYSBNaW5pc3RyeSBvZiBIZWFsdGggKE1vSCkgbGF1bmNoZWQgYSBtdWx0aWZhY2V0ZWQgcHVibGljIGhlYWx0aCByZXNwb25zZSB0aGF0IGluY2x1ZGVkIGluY3JlYXNlZCBjaGxvcmluYXRpb24gb2YgdGhlIEx1c2FrYSBtdW5pY2lwYWwgd2F0ZXIgc3VwcGx5LCBwcm92aXNpb24gb2YgZW1lcmdlbmN5IHdhdGVyIHN1cHBsaWVzLCB3YXRlciBxdWFsaXR5IG1vbml0b3JpbmcgYW5kIHRlc3RpbmcsIGVuaGFuY2VkIHN1cnZlaWxsYW5jZSwgZXBpZGVtaW9sb2dpYyBpbnZlc3RpZ2F0aW9ucywgYSBjaG9sZXJhIHZhY2NpbmF0aW9uIGNhbXBhaWduLCBhZ2dyZXNzaXZlIGNhc2UgbWFuYWdlbWVudCBhbmQgaGVhbHRoIGNhcmUgd29ya2VyIHRyYWluaW5nLCBhbmQgbGFib3JhdG9yeSB0ZXN0aW5nIG9mIGNsaW5pY2FsIHNhbXBsZXMuIEluIGxhdGUgRGVjZW1iZXIgMjAxNywgYSBudW1iZXIgb2Ygd2F0ZXItcmVsYXRlZCBwcmV2ZW50aXZlIGFjdGlvbnMgd2VyZSBpbml0aWF0ZWQsIGluY2x1ZGluZyBpbmNyZWFzaW5nIGNobG9yaW5lIGxldmVscyB0aHJvdWdob3V0IHRoZSBjaXR54oCZcyB3YXRlciBkaXN0cmlidXRpb24gc3lzdGVtIGFuZCBwbGFjaW5nIGVtZXJnZW5jeSB0YW5rcyBvZiBjaGxvcmluYXRlZCB3YXRlciBpbiB0aGUgbW9zdCBhZmZlY3RlZCBuZWlnaGJvcmhvb2RzOyBjaG9sZXJhIGNhc2VzIGRlY2xpbmVkIHNoYXJwbHkgaW4gSmFudWFyeSAyMDE4LiBEdXJpbmcgSmFudWFyeSAxMOKAk0ZlYnJ1YXJ5IDE0LCAyMDE4LCBhcHByb3hpbWF0ZWx5IDIgbWlsbGlvbiBkb3NlcyBvZiBvcmFsIGNob2xlcmEgdmFjY2luZSB3ZXJlIGFkbWluaXN0ZXJlZCB0byBMdXNha2EgcmVzaWRlbnRzIGFnZWQg4omlMSB5ZWFyLiBIb3dldmVyLCBpbiBtaWQtTWFyY2gsIGhlYXZ5IGZsb29kaW5nIGFuZCB3aWRlc3ByZWFkIHdhdGVyIHNob3J0YWdlcyBvY2N1cnJlZCwgbGVhZGluZyB0byBhIHJlc3VyZ2VuY2Ugb2YgY2hvbGVyYS4gQXMgb2YgTWF5IDEyLCAyMDE4LCB0aGUgb3V0YnJlYWsgaGFkIGFmZmVjdGVkIHNldmVuIG9mIHRoZSAxMCBwcm92aW5jZXMgaW4gWmFtYmlhLCB3aXRoIDUsOTA1IHN1c3BlY3RlZCBjYXNlcyBhbmQgYSBjYXNlIGZhdGFsaXR5IHJhdGUgKENGUikgb2YgMS45JS4gQW1vbmcgdGhlIHN1c3BlY3RlZCBjYXNlcywgNSw0MTQgKDkxLjclKSwgaW5jbHVkaW5nIDk4IGRlYXRocyAoQ0ZSID0gMS44JSksIG9jY3VycmVkIGluIEx1c2FrYSByZXNpZGVudHMuNDMwMTQ="
-        article:
-          $ref: '#/components/schemas/Article'
-        desease:
-          $ref: '#/components/schemas/Disease'
-        event_date:
+          example: "Outbreak of Hepatitis A Virus Infections Potentially Linked to Fresh Blackberries"
+        main_text:
           type: string
-          pattern: '^\d{4}-\d{2}-\d{2}$'
-          example: "2018-04-02"
-        location:
-          $ref: '#/components/schemas/Location'
-          
-    Disease:
-      type: object
-      properties:
-        id:
+          example: "CDC, public health and regulatory officials in several states, and the U.S. Food and Drug Administration (FDA)external icon investigated a multistate outbreak of hepatitis A associated with exposure to contaminated fresh blackberries sold at Fresh Thyme Farmers Market and Woodman’s grocery stores during September 2019. As of February 19, 2020, a total of 20 outbreak-associated cases of hepatitis A were reported from 7 states. A list of the states and the number of cases in each is found on the Map of Reported Cases page. Illnesses started on dates ranging from October 8, 2019, to November 15, 2019. Ill people ranged in age from 14 to 73 years, with a median age of 50. Sixty percent of ill people were female. Of 19 people with available information, 11 (58%) were hospitalized. No deaths were reported."
+        date_of_publication:
           type: string
-          description: Unique identifier for the given disease.
-          example: "Y2hvbGVyYXByb2Z1c2Ugd2F0ZXJ5IGRpYXJyaGVhLCBzb21ldGltZXMgZGVzY3JpYmVkIGFzICJyaWNlLXdhdGVyIHN0b29scyJ8dm9taXRpbmd8dGhpcnN0fGxlZyBjcmFtcHN8cmVzdGxlc3NuZXNzIG9yIGlycml0YWJpbGl0eXxyYXBpZCBoZWFydCByYXRlfGxvc3Mgb2Ygc2tpbiBlbGFzdGljaXR5fGRyeSBtdWNvdXMgbWVtYnJhbmVzfGxvdyBibG9vZCBwcmVzc3VyZQ=="
-        disease_name:
-          type: string
-          example: Listeria
-        symptoms:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                example: Fever
+          example: "2020-02-19"
+        reports:
+          $ref: '#/components/schemas/Reports'
