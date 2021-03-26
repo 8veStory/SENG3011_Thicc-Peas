@@ -202,3 +202,59 @@ describe('GET /diseases', function(){
 //     });
 //   });
 // });
+
+// REPORT TESTING
+describe('GET /reports', function(){
+    it('should respond with a json 200 response with URL in request', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get('/reports')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(done);
+    });
+    it ('can produce a list of all reports published on outbreaks between given parameters in the form YYYY-MM-DD', function(){
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        .get('/reports?start_date=2020-12-01&end_date=2021-03-01')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(function(res) {
+            assert(res.length > 0);
+        })
+        .end();
+    });
+    it ('can produce a list of all reports published on outbreaks at a certain location', function(){
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        .get('/reports?location=USA')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(function(res) {
+            assert(res.length > 0);
+        })
+        .end();
+    });
+    it ('can produce a list of all reports published on outbreaks containing a desired keyword', function(){
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        .get('/reports?key_terms=hedgehog')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(function(res) {
+            assert(res.length > 0);
+        })
+        .end();
+    });
+});
+
+describe('GET /report/{reportID}', function(){
+    it('should respond with a json 200 response with URL in request', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get('/report/1ed7bef50165f63747e64fc1814fb517')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(done);
+    });
+});
