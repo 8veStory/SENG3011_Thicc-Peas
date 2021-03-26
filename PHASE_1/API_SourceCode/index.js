@@ -16,6 +16,7 @@ const { promises } = require('dns');
 const { response } = require('express');
 const { create } = require('domain');
 const app     = express();
+exports.app = app;
 
 
 // CONSTANTS
@@ -507,7 +508,7 @@ app.get('/article/:articleid', (req, res) => {
         log(req, res);
     });
 })
-app.listen(
+exports.server = app.listen(
     PORT,
     () => console.log(`API is alive on http://localhost:${PORT}`)
 );

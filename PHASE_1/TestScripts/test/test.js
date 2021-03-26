@@ -6,9 +6,20 @@ var should = chai.should();  // Using Should style
 
 // supertest stuff
 const request = require('supertest');
-const express = require('express');
 
-const app = express();
+const Express = require('express');
+const server = require('../../API_SourceCode/index').server;
+server.close();
+
+function startServer() {
+    server.listen(3000);
+    console.log("Server started.");
+}
+
+function stopServer() {
+    server.close();
+    console.log("Server stopped.");
+}
 
 // app.get('/diseases', function(req, res) {
 //     res.status(200).json({ name: 'john' });
