@@ -87,6 +87,37 @@ describe('GET /diseases', function(){
             })
             .end(done);
     });
+
+    it("check 'symptoms' query works", function(done) {
+        request(`${url}`)
+            .get(`/diseases?symptoms=vomiting`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 1, "Should have only returned Cholera.");
+
+                let disease = res.body[0];
+                let correct_symptoms   = ["profuse watery diarrhea, sometimes described as \"rice-water stools\"", "vomiting", "thirst", "leg cramps", "restlessness or irritability", "rapid heart rate", "loss of skin elasticity", "dry mucous membranes", "low blood pressure"];
+                let correct_report_ids = ["cc2d456d8d1349fefc6f1868b5a6ad8e", "5d61d0a41744a0e18014a9e508bb5e73", "2cbf376f73106b9610897251d425979e", "b27c5e8d32889b7b90cd474fb32c8856", "f8248f4695a4112e938c120fd22dfa63"];
+
+                assert(disease.name == 'cholera', "Incorrect disease name");
+                assert(disease.disease_id == 'b4d780dd311fae981c01e339f90afdae', "Incorrect disease id");
+
+                assert(disease.symptoms.length == correct_symptoms.length, "Incorrect number of symptoms");
+                assert(correct_symptoms.every(function (correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }), "Incorrect symptom details");
+
+                assert(disease.reports.length == correct_report_ids.length, "Incorrect number of reports.");
+                let reportIDs = disease.reports.map(report => { return report.report_id; });
+                for (reportID of reportIDs) {
+                    assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
+                }
+            })
+            .end(done);
+    })
+
     it('check request doesn\'t alter behaviour with extra invalid parameters', function(done) {
         request(`${url}`)
             .get(`/diseases${invalidparams}`)
@@ -95,6 +126,7 @@ describe('GET /diseases', function(){
             .expect('Content-Type', /json/)
             .end(done);
     });
+
     it('check request returns 404 status code when given further endpoint', function(done) {
         request(`${url}`)
             .get(`/diseases${invalidendpoint}`)
@@ -106,7 +138,6 @@ describe('GET /diseases', function(){
 
 /**
  * Test '/disease/{diseaseid}' returns the correct disease.
- * TODO: NOT DONE YET!
  */
 describe('GET /disease/id for cholera', function(){
     it('gets correct details and status code for cholera', function(done) {
@@ -172,8 +203,7 @@ describe('GET /disease/id for cholera', function(){
             .set('Accept', 'application/json')
             .expect('Content-Type', /text\/html/)
             .expect(function(res) {
-                console.log(res.body);
-                assert(res.body == "No diseases match ID invalid_disease_id", "Incorrect error message.");
+                assert(res.text == "No diseases match ID invalid_disease_id", "Incorrect error message.");
             })
             .end(done);
     });
