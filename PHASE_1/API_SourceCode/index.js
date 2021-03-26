@@ -120,11 +120,12 @@ function create_article_result(articleData) {
             reports.push(reportData);
         });
 
+
         let result = {
             article_id: articleData.article_id,
             headline: articleData.headline,
             main_text: articleData.main_text,
-            date_of_publication: new Date(Date.parse(articleData.date_of_publication.toDate().toString())),
+            date_of_publication: articleData.date_of_publication ? new Date(Date.parse(articleData.date_of_publication.toDate().toString())) : articleData.date_of_publication,
             url: articleData.url,
             reports: reports
         }
@@ -185,6 +186,9 @@ app.get('/reports', async (req, res) => {
     if (req.query.key_terms) key_terms = req.query.key_terms.split(',').map(term => term.toLowerCase());
 
     // Check Query Parameter Constraints
+    if (start_date && isNaN(start_date.getTime()))  { res.status(400).send(`Start date ${req.query.start_date} is invalid.`); return; }
+    if (end_date && isNaN(end_date.getTime()))      { res.status(400).send(`End date ${req.query.end_date} is invalid.`);     return; }
+
     if ((start_date && end_date) && (end_date <= start_date)) {
         // Date range must be valid.
         res.status(400).send(`End date '${end_date}' should be behind start date '${start_date}.'`);
@@ -396,13 +400,45 @@ app.get('/disease/:diseaseid', (req, res) => {
     });
 })
 
+/**
+ * Endpoint: GET '/articles'
+ * 
+ * Sends all articles that satisfy the query parameter filters used. By default
+ * (when no query parameters are used) all articles are returned.
+ * 
+ * Query Parameters:
+ * - start_date: ISO date that is the start of the date range to search in. Default: all previous [OPTIONAL]
+ * - end_date:   ISO date that is the end of the date range to search in.   Default: present      [OPTIONAL]
+ * - key_terms:  Comma-delimited list of key terms to search for in the
+ *               headlines and main_text.                                   Default: none         [OPTIONAL]
+ * 
+ * Possible Status Codes:
+ * - 200 OK: Sends articles according to the query parameters
+ * - 400 BAD REQUEST: Invalid query parameters used or badly formatted request.
+ */
 app.get('/articles', (req, res) => {
     let key_terms;
+    let start_date;
+    let end_date;
 
-    if (req.query.key_terms) key_terms = req.query.key_terms.split(',').map(term => term.toLowerCase());
+    // Query Parameters
+    if (req.query.key_terms) key_terms   = req.query.key_terms.split(',').map(term => term.toLowerCase());
+    if (req.query.start_date) start_date = new Date(Date.parse(req.query.start_date));
+    if (req.query.end_date) end_date     = new Date(Date.parse(req.query.end_date));
+
+    if (start_date && isNaN(start_date.getTime()))  { res.status(400).send(`Start date ${req.query.start_date} is invalid.`); return; }
+    if (end_date && isNaN(end_date.getTime()))      { res.status(400).send(`End date ${req.query.end_date} is invalid.`);     return; }
+
+    // Check Query Parameter Constraints
+    if ((start_date && end_date) && (end_date <= start_date)) {
+        // Date range must be valid.
+        res.status(400).send(`End date '${end_date}' should be behind start date '${start_date}.'`);
+    }
 
     // Get articles according to the correct query parameters.
     let articleQueryRef = db.collection(FS_ARTICLES_COLLECTION);
+    if (start_date) articleQueryRef = articleQueryRef.where('date_of_publication', '>=', start_date);
+    if (end_date)   articleQueryRef   = articleQueryRef.where('date_of_publication', '<=', end_date);
     articleQueryRef.get().then(queryResults => {
         let article_result_promise = [];
         let final_article_results  = [];
