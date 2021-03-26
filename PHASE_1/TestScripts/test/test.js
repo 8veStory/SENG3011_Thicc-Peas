@@ -7,23 +7,7 @@ var should = chai.should();  // Using Should style
 // supertest stuff
 const request = require('supertest');
 
-const Express = require('express');
-const server = require('../../API_SourceCode/index').server;
-server.close();
-
-function startServer() {
-    server.listen(3000);
-    console.log("Server started.");
-}
-
-function stopServer() {
-    server.close();
-    console.log("Server stopped.");
-}
-
-// app.get('/diseases', function(req, res) {
-//     res.status(200).json({ name: 'john' });
-// });
+const deleteLogs = require('../../API_SourceCode/index').deleteLogs;
 
 // const url = 'https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app';
 const url = 'http://localhost:3000';
@@ -44,22 +28,61 @@ describe('GET /diseases', function(){
             })
             .end(done);
     });
-    it('has salmonella with all correct values', function(done) {
+    it('?disease_names=chikungunya has correct values and 200 status code', function(done) {
         request(`${url}`)
-            .get('/diseases?disease_names=salmonella')
+            .get('/diseases?disease_names=chikungunya')
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                assert(res.body.length == 1);
-                assert(res.body[0].name == 'salmonella');
-                assert(res.body[0].disease_id == '777d1c109f5eef1d64c418062a918d33');
-                var hardcoded = [ 'diarrhea', 'fever', 'stomach cramps' ];
-                var actual = res.body[0].symptoms;
-                assert(hardcoded.length == actual.length);
-                assert(hardcoded.every(function(u, i) {
-                    return u === actual[i];
-                }));
+                assert(res.body.length == 1, "Only one disease should have been returned.");
+
+                let disease = res.body[0];
+                let correct_symptoms   = [ "fever", "joint pain", "headache", "muscle pain", "joint swelling", "rash" ];
+                let correct_report_ids = [ '1d90a471f9379fb1754fa366de1653f3', 'f57edf7b8e51568af08ddf1ba81a2734', '610522d22f202310ae5f8e1cdeac9590', 'def84179f91a114cdffc96b8b1f0d8bc']
+
+                assert(disease.name == 'chikungunya', "Incorrect disease name");
+                assert(disease.disease_id == '4a1239ee4df81a98a51a3eb15c5521b3', "Incorrect disease id");
+
+                assert(disease.symptoms.length == correct_symptoms.length, "Incorrect number of symptoms");
+                assert(correct_symptoms.every(function(correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }), "Incorrect symptom details");
+
+                assert(disease.reports.length == correct_report_ids.length, "Incorrect number of reports.");
+                let reportIDs = disease.reports.map(report => { return report.report_id; });
+                for (reportID of reportIDs) {
+                    assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
+                }
+            })
+            .end(done);
+    });
+    it('?disease_names=cholera has correct values and 200 status code', function(done) {
+        request(`${url}`)
+            .get('/diseases?disease_names=cholera')
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 1, "Only one disease should have been returned.");
+
+                let disease = res.body[0];
+                let correct_symptoms     = [ "profuse watery diarrhea, sometimes described as \"rice-water stools\"", "vomiting", "thirst", "leg cramps", "restlessness or irritability", "rapid heart rate", "loss of skin elasticity", "dry mucous membranes", "low blood pressure" ];
+                let correct_report_ids   = [ "cc2d456d8d1349fefc6f1868b5a6ad8e", "5d61d0a41744a0e18014a9e508bb5e73", "2cbf376f73106b9610897251d425979e", "b27c5e8d32889b7b90cd474fb32c8856", "f8248f4695a4112e938c120fd22dfa63" ];
+
+                assert(disease.name == 'cholera', "Incorrect disease name");
+                assert(disease.disease_id == 'b4d780dd311fae981c01e339f90afdae', "Incorrect disease id");
+
+                assert(disease.symptoms.length == correct_symptoms.length, "Incorrect number of symptoms");
+                assert(correct_symptoms.every(function(correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }), "Incorrect symptom details");
+
+                assert(disease.reports.length == correct_report_ids.length, "Incorrect number of reports.");
+                let reportIDs = disease.reports.map(report => { return report.report_id; });
+                for (reportID of reportIDs) {
+                    assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
+                }
             })
             .end(done);
     });
@@ -78,6 +101,7 @@ describe('GET /disease/id for salmonella', function(){
             .expect('Content-Type', /json/)
             .end(done);
     });
+
     it('gets salmonella with all correct values and a correct article', function(done) {
         request(`${url}`)
             .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
