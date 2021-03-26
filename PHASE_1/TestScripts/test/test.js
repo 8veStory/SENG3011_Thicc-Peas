@@ -27,7 +27,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
@@ -49,7 +48,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
@@ -71,7 +69,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
@@ -93,7 +90,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
@@ -115,7 +111,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
@@ -137,7 +132,6 @@ describe('GET /diseases', function(){
                         contains = true;
                     }
                 }
-                console.log(id);
                 assert(contains);
             })
             .end(done);
