@@ -9,6 +9,7 @@ RUN npm install --production --silent && mv node_modules ../
 
 # Copy source code
 COPY . .
+COPY ./handy-amplifier-307202-7b79308ce4ea.json ../
 EXPOSE 3000
 
 # Run
