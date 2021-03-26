@@ -594,21 +594,3 @@ describe('GET /report/id for cholera', function() {
             .end(done);
     });
 });
-
-// describe('GET /report/{reportID}', function(){
-//     it('should respond with a json 200 response with URL in request', function(done) {
-//         request(`${url}`)
-//             .get('/report/1ed7bef50165f63747e64fc1814fb517')
-//             .set('Accept', 'application/json')
-//             .expect(200)
-//             .expect('Content-Type', /json/)
-//             .end(done);
-//     });
-//     it('should respond with a json 404 response if invalid ID', function(done) {
-//         request(`${url}`)
-//             .get('/report/invalid_id')
-//             .expect(404)
-//             .expect('Content-Type', "text/html; charset=utf-8")
-//             .end(done);
-//     });
-// });
