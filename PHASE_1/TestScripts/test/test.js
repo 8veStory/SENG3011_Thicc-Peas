@@ -7,8 +7,6 @@ var should = chai.should();  // Using Should style
 // supertest stuff
 const request = require('supertest');
 
-const deleteLogs = require('../../API_SourceCode/index').deleteLogs;
-
 // const url = 'https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app';
 const url = 'http://localhost:3000';
 
@@ -27,6 +25,7 @@ describe('GET /diseases', function(){
             })
             .end(done);
     });
+
     it('?disease_names=chikungunya has correct values and 200 status code', function(done) {
         request(`${url}`)
             .get('/diseases?disease_names=chikungunya')
@@ -56,6 +55,7 @@ describe('GET /diseases', function(){
             })
             .end(done);
     });
+
     it('?disease_names=cholera has correct values and 200 status code', function(done) {
         request(`${url}`)
             .get('/diseases?disease_names=cholera')
@@ -147,7 +147,19 @@ describe('GET /disease/id for cholera', function(){
             })
             .end(done);
     });
-    // TODO: test with disease_id = 'invalid_disease_id'
+
+    it('returns 404 if invalid disease id', function(done) {
+        request(`${url}`)
+            .get(`/disease/invalid_disease_id`)
+            .expect(404)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /text\/html/)
+            .expect(function(res) {
+                console.log(res.body);
+                assert(res.body == "No diseases match ID invalid_disease_id", "Incorrect error message.");
+            })
+            .end(done);
+    });
 });
 
 /**
