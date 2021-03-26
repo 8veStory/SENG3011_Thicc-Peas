@@ -214,15 +214,6 @@ describe('GET /disease/id for cholera', function(){
  * returns the correct output.
  */
 describe('GET /articles', function(){
-    it('200 response', function(done) {
-        request(`${url}`)
-            .get('/articles')
-            .expect(200)
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .end(done);
-    });
-
     it('returns all articles', function(done) {
         request(`${url}`)
             .get('/articles')
