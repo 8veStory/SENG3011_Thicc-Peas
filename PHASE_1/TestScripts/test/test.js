@@ -7,23 +7,7 @@ var should = chai.should();  // Using Should style
 // supertest stuff
 const request = require('supertest');
 
-const Express = require('express');
-const server = require('../../API_SourceCode/index').server;
-server.close();
-
-function startServer() {
-    server.listen(3000);
-    console.log("Server started.");
-}
-
-function stopServer() {
-    server.close();
-    console.log("Server stopped.");
-}
-
-// app.get('/diseases', function(req, res) {
-//     res.status(200).json({ name: 'john' });
-// });
+const deleteLogs = require('../../API_SourceCode/index').deleteLogs;
 
 describe('GET /diseases', function(){
     it('200 response', function(done) {
@@ -34,9 +18,32 @@ describe('GET /diseases', function(){
             .expect('Content-Type', /json/)
             .end(done);
     });
-    it('has salmonella with all correct values', function(done) {
+    it('?disease_names=chikungunya has correct values and 200 status code', function(done) {
         request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
-            .get('/diseases?disease_names=salmonella')
+            .get('/diseases?disease_names=chikungunya')
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 1, "Only one disease should have been returned.");
+
+                var disease = res.body[0];
+                var correct_symptoms   = [ 'diarrhea', 'fever', 'stomach cramps' ];
+                var correct_report_ids = [ '1d90a471f9379fb1754fa366de1653f3', 'f57edf7b8e51568af08ddf1ba81a2734', '610522d22f202310ae5f8e1cdeac9590', 'def84179f91a114cdffc96b8b1f0d8bc']
+
+                assert(disease.name == 'chikungunya');
+                assert(disease.disease_id == '4a1239ee4df81a98a51a3eb15c5521b3');
+                assert(disease.symptoms == correct_symptoms.length);
+                assert(correct_symptoms.every(function(correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }));
+                assert(disease.reports)
+            })
+            .end(done);
+    });
+    it('?disease_names=cholera has correct values and 200 status code', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get('/diseases?disease_names=cholera')
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -64,6 +71,7 @@ describe('GET /disease/id for salmonella', function(){
             .expect('Content-Type', /json/)
             .end(done);
     });
+
     it('gets salmonella with all correct values and a correct article', function(done) {
         request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
             .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
