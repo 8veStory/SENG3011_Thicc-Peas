@@ -10,6 +10,10 @@ const express = require('express');
 
 const app = express();
 
+// app.get('/diseases', function(req, res) {
+//     res.status(200).json({ name: 'john' });
+// });
+
 describe('GET /diseases', function(){
     it('200 response', function(done) {
         request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
@@ -134,26 +138,19 @@ describe('GET /article/id for same report as in /articles test', function(){
     });
 });
 
-// describe('GET /diseases', function(){
-//     it('200 response - has salmonella', function(done) {
-//         request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
-//             .get('/diseases')
-//             .set('Accept', 'application/json')
-//             .expect('Content-Type', /json/)
-//             .expect(200)
-//             .expect(function(res) {
-//                 var contains = false;
-//                 for (var i = 0; i < res.body.length; i++) {
-//                     if (res.body[i].name == 'salmonella') {
-//                         id = res.body[i].disease_id;
-//                         contains = true;
-//                     }
-//                 }
-//                 assert(contains);
-//             })
-//             .end(done);
-//     });
-// });
+describe('GET /log', function(){
+    it('200 response', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get(`/log`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                console.log(res.body);
+            })
+            .end(done);
+    });
+});
 
 // describe('GET /diseases', function(){
 //     it('200 response - has salmonella', function(done) {
