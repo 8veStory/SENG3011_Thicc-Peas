@@ -281,27 +281,31 @@ describe('GET /articles', function(){
  * Test '/article/{articleid}' returns the correct article.
  */
 describe('GET /article/id for same report as in /articles test', function(){
-    it('200 response', function(done) {
+    it('gets 200 response and the correct article with the corresponding id', function(done) {
         request(`${url}`)
-            .get(`/article/ac908d92d6512fd9cb134694fa02f532`)
-            .expect(200)
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .end(done);
-    });
-    it('got the same article with all the same fields', function(done) {
-        request(`${url}`)
-            .get(`/article/ac908d92d6512fd9cb134694fa02f532`)
+            .get(`/article/b99957498d7205494ecc90d1c1acc7bb`)
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                assert(res.body.article_id == 'ac908d92d6512fd9cb134694fa02f532');
-                assert(res.body.headline == 'DEMOCRATIC REPUBLIC OF THE CONGO (formerly ZAIRE) Ebola Virus Outbreak 2020');
-                assert(res.body.main_text.match(/^The DRC government declared a new Ebola outbreak.*/));
-                assert(res.body.date_of_publication == '2020-06-01T00:00:00.000Z');
-                assert(res.body.url == 'https://www.cdc.gov/vhf/ebola/history/chronology.html');
-                assert(res.body.reports.length == 1);
+                let article = res.body;
+                assert(article.headline == 'Chikungunya Cases Identified Through Passive Surveillance and Household Investigations — Puerto Rico, May 5–August 12, 2014', "Incorrect headline.");
+                assert(article.main_text.match(/^Residents of and travelers to areas of the tropics with ongoing CHIKV and DENV transmission should employ mosquito avoidance strategies to prevent illness.*/), "Incorrect main_text.");
+                assert(article.date_of_publication == '2014-12-05T00:00:00.000Z', "Incorrect date of publication.");
+                assert(article.url == 'https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6348a1.htm?s_cid=mm6348a1_w');
+                assert(article.reports[0].report_id == "f57edf7b8e51568af08ddf1ba81a2734", "Incorrect report attached to article.")
+            })
+            .end(done);
+    });
+
+    it('gets 404 response for invalid id', function(done) {
+        request(`${url}`)
+            .get(`/article/invalid_article_id`)
+            .expect(404)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /text\/html/)
+            .expect(function(res) {
+                assert(res.text == "No articles match ID invalid_article_id", "Incorrect error message.");
             })
             .end(done);
     });
@@ -369,30 +373,6 @@ describe('GET /log', function(){
             .get(`/log${invalidendpoint}`)
             .expect(404)
             .expect('Content-Type', "text/html; charset=utf-8")
-            .end(done);
-    });
-});
-
-/**
- * Ebola exists in '/diseases'.
- */
-describe('GET /diseases', function(){
-    it('200 response - has salmonella', function(done) {
-        request(`${url}`)
-            .get('/diseases')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .expect(function(res) {
-                var contains = false;
-                for (var i = 0; i < res.body.length; i++) {
-                    if (res.body[i].name == 'salmonella') {
-                        id = res.body[i].disease_id;
-                        contains = true;
-                    }
-                }
-                assert(contains);
-            })
             .end(done);
     });
 });
