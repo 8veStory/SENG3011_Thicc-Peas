@@ -20,7 +20,9 @@ const app     = express();
 
 // CONSTANTS
 const PORT = process.env.PORT;
-const FS_KEY_PATH = "../handy-amplifier-307202-7b79308ce4ea.json"
+const FS_KEY_PATH = "../thicc-peas-seng3031-test-9ba8332e43ee.json"
+// "../thicc-peas-seng3031-test-9ba8332e43ee.json" is the testing database
+// "../thicc-peas-seng3031-test-9ba8332e43ee.json"
 const FS_DISEASES_COLLECTION = "diseases";
 const FS_REPORTS_COLLECTION = "reports";
 const FS_ARTICLES_COLLECTION = "articles";
