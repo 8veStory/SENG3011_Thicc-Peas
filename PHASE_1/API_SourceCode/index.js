@@ -58,6 +58,10 @@ if (!Object.entries)
    };
 
 // HELPER METHODS
+exports.deleteLogs = function deleteLogs() {
+    fs.truncateSync("./log.txt", 0);
+}
+
 function log(req, res, extraMessage = "") {
     let utcTime = new Date().toJSON();
     result = `\n${utcTime} | ${req.ip} requested '${req.url}' - Status Code: ${res.statusCode}`

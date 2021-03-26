@@ -23,7 +23,7 @@ class scraped_data_xlsx_to_firestore:
         # Makes this class print information about what it's sending.
         self.debug = debug
 
-    def send_diseases(self):
+    def send_diseases(self, disease_name = None):
         """
         Sends all diseases from the 'Diseases' sheet to the FireStore.
         """
@@ -37,15 +37,20 @@ class scraped_data_xlsx_to_firestore:
             name = row[1].value
             symptoms = row[2].value
 
+            if disease_name is not None and name != disease_name:
+                continue;
+
             # Parse symptoms (which should be of form "<symptom_1>|<symptom_2>|...") into an array
             parsed_symptoms = symptoms.split("|")
 
             if disease_id is not None:
+                print(disease_id)
+                print(name)
                 # If the row is not empty then send the disease to the FireStore.
                 self.client.write_disease(disease_id, name, parsed_symptoms)
         print("==========        COMPLETE        ==========")
 
-    def send_reports_and_articles(self):
+    def send_reports_and_articles(self, disease_name = None):
         """
         Sends all reports and articles to the FireStore for each disease in the xlsx file.
         """
@@ -54,6 +59,9 @@ class scraped_data_xlsx_to_firestore:
 
         print("==========Sending 'Reports' and 'Articles'==========")
         for sheet_name in disease_report_and_article_sheets:
+            if disease_name is not None and sheet_name != disease_name:
+                continue
+
             print(f"======{sheet_name}=====")
             for row in self.workbook[sheet_name].iter_rows(2):
 
@@ -103,5 +111,12 @@ if __name__ == "__main__":
     # Send diseases
     sender.send_diseases()
 
-    # send reports and articles for all diseases
+    # Send reports and articles for all diseases
     sender.send_reports_and_articles()
+
+    # Send only cholera and chikungunya disease and reports.
+    # sender.send_diseases("cholera")
+    # # sender.send_diseases("chikungunya")
+    # sender.send_reports_and_articles("cholera")
+    # sender.send_reports_and_articles("chikungunya")
+
