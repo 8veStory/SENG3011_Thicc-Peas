@@ -1,0 +1,17 @@
+{
+  "name": "testscripts",
+  "version": "1.0.0",
+  "description": "Tests for the Thicc Peas CDC API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.4",
+    "loadtest": "^5.1.2",
+    "mocha": "^8.3.2",
+    "supertest": "^6.1.3"
+  }
+}
