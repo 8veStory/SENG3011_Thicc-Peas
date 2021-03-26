@@ -363,7 +363,7 @@ describe('GET /log', function(){
         request(`${url}`)
             .get(`/log${invalidendpoint}`)
             .expect(404)
-            .expect('Content-Type', "text/html; charset=utf-8")
+            .expect('Content-Type', /text\/html/)
             .end(done);
     });
 });
@@ -465,6 +465,14 @@ describe('GET /reports', function() {
             .end(done);
     });
 
+    it('?start_date=1990-01-01&end_date=1980-01-01 got no reports and returned status code 400', function(done) {
+        request(`${url}`)
+            .get('/reports?start_date=1990-01-01&end_date=1980-01-01')
+            .expect(400)
+            .expect('Content-Type', 'text/html; charset=utf-8')
+            .end(done);
+    });
+
     it('?location=Tazmania got one report and has correct values', function(done) {
         request(`${url}`)
             .get('/reports?location=Tazmania')
@@ -547,92 +555,45 @@ describe('GET /reports', function() {
         request(`${url}`)
             .get(`/reports${invalidendpoint}`)
             .expect(404)
-            .expect('Content-Type', "text/html; charset=utf-8")
+            .expect('Content-Type', /text\/html/)
             .end(done);
     });
 });
 
-// REPORT TESTING
-// describe.only('GET /reports', function(){
-//     it('should respond with a json 200 response with URL in request', function(done) {
-//         request(`${url}`)
-//             .get('/reports')
-//             .set('Accept', 'application/json')
-//             .expect(200)
-//             .expect('Content-Type', /json/)
-//             .expect(function(res) {
-//                 console.log(res.body);
-//                 console.log(res.body.length);
-//                 // assert(res.length > 0);
-//             })
-//             .end(done);
-//     });
-//     it ('can produce a list of all reports published on outbreaks between given parameters in the form YYYY-MM-DD', function(done){
-//         request(`${url}`)
-//         .get('/reports?start_date=2020-12-01&end_date=2021-03-01')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .expect(function(res) {
-//             console.log(res.body);
-//             assert(res.length > 0);
-//         })
-//         .end(done);
-//     });
-//     it ('will produce an error when invalid dates in the form of YYYY-MM-DD provided', function(done){
-//         request(`${url}`)
-//         .get('/reports?start_date=2021-12-01&end_date=2020-03-01')
-//         .set('Accept', 'application/json')
-//         .expect(400)
-//         .end(done);
-//     });
-//     it ('can produce a list of all reports published on outbreaks at a certain location', function(done){
-//         request(`${url}`)
-//         .get('/reports?location=USA')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .expect(function(res) {
-//             assert(res.length > 0);
-//         })
-//         .end(done);
-//     });
-//     it ('will produce an empty list if invalid location supplied', function(done){
-//         request(`${url}`)
-//         .get('/reports?location=wakanda')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .end(done);
-//     });
-//     it ('can produce a list of all reports published on outbreaks containing a desired keyword', function(done){
-//         request(`${url}`)
-//         .get('/reports?key_terms=hedgehog')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .end(done);
-//     });
-//     it ('will produce an empty list if given string does not appear in any given documents', function(done){
-//         request(`${url}`)
-//         .get('/reports?key_terms=here_is_a_string_of_words_that_can_not_be_in_the_report')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .expect(function(res) {
-//             assert(res.length == 0);
-//         })
-//         .end(done);
-//     });
-//     it ('will produce a 404 error if invalid query presented', function(done){
-//         request(`${url}`)
-//         .get('/reports?invalid_query=invalid_query')
-//         .set('Accept', 'application/json')
-//         .expect(200)
-//         .expect('Content-Type', /json/)
-//         .end(done);
-//     });
-// });
+describe('GET /report/id for cholera', function() {
+    it('gets correct details and status code for cholera', function(done) {
+        request(`${url}`)
+            .get(`/report/5d61d0a41744a0e18014a9e508bb5e73`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                var report = res.body;
+                
+                assert(report.report_id == '5d61d0a41744a0e18014a9e508bb5e73');
+                assert(report.disease.disease_id == 'b4d780dd311fae981c01e339f90afdae');
+                assert(report.article.article_id == 'c65a4366e9ab94b4b52c2a402072bc98');
+                assert(report.location == 'Kenya');
+                assert(report.statistics.hospitalisations == null);
+                assert(report.statistics.reported_cases == 11033);
+                assert(report.statistics.deaths == 178);
+                assert(report.event_date == '2015-01-06T00:00:00.000Z');
+            })
+            .end(done);
+    });
+
+    it('returns 404 if invalid report id', function(done) {
+        request(`${url}`)
+            .get(`/report/invalid_report_id`)
+            .expect(404)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /text\/html/)
+            .expect(function(res) {
+                assert(res.text == "No reports match the ID invalid_report_id");
+            })
+            .end(done);
+    });
+});
 
 // describe('GET /report/{reportID}', function(){
 //     it('should respond with a json 200 response with URL in request', function(done) {
