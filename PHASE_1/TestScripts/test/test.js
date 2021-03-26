@@ -6,25 +6,36 @@ var should = chai.should();  // Using Should style
 
 // supertest stuff
 const request = require('supertest');
-const express = require('express');
 
+// ExpressJS
+const express = require('express');
 const app = express();
 
 // app.get('/diseases', function(req, res) {
 //     res.status(200).json({ name: 'john' });
 // });
 
+// const url = 'https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app';
+const url = 'http://localhost:3000';
+
+/**
+ * Test '/diseases' returns the correct diseases
+ * TODO: NOT DONE YET!
+ */
 describe('GET /diseases', function(){
-    it('200 response', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+    it('gives the correct status code and response length.', function(done) {
+        request(`${url}`)
             .get('/diseases')
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 2);
+            })
             .end(done);
     });
     it('has salmonella with all correct values', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get('/diseases?disease_names=salmonella')
             .expect(200)
             .set('Accept', 'application/json')
@@ -44,9 +55,13 @@ describe('GET /diseases', function(){
     });
 });
 
+/**
+ * Test '/disease/{diseaseid}' returns the correct disease.
+ * TODO: NOT DONE YET!
+ */
 describe('GET /disease/id for salmonella', function(){
     it('200 response', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
             .expect(200)
             .set('Accept', 'application/json')
@@ -54,7 +69,7 @@ describe('GET /disease/id for salmonella', function(){
             .end(done);
     });
     it('gets salmonella with all correct values and a correct article', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
             .expect(200)
             .set('Accept', 'application/json')
@@ -82,11 +97,16 @@ describe('GET /disease/id for salmonella', function(){
             })
             .end(done);
     });
+    // TODO: test with disease_id = 'invalid_disease_id'
 });
 
+/**
+ * Test '/articles' with the 'start_date', 'end-date' and 'key_terms' query
+ * returns the correct output.
+ */
 describe('GET /articles', function(){
     it('200 response', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get('/articles')
             .expect(200)
             .set('Accept', 'application/json')
@@ -94,7 +114,7 @@ describe('GET /articles', function(){
             .end(done);
     });
     it('gets an ebola article within 2020', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get('/articles?start_date=2020-01-01&end_date=2020-12-31&key_terms=ebola')
             .expect(200)
             .set('Accept', 'application/json')
@@ -111,9 +131,12 @@ describe('GET /articles', function(){
     });
 });
 
+/**
+ * Test '/article/{articleid}' returns the correct article.
+ */
 describe('GET /article/id for same report as in /articles test', function(){
     it('200 response', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get(`/article/ac908d92d6512fd9cb134694fa02f532`)
             .expect(200)
             .set('Accept', 'application/json')
@@ -121,7 +144,7 @@ describe('GET /article/id for same report as in /articles test', function(){
             .end(done);
     });
     it('got the same article with all the same fields', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get(`/article/ac908d92d6512fd9cb134694fa02f532`)
             .expect(200)
             .set('Accept', 'application/json')
@@ -138,40 +161,95 @@ describe('GET /article/id for same report as in /articles test', function(){
     });
 });
 
+/**
+ * Checks last log output has accurate time, date, request and status code for '/diseases'.
+ */
 describe('GET /log', function(){
+    var loglen;
+    var reqtime;
+    var reqstring = '/diseases';
+    var statuscode;
+    var invalidparams = '?invalidparams';
+    var invalidendpoint = '/invalidendpoint';
     it('200 response', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get(`/log`)
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                console.log(res.body);
+                loglen = res.body.logs.length;
             })
+            .end(done);
+    });
+    it('request /diseases', function(done) {
+        request(`${url}`)
+            .get(reqstring)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                reqtime = new Date(Date.now());
+                statuscode = res.statusCode;
+            })
+            .end(done);
+    });
+    it('checks last log output has accurate time, date, request, and status code', function(done) {
+        request(`${url}`)
+            .get(`/log`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(loglen + 1 == res.body.logs.length);
+                var lastlog = res.body.logs[loglen];
+                var logdate = new Date(lastlog.match(/^[^ ]+/));
+                assert(logdate - reqtime <= 500);
+                assert(lastlog.match(/'.*'/) == `'${reqstring}'`);
+                assert(lastlog.match(/\d+$/) == statuscode);
+            })
+            .end(done);
+    });
+    it('check request doesn\'t alter behaviour with extra invalid parameters', function(done) {
+        request(`${url}`)
+            .get(`/log${invalidparams}`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .end(done);
+    });
+    it('check request returns 404 status code when given further endpoint', function(done) {
+        request(`${url}`)
+            .get(`/log${invalidendpoint}`)
+            .expect(404)
+            .expect('Content-Type', "text/html; charset=utf-8")
             .end(done);
     });
 });
 
-// describe('GET /diseases', function(){
-//     it('200 response - has salmonella', function(done) {
-//         request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
-//             .get('/diseases')
-//             .set('Accept', 'application/json')
-//             .expect('Content-Type', /json/)
-//             .expect(200)
-//             .expect(function(res) {
-//                 var contains = false;
-//                 for (var i = 0; i < res.body.length; i++) {
-//                     if (res.body[i].name == 'salmonella') {
-//                         id = res.body[i].disease_id;
-//                         contains = true;
-//                     }
-//                 }
-//                 assert(contains);
-//             })
-//             .end(done);
-//     });
-// });
+/**
+ * Ebola exists in '/diseases'.
+ */
+describe('GET /diseases', function(){
+    it('200 response - has salmonella', function(done) {
+        request(`${url}`)
+            .get('/diseases')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect(function(res) {
+                var contains = false;
+                for (var i = 0; i < res.body.length; i++) {
+                    if (res.body[i].name == 'salmonella') {
+                        id = res.body[i].disease_id;
+                        contains = true;
+                    }
+                }
+                assert(contains);
+            })
+            .end(done);
+    });
+});
 
 
 // mocha test stuff
