@@ -17,7 +17,9 @@ const url = 'http://localhost:3000';
  * TODO: NOT DONE YET!
  */
 describe('GET /diseases', function(){
-    it('gives the correct status code and response length.', function(done) {
+    var invalidparams = '?invalidquery=invalidquery';
+    var invalidendpoint = '/invalidendpoint';
+    it('gives the correct status code and response length', function(done) {
         request(`${url}`)
             .get('/diseases')
             .expect(200)
@@ -84,6 +86,21 @@ describe('GET /diseases', function(){
                     assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
                 }
             })
+            .end(done);
+    });
+    it('check request doesn\'t alter behaviour with extra invalid parameters', function(done) {
+        request(`${url}`)
+            .get(`/diseases${invalidparams}`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .end(done);
+    });
+    it('check request returns 404 status code when given further endpoint', function(done) {
+        request(`${url}`)
+            .get(`/diseases${invalidendpoint}`)
+            .expect(404)
+            .expect('Content-Type', "text/html; charset=utf-8")
             .end(done);
     });
 });
@@ -286,7 +303,7 @@ describe('GET /diseases', function(){
 });
 
 // REPORT TESTING
-describe.only('GET /reports', function(){
+describe('GET /reports', function(){
     it('should respond with a json 200 response with URL in request', function(done) {
         request(`${url}`)
             .get('/reports')
