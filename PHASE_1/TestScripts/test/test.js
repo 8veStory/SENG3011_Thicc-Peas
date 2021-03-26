@@ -14,7 +14,9 @@ const url = 'http://localhost:3000';
  * Test '/diseases' returns the correct diseases
  */
 describe('GET /diseases', function(){
-    it('gives the correct status code and response length.', function(done) {
+    var invalidparams = '?invalidquery=invalidquery';
+    var invalidendpoint = '/invalidendpoint';
+    it('gives the correct status code and response length', function(done) {
         request(`${url}`)
             .get('/diseases')
             .expect(200)
@@ -83,6 +85,21 @@ describe('GET /diseases', function(){
                     assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
                 }
             })
+            .end(done);
+    });
+    it('check request doesn\'t alter behaviour with extra invalid parameters', function(done) {
+        request(`${url}`)
+            .get(`/diseases${invalidparams}`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .end(done);
+    });
+    it('check request returns 404 status code when given further endpoint', function(done) {
+        request(`${url}`)
+            .get(`/diseases${invalidendpoint}`)
+            .expect(404)
+            .expect('Content-Type', "text/html; charset=utf-8")
             .end(done);
     });
 });
@@ -231,7 +248,7 @@ describe('GET /log', function(){
     var reqtime;
     var reqstring = '/diseases';
     var statuscode;
-    var invalidparams = '?invalidparams';
+    var invalidparams = '?invalidquery=invalidquery';
     var invalidendpoint = '/invalidendpoint';
     it('200 response', function(done) {
         request(`${url}`)
@@ -313,40 +330,37 @@ describe('GET /diseases', function(){
     });
 });
 
-
-// mocha test stuff
-// var assert = require('assert');
-// describe('Array', function() {
-//   describe('#indexOf()', function() {
-//     it('should return -1 when the value is not present', function() {
-//       assert.equal([1, 2, 3].indexOf(4), -1);
-//     });
-//   });
-// });
-
 // REPORT TESTING
 describe('GET /reports', function(){
     it('should respond with a json 200 response with URL in request', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get('/reports')
             .set('Accept', 'application/json')
             .expect(200)
             .expect('Content-Type', /json/)
             .end(done);
     });
-    it ('can produce a list of all reports published on outbreaks between given parameters in the form YYYY-MM-DD', function(){
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+    it ('can produce a list of all reports published on outbreaks between given parameters in the form YYYY-MM-DD', function(done){
+        request(`${url}`)
         .get('/reports?start_date=2020-12-01&end_date=2021-03-01')
         .set('Accept', 'application/json')
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(function(res) {
+            console.log(res.body);
             assert(res.length > 0);
         })
-        .end();
+        .end(done);
     });
-    it ('can produce a list of all reports published on outbreaks at a certain location', function(){
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+    it ('will produce an error when invalid dates in the form of YYYY-MM-DD provided', function(done){
+        request(`${url}`)
+        .get('/reports?start_date=2021-12-01&end_date=2020-03-01')
+        .set('Accept', 'application/json')
+        .expect(400)
+        .end(done);
+    });
+    it ('can produce a list of all reports published on outbreaks at a certain location', function(done){
+        request(`${url}`)
         .get('/reports?location=USA')
         .set('Accept', 'application/json')
         .expect(200)
@@ -354,28 +368,59 @@ describe('GET /reports', function(){
         .expect(function(res) {
             assert(res.length > 0);
         })
-        .end();
+        .end(done);
     });
-    it ('can produce a list of all reports published on outbreaks containing a desired keyword', function(){
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+    it ('will produce an empty list if invalid location supplied', function(done){
+        request(`${url}`)
+        .get('/reports?location=wakanda')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(done);
+    });
+    it ('can produce a list of all reports published on outbreaks containing a desired keyword', function(done){
+        request(`${url}`)
         .get('/reports?key_terms=hedgehog')
         .set('Accept', 'application/json')
         .expect(200)
         .expect('Content-Type', /json/)
+        .end(done);
+    });
+    it ('will produce an empty list if given string does not appear in any given documents', function(done){
+        request(`${url}`)
+        .get('/reports?key_terms=here_is_a_string_of_words_that_can_not_be_in_the_report')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
         .expect(function(res) {
-            assert(res.length > 0);
+            assert(res.length == 0);
         })
-        .end();
+        .end(done);
+    });
+    it ('will produce a 404 error if invalid query presented', function(done){
+        request(`${url}`)
+        .get('/reports?invalid_query=invalid_query')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(done);
     });
 });
 
 describe('GET /report/{reportID}', function(){
     it('should respond with a json 200 response with URL in request', function(done) {
-        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+        request(`${url}`)
             .get('/report/1ed7bef50165f63747e64fc1814fb517')
             .set('Accept', 'application/json')
             .expect(200)
             .expect('Content-Type', /json/)
+            .end(done);
+    });
+    it('should respond with a json 404 response if invalid ID', function(done) {
+        request(`${url}`)
+            .get('/report/invalid_id')
+            .expect(404)
+            .expect('Content-Type', "text/html; charset=utf-8")
             .end(done);
     });
 });
