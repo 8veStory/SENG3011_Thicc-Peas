@@ -91,42 +91,59 @@ describe('GET /diseases', function(){
  * Test '/disease/{diseaseid}' returns the correct disease.
  * TODO: NOT DONE YET!
  */
-describe('GET /disease/id for salmonella', function(){
-    it('200 response', function(done) {
+describe('GET /disease/id for cholera', function(){
+    it('gets correct details and status code for cholera', function(done) {
         request(`${url}`)
-            .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
-            .expect(200)
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .end(done);
-    });
-
-    it('gets salmonella with all correct values and a correct article', function(done) {
-        request(`${url}`)
-            .get(`/disease/777d1c109f5eef1d64c418062a918d33`)
+            .get(`/disease/b4d780dd311fae981c01e339f90afdae`)
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                assert(res.body.name == 'salmonella');
-                assert(res.body.disease_id == '777d1c109f5eef1d64c418062a918d33');
-                var hardcoded = [ 'diarrhea', 'fever', 'stomach cramps' ];
-                var actual = res.body.symptoms;
-                assert(hardcoded.length == actual.length);
-                assert(hardcoded.every(function(u, i) {
-                    return u === actual[i];
-                }));
-                var contains = false;
-                for (var i = 0; i < res.body.reports.length; i++) {
-                    if (res.body.reports[i].article_id == '0e9180c5077aaa569381beba67e56d96') {
-                        contains = true;
-                        assert(res.body.reports[i].report_id == 'c30962a8ba75e5c849fb5f8421a988fc');
-                        assert(res.body.reports[i].article_id == '0e9180c5077aaa569381beba67e56d96');
-                        assert(res.body.reports[i].event_date == '2015-10-16T00:00:00.000Z');
-                        assert(res.body.reports[i].location == 'USA');
-                    }
+                let disease = res.body;
+                let correct_symptoms   = ["profuse watery diarrhea, sometimes described as \"rice-water stools\"", "vomiting", "thirst", "leg cramps", "restlessness or irritability", "rapid heart rate", "loss of skin elasticity", "dry mucous membranes", "low blood pressure"];
+                let correct_report_ids = ["cc2d456d8d1349fefc6f1868b5a6ad8e", "5d61d0a41744a0e18014a9e508bb5e73", "2cbf376f73106b9610897251d425979e", "b27c5e8d32889b7b90cd474fb32c8856", "f8248f4695a4112e938c120fd22dfa63"];
+
+                assert(disease.name == 'cholera', "Incorrect disease name");
+                assert(disease.disease_id == 'b4d780dd311fae981c01e339f90afdae', "Incorrect disease id");
+
+                assert(disease.symptoms.length == correct_symptoms.length, "Incorrect number of symptoms");
+                assert(correct_symptoms.every(function (correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }), "Incorrect symptom details");
+
+                assert(disease.reports.length == correct_report_ids.length, "Incorrect number of reports.");
+                let reportIDs = disease.reports.map(report => { return report.report_id; });
+                for (reportID of reportIDs) {
+                    assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
                 }
-                assert(contains);
+            })
+            .end(done);
+    });
+
+    it('gets correct details and status code for chikungunya', function(done) {
+        request(`${url}`)
+            .get(`/disease/4a1239ee4df81a98a51a3eb15c5521b3`)
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                let disease = res.body;
+                let correct_symptoms   = [ "fever", "joint pain", "headache", "muscle pain", "joint swelling", "rash" ];
+                let correct_report_ids = [ '1d90a471f9379fb1754fa366de1653f3', 'f57edf7b8e51568af08ddf1ba81a2734', '610522d22f202310ae5f8e1cdeac9590', 'def84179f91a114cdffc96b8b1f0d8bc']
+
+                assert(disease.name == 'chikungunya', "Incorrect disease name");
+                assert(disease.disease_id == '4a1239ee4df81a98a51a3eb15c5521b3', "Incorrect disease id");
+
+                assert(disease.symptoms.length == correct_symptoms.length, "Incorrect number of symptoms");
+                assert(correct_symptoms.every(function(correct_symptom, i) {
+                    return correct_symptom === disease.symptoms[i];
+                }), "Incorrect symptom details");
+
+                assert(disease.reports.length == correct_report_ids.length, "Incorrect number of reports.");
+                let reportIDs = disease.reports.map(report => { return report.report_id; });
+                for (reportID of reportIDs) {
+                    assert(correct_report_ids.includes(reportID), "Incorrect report ID.");
+                }
             })
             .end(done);
     });
