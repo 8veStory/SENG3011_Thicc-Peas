@@ -10,25 +10,34 @@ const express = require('express');
 
 const app = express();
 
-app.get('/user', function(req, res) {
-  res.status(200).json({ name: 'john' });
+describe('GET /diseases', function(){
+    it('should respond with a json 200 response with URL in request', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get('/diseases')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(done);
+    });
 });
 
-request(app)
-  .get('/diseases')
-  .expect('Content-Type', 'text/html; charset=utf-8')
-//   .expect('Content-Length', '15')
-  .expect(200)
-  .end(function(err, res) {
-    if (err) throw err;
-  });
+describe('GET /diseases', function(){
+    it('should respond with a json 200 response with URL in request', function(done) {
+        request('https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app')
+            .get('/diseases')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(done);
+    });
+});
 
 // mocha test stuff
-var assert = require('assert');
-describe('Array', function() {
-  describe('#indexOf()', function() {
-    it('should return -1 when the value is not present', function() {
-      assert.equal([1, 2, 3].indexOf(4), -1);
-    });
-  });
-});
+// var assert = require('assert');
+// describe('Array', function() {
+//   describe('#indexOf()', function() {
+//     it('should return -1 when the value is not present', function() {
+//       assert.equal([1, 2, 3].indexOf(4), -1);
+//     });
+//   });
+// });
