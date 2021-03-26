@@ -222,19 +222,56 @@ describe('GET /articles', function(){
             .expect('Content-Type', /json/)
             .end(done);
     });
-    it('gets an ebola article within 2020', function(done) {
+
+    it('returns all articles', function(done) {
         request(`${url}`)
-            .get('/articles?start_date=2020-01-01&end_date=2020-12-31&key_terms=ebola')
+            .get('/articles')
             .expect(200)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(function(res) {
-                assert(res.body.length == 1);
-                assert(res.body[0].headline == 'DEMOCRATIC REPUBLIC OF THE CONGO (formerly ZAIRE) Ebola Virus Outbreak 2020');
-                assert(res.body[0].main_text.match(/^The DRC government declared a new Ebola outbreak.*/));
-                assert(res.body[0].date_of_publication == '2020-06-01T00:00:00.000Z');
-                assert(res.body[0].url == 'https://www.cdc.gov/vhf/ebola/history/chronology.html');
-                assert(res.body[0].reports.length == 1);
+                let correctArticleIDs = [ "13c0812dd2c8ac9b95f1aafb126562cf", "3931f0e17eadd2214f67ebcb50c02d68",
+                                          "05cc555686be2f81f16abdd139201bd4", "2b54a160d0518e8f0946846bde6face6",
+                                          "c65a4366e9ab94b4b52c2a402072bc98", "0ba48160bd6034c38b9d5cea8aa94d0a",
+                                          "bc3f104e0a565bfb704f245a5b0f000f", "b99957498d7205494ecc90d1c1acc7bb",
+                                          "b730f0885558d9398d32b87b9cdd25a6" ];
+
+                assert(res.body.length == 9);
+                let articleIDs = res.body.map(article => { return article.article_id; });
+                for (articleID of articleIDs) {
+                    assert(correctArticleIDs.includes(articleID), "Incorrect article ID.");
+                }
+            })
+            .end(done);
+    });
+
+    it('gets an ebola article within 2020', function(done) {
+        request(`${url}`)
+            .get('/articles?start_date=2010-01-01&end_date=2015-01-01&key_terms=DENV')
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 1, "Should have returned one article.");
+                let article = res.body[0];
+
+                assert(article.headline == 'Chikungunya Cases Identified Through Passive Surveillance and Household Investigations — Puerto Rico, May 5–August 12, 2014', "Incorrect headline.");
+                assert(article.main_text.match(/^Residents of and travelers to areas of the tropics with ongoing CHIKV and DENV transmission should employ mosquito avoidance strategies to prevent illness.*/), "Incorrect main_text.");
+                assert(article.date_of_publication == '2014-12-05T00:00:00.000Z', "Incorrect date of publication.");
+                assert(article.url == 'https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6348a1.htm?s_cid=mm6348a1_w');
+                assert(article.reports[0].report_id == "f57edf7b8e51568af08ddf1ba81a2734", "Incorrect report attached to article.")
+            })
+            .end(done);
+    });
+
+    it('gets no relevent articles if queries fetch nothing', function(done) {
+        request(`${url}`)
+            .get('/articles?start_date=2010-01-01&end_date=2015-01-01&key_terms=hedgehogs')
+            .expect(200)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(function(res) {
+                assert(res.body.length == 0, "Should have returned no articles.");
             })
             .end(done);
     });
