@@ -1,0 +1,1 @@
+gcloud builds submit --tag gcr.io/handy-amplifier-307202/cdc
