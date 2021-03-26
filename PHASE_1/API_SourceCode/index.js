@@ -441,7 +441,34 @@ app.get('/articles', (req, res) => {
     });
 });
 
+/**
+ * Endpoint: GET '/article/:articleid'
+ * 
+ * Returns you the article that corresponds to the given 'articleid'.
+ */
+app.get('/article/:articleid', (req, res) => {
+    let articleID = req.params.articleid;
+    if (!articleID) {
+        res.status(400).send(`articleid ${articleID} is invalid.`);
+        log(req, res);
+        return;
+    }
+    articleID = articleID.toLowerCase();
 
+    db.collection(FS_ARTICLES_COLLECTION).where('article_id', '==', articleID).get().then(result => {
+        if (result.size > 1) console.log(`WARNING: ${articleID} has ${result.size} entries in the DB.`);
+
+        if (result.size == 0) {
+            res.status(404).send(`No articles match ID ${articleID}`);
+        } else {
+            let articleData = result.docs[0].data();
+            create_article_result(articleData).then(articleResult => {
+                res.status(200).send(articleResult);
+            })
+        }
+        log(req, res);
+    });
+})
 app.listen(
     PORT,
     () => console.log(`API is alive on http://localhost:${PORT}`)
