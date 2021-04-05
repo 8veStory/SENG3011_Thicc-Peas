@@ -16,10 +16,55 @@ ul {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-    font-family: "Times New Roman", Times, serif;
+    font-family: "Segoe UI";
   }
   
   /* Change the link color to #111 (black) on hover */
   li a:hover {
+    background-color:#224dab;
+    
+  }
+
+  h1 {
+    font-family: "Segoe UI";
+  }
+  
+  h2 {
+    font-family: "Segoe UI";
+  }
+
+  p {
+    font-family: "Segoe UI";
+  }
+
+  .active {
+    background-color: #18377a;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 64px;
+  }
+
+  .auth {
+    background-color: #214ba7;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .box {
+    width: 50%;
+    float: left;
+    padding: 230px;
+    text-align: center;
+    color: white;
+    background-color: #346eeb;
+    margin: auto;
+    border: 50px solid white;
+    line-height: 300px;
+  }
+  .box a:hover {
     background-color:#224dab;
   }
