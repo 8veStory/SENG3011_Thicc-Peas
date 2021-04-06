@@ -246,38 +246,43 @@ select {
 
 .clinic-column {
   float: left;
+  border: 3px solid grey;
+  border-radius: 10px;
 }
 
 .clinic-columnleft, .clinic-columnright {
   width: 30%;
-  background-color: crimson;
 }
 
 .clinic-columnmiddle {
   width: 30%;
   margin-left: 5%;
   margin-right: 5%;
-  background-color: #4CAF50;
 }
 
-.clinic-list {
-  float: left;
+.clinic-heading {
+  margin-left: 3%;
 }
 
-/* .clinic-bookingrecent {
-  float: left;
-  width: 33.33%;
-  background-color: #18377a;
+.clinic-break {
+  width: 95%;
 }
 
-.clinic-inventory {
-  float: left;
-  width: 33.33%;
-  background-color: #4CAF50;
+.clinic-table {
+  width: 100%;
+  /* border-top: 3px solid grey; */
+  text-align: center;
+  padding: 0% 1% 1% 1%;
 }
 
-.clinic-inventoryadd {
-  float: left;
-  width: 33.33%;
-  background-color: crimson;
-} */
+.clinic-tablerow {
+  border: 1px solid grey;
+  border-radius: 10px;
+}
+
+.clinic-inventorybox {
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: 4%;
+  width: 100%;
+}
