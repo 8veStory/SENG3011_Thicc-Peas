@@ -232,3 +232,52 @@ select {
   transition: max-height 0.2s ease-out;
   background-color: #7c9ee9;
 }
+
+.clinic-container {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.clinic-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.clinic-column {
+  float: left;
+}
+
+.clinic-columnleft, .clinic-columnright {
+  width: 30%;
+  background-color: crimson;
+}
+
+.clinic-columnmiddle {
+  width: 30%;
+  margin-left: 5%;
+  margin-right: 5%;
+  background-color: #4CAF50;
+}
+
+.clinic-list {
+  float: left;
+}
+
+/* .clinic-bookingrecent {
+  float: left;
+  width: 33.33%;
+  background-color: #18377a;
+}
+
+.clinic-inventory {
+  float: left;
+  width: 33.33%;
+  background-color: #4CAF50;
+}
+
+.clinic-inventoryadd {
+  float: left;
+  width: 33.33%;
+  background-color: crimson;
+} */
