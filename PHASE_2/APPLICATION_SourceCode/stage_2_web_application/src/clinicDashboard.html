@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href=#LiveDiseaseReport>Live Disease report</a></li>
+    <li><a href=#LocalOutbreaks>Local Outbreaks</a></li>
+    <li style="float:right"><a class="auth" href="loginPage.html">Login</a></li>
+    <li style="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
+  </ul>
+
+
+  <div class="container">
+    <h1>Sign Up</h1>
+    <p>Please fill in this form to create an account.</p>
+    <hr>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+    <label for="address"><b>Clinic Address</b></label>
+    <input type="text" placeholder="John Hospital, 123 Vaccine Street" name="addr" required>
+
+    <label for="country"><b>Clinic Country</b></label>
+    <select name="countries" id="countries">
+      <option value="Australia">Australia</option>
+      <option value="United States of America">United States of America</option>
+      <option value="Japan">Japan</option>
+      <option value="United Kingdom">United Kingdom</option>
+    </select>
+
+    <label for="state"><b>Clinic State</b></label>
+    <select name="states" id="states">
+      <option value="New South Wales">New South Wales</option>
+      <option value="Queensland">Queensland</option>
+      <option value="South Autralia">South Autralia</option>
+      <option value="Victoria">Victoria</option>
+      <option value="Western Australia">Western Australia</option>
+      <option value="Tasmania">Tasmania</option>
+    </select>
+
+    <div class="clearfix">
+      <button type="button" class="cancelbtn">Cancel</button>
+      <button type="submit" class="signupbtn">Sign Up</button>
+    </div>
+
+  </div>
+</body>
+
+</html>
