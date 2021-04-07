@@ -288,3 +288,11 @@ select {
   width: 95%;
   margin-bottom: 4%;
 }
+
+.outbreaks-box {
+  margin: auto;
+  width: 50%;
+  border: 3px solid grey;
+  border-radius: 10px;
+  padding: 1%;
+}
