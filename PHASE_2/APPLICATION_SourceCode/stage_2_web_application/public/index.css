@@ -225,8 +225,8 @@ select {
 .content {
   padding: 0 18px;
   max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  overflow: auto;
+  transition: max-height 0.3s ease-in-out;
   background-color: #7c9ee9;
 }
 
@@ -291,6 +291,7 @@ select {
 
 .outbreaks-box {
   margin: auto;
+  margin-bottom: 2%;
   width: 65%;
   border: 2px solid grey;
   border-radius: 10px;
