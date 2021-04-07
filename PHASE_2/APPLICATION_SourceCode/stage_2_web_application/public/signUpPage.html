@@ -7,7 +7,6 @@
 
  <ul>
   <li><a href="index.html">Home</a></li>
-  <li><a href=#LiveDiseaseReport>Live Disease report</a></li>
   <li><a href=#LocalOutbreaks>Local Outbreaks</a></li>
   <li style="float:right"><a class="auth" href="loginPage.html">Login</a></li>
   <li style="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
@@ -50,10 +49,15 @@
     </select>
 
     <div class="clearfix">
-      <button type="button" class="cancelbtn">Cancel</button>
-      <button type="submit" class="signupbtn">Sign Up</button>
+      <button color="secondary" type="button" class="button is-danger cancelbtn">Cancel MONKEY</button>
+      <button type="submit" class="button signupbtn">Sign Up</button>
     </div>
 
   </div>
+
+  <script type="text/javascript">
+    document.getElementsByClassName("cancelbtn")[0].onclick = () => location.href = "index.html";
+    document.getElementsByClassName("signupbtn")[0].onclick = () => location.href = "index.html";
+  </script>
   </body>
   </html>
