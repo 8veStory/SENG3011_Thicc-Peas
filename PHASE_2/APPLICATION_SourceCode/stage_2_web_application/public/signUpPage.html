@@ -19,16 +19,16 @@
     <hr>
 
     <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" required>
+    <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
     <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+    <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
     <label for="psw-repeat"><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
 
     <label for="address"><b>Clinic Address</b></label>
-    <input type="text" placeholder="John Hospital, 123 Vaccine Street" name="addr" required>
+    <input type="text" placeholder="John Hospital, 123 Vaccine Street" name="addr" id="addr" required>
 
     <label for="country"><b>Clinic Country</b></label>
     <select name="countries" id="countries">
@@ -50,9 +50,37 @@
 
     <div class="clearfix">
       <button type="button" class="cancelbtn" onclick="document.location='index.html'">Cancel</button>
-      <button type="submit" class="signupbtn" onclick="document.location='clinicDashboard.html'">Sign Up</button>
+      <button type="submit" class="signupbtn" onclick="handle_submit()">Sign Up</button>
     </div>
 
   </div>
+  <script>
+    function validateEmail(email) {
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+    function handle_submit(input){
+      var email = document.getElementById("email");
+      var psw = document.getElementById("psw");
+      var repeat = document.getElementById("psw-repeat");
+      var valid = 1;
+      if(validateEmail(email.value) == false && valid == 1){
+        valid = 0;
+        alert("email is invalid");
+      }
+      if(psw.value == "" && valid == 1){
+        valid = 0;
+        alert("passward cant be empty")
+      }
+      if(psw.value != repeat.value && valid == 1){
+        valid = 0;
+        alert("passward is not same");
+      }
+      if(valid == 1){
+        document.location='clinicDashboard.html';
+      }
+    }
+  </script>
   </body>
   </html>
+
