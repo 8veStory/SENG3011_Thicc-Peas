@@ -4,6 +4,36 @@
 <head>
   <title>Clinic Dashboard</title>
   <link rel="stylesheet" href="index.css">
+  <script>
+    function addInv() {
+      var table = document.getElementById("inventory-table");
+      var row = table.insertRow();
+      var disease = row.insertCell();
+      var type = row.insertCell();
+      var amount = row.insertCell();
+      disease.className = "clinic-tablerow";
+      type.className = "clinic-tablerow";
+      amount.className = "clinic-tablerow";
+      var form = document.getElementById("add-to-inv-form");
+      function handleForm(event) {
+        event.preventDefault();
+      }
+      form.addEventListener('submit', handleForm);
+      disease.appendChild(document.createTextNode(toTitleCase(form.elements["disease"].value)));
+      type.appendChild(document.createTextNode(form.elements["type"].value));
+      amount.appendChild(document.createTextNode(form.elements["amount"].value));
+      form.reset();
+    }
+
+    function toTitleCase(str) {
+      return str.replace(
+        /\w\S*/g,
+        function (txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    }
+  </script>
 </head>
 
 <body>
@@ -60,7 +90,7 @@
     <div class="clinic-column clinic-columnmiddle">
       <h2 class="clinic-heading">Inventory</h2>
       <hr class="clinic-break">
-      <table class="clinic-table">
+      <table class="clinic-table" id="inventory-table">
         <tr>
           <th>Disease</th>
           <th>Type</th>
@@ -87,17 +117,19 @@
       <h2 class="clinic-heading">Add to Inventory</h2>
       <hr class="clinic-break">
       <div class="clinic-inventorybox">
-        <label for="disease"><b>Disease</b></label>
-        <input type="text" placeholder="Enter Disease" name="disease" required>
-        <label for="Type"><b>Type</b></label>
-        <select name="type" id="type">
-          <option value="Test">Test</option>
-          <option value="Vaccine">Vaccine</option>
-        </select>
-        <label for="amount"><b>Amount</b></label>
-        <input type="number" placeholder="1234" name="amount" required>
-        <button type="button" class="clearbtn">Clear</button>
-        <button type="submit" class="addbtn">Add</button>
+        <form id="add-to-inv-form">
+          <label for="disease"><b>Disease</b></label>
+          <input type="text" placeholder="Enter Disease" name="disease" required>
+          <label for="Type"><b>Type</b></label>
+          <select name="type" id="type">
+            <option value="Test">Test</option>
+            <option value="Vaccine">Vaccine</option>
+          </select>
+          <label for="amount"><b>Amount</b></label>
+          <input type="number" placeholder="1234" name="amount" required>
+          <button type="button" class="clearbtn">Clear</button>
+          <button type="submit" class="addbtn" onclick="addInv()">Add</button>
+        </form>
       </div>
     </div>
   </div>
