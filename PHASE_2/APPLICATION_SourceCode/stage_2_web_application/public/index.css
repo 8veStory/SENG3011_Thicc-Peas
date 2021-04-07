@@ -89,31 +89,22 @@ button:hover {
 
 .box-description {
   text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1.5%;
 }
 
 .box-container {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto;
-  grid-template-areas:
-    "box-container__individual box-container__or box-container__clinic";
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 50px;
+  margin-left: 10%;
+  margin-right: 10%;
+  text-align: center;
+  line-height: 300px;
 }
 
 .box-container div {
   float: left;
-  width: 75%;
   height: auto;
   text-align: center;
-  line-height: 300px;
   background-color: #346eeb;
-}
-
-.box-container div:hover {
-  background-color: #224dab;
 }
 
 .box-container a {
@@ -121,21 +112,27 @@ button:hover {
   text-decoration: none;
 }
 
-.box-container__individual {
-  grid-area: box-container__individual;
-  justify-self: right;
-  margin-right: 10%;
+.box-container div:hover {
+  background-color: #224dab;
 }
 
-.box-container__or {
-  grid-area: box-container__or;
-  text-align: center;
+.box-container:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
-.box-container__clinic {
-  grid-area: box-container__clinic;
-  justify-self: left;
-  margin-left: 10%;
+.box-column {
+  float: left;
+  border-radius: 40px;
+}
+
+.box-columnleft, .box-columnright {
+  width: 45%;
+}
+
+.box-columnmiddle {
+  width: 10%;
 }
 
 .box {
