@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="localOutbreak.html">Local Outbreaks</a></li>
+    <li style="float:right"><a class="auth" href="loginPage.html">Login</a></li>
+    <li style="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
+  </ul>
+  <h1 class="title">Clinic Dashboard</h1>
+  <div class="clinic-container">
+    <div class="clinic-column clinic-columnleft">
+      <h2 class="clinic-heading">Recent Bookings</h2>
+      <hr class="clinic-break">
+      <table class="clinic-table">
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Disease</th>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">#34</td>
+          <td class="clinic-tablerow">John Doe</td>
+          <td class="clinic-tablerow">Vaccine</td>
+          <td class="clinic-tablerow">Covid</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">#35</td>
+          <td class="clinic-tablerow">Jane Doe</td>
+          <td class="clinic-tablerow">Test</td>
+          <td class="clinic-tablerow">Malaria</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">#36</td>
+          <td class="clinic-tablerow">Sue Doe</td>
+          <td class="clinic-tablerow">Test</td>
+          <td class="clinic-tablerow">Malaria</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">#37</td>
+          <td class="clinic-tablerow">Mike Doe</td>
+          <td class="clinic-tablerow">Vaccine</td>
+          <td class="clinic-tablerow">Flu</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">#38</td>
+          <td class="clinic-tablerow">Max Owen</td>
+          <td class="clinic-tablerow">Test</td>
+          <td class="clinic-tablerow">Covid</td>
+        </tr>
+      </table>
+    </div>
+    <div class="clinic-column clinic-columnmiddle">
+      <h2 class="clinic-heading">Inventory</h2>
+      <hr class="clinic-break">
+      <table class="clinic-table">
+        <tr>
+          <th>Disease</th>
+          <th>Type</th>
+          <th>Amount</th>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">Covid</td>
+          <td class="clinic-tablerow">Test</td>
+          <td class="clinic-tablerow">20</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">Covid</td>
+          <td class="clinic-tablerow">Vaccine</td>
+          <td class="clinic-tablerow">50</td>
+        </tr>
+        <tr>
+          <td class="clinic-tablerow">Flu</td>
+          <td class="clinic-tablerow">Vaccine</td>
+          <td class="clinic-tablerow">15</td>
+        </tr>
+      </table>
+    </div>
+    <div class="clinic-column clinic-columnright">
+      <h2 class="clinic-heading">Add to Inventory</h2>
+      <hr class="clinic-break">
+      <div class="clinic-inventorybox">
+        <label for="disease"><b>Disease</b></label>
+        <input type="text" placeholder="Enter Disease" name="disease" required>
+        <label for="Type"><b>Type</b></label>
+        <select name="type" id="type">
+          <option value="Test">Test</option>
+          <option value="Vaccine">Vaccine</option>
+        </select>
+        <label for="amount"><b>Amount</b></label>
+        <input type="number" placeholder="1234" name="amount" required>
+        <button type="button" class="clearbtn">Clear</button>
+        <button type="submit" class="addbtn">Add</button>
+      </div>
+    </div>
+  </div>
+
+</html>
