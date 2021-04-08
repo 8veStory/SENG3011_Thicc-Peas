@@ -85,6 +85,7 @@
             center: { lat: -34.397, lng: 150.644 },
             zoom: 8,
           });
+          document.getElementById("addressbutton").style.display = "block";
         }
       }
 
@@ -93,6 +94,7 @@
           center: { lat: position.coords.latitude, lng: position.coords.longitude },
           zoom: 12,
         });
+        document.getElementById("addressbutton").style.display = "block";
       }
 
       function addAddresses() {
@@ -139,10 +141,10 @@
     <li style="float:right"><a class="auth" href="loginPage.html">Login</a></li>
     <li style="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
     </ul>
-    <button onclick="addAddresses()">Find Available Clinics</button> <!-- PLEASE REFORMAT CSS ACCORDINGLY -->
+    <button id="addressbutton"onclick="addAddresses()" style="display:none">Find Available Clinics</button> <!-- PLEASE REFORMAT CSS ACCORDINGLY -->
     <div id="pharmacylist" style="float:right; width:20%">
     </div>    
-    <div id="map"></div>
+    <div id="map" style="font-size:50px">Map Loading...</div>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGrnG8WTVBcpYTlFF_dHJe4X8-XMcWduA&callback=initMap&libraries=&v=weekly"
