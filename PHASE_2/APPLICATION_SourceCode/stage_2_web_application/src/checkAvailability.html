@@ -1,45 +1,3 @@
-<!--<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-
- 
-
-<h1 class="title">Check for availability</h1>
--->
-<!--I don't know how to do this page at the moment-->
-<!--This is the map page and it is the most important page-->
-
-<!--
-<p>Click the button to get your coordinates.</p>
-<button onclick="getLocation()">Try It</button>
-<p id="demo"></p>
--->
-<!--Script below is just a default geolocation finder
-<script>
-var x = document.getElementById("demo");
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude + 
-  "<br>Longitude: " + position.coords.longitude;
-}
-</script>
-
-</body>
-</html>
-
--->
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -54,6 +12,19 @@ function showPosition(position) {
       }
       #h1 {
         font-size:5px;
+      }
+      #pharmacynode {
+        border: none;
+        font-family: "Segoe UI";
+        color: white;
+        background-color: #346eeb;
+        padding: 14px 16px;
+        border-radius: 15px;
+        border: solid white;
+      }
+
+      #pharmacynode:hover {
+        background-color: #224dab;
       }
 
       /* Optional: Makes the sample page fill the window. */
@@ -120,7 +91,7 @@ function showPosition(position) {
       function showPosition(position) {
         map = new google.maps.Map(document.getElementById("map"), {
           center: { lat: position.coords.latitude, lng: position.coords.longitude },
-          zoom: 8,
+          zoom: 12,
         });
       }
 
@@ -146,21 +117,19 @@ function showPosition(position) {
               title:"Pharmacy",
               map: map
             });
-            marker.setMap(map);
             var pharmacyList = document.getElementById("pharmacylist");
             var pharmacyNode = document.createElement('div');
-            pharmacyNode.appendChild(document.createTextNode("Available pharmacies:"));
+            pharmacyNode.id = "pharmacynode"
+            //pharmacyNode.appendChild(document.createTextNode("Available pharmacies:\n"));
             pharmacyNode.appendChild(document.createTextNode(addressdata.name));
             pharmacyNode.appendChild(document.createElement('br'));
-            pharmacyNode.appendChild(document.createTextNode("Available vaccines:"));
-            pharmacyNode.appendChild(document.createElement('br'));
-            pharmacyNode.appendChild(document.createTextNode(`${addressdata.vaccine_data[0].available}\n/\n${addressdata.vaccine_data[0].quantity}`));
-            pharmacyNode.appendChild(document.createElement('br'));
-            
+            pharmacyNode.appendChild(document.createTextNode(`Available vaccines: ${addressdata.vaccine_data[0].available}\n/\n${addressdata.vaccine_data[0].quantity}`));
+            pharmacyNode.appendChild(document.createTextNode(' \n'));
+            pharmacyNode.addEventListener('click', () => {map.setCenter(marker.getPosition())})
             pharmacylist.appendChild(pharmacyNode);
+            marker.setMap(map);
           });
       }
-
     </script>
   </head>
   <body>
@@ -172,7 +141,7 @@ function showPosition(position) {
     <li style="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
     </ul>
     <button onclick="addAddresses()">Find Available Pharmacies</button> <!-- PLEASE REFORMAT CSS ACCORDINGLY -->
-    <div id="pharmacylist" style="float:right">
+    <div id="pharmacylist" style="float:right; width:20%">
     </div>    
     <div id="map"></div>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
