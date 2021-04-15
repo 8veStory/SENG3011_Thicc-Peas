@@ -1,0 +1,15 @@
+#parent{ 
+    background: #999;
+    padding:100px;
+    height: 100%;
+    width: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.child {background:#ccc;height:200px;margin:20px;}
+
+.div {
+    display: flex;
+    align-items: center;
+}

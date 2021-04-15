@@ -1,0 +1,324 @@
+.App {
+  text-align: center;
+}
+
+
+
+
+
+.App-link {
+  color: #61dafb;
+}
+
+
+.body_text {
+  position: absolute;
+  top: 100%; left: 50%;
+}
+
+
+@import 'bulma/css/bulma.css';
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #346eeb;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-family: "Segoe UI";
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color:#224dab;
+}
+
+h1 {
+  font-family: "Segoe UI";
+  text-align: center;
+}
+
+h2 {
+  font-family: "Segoe UI";
+}
+
+p {
+  font-family: "Segoe UI";
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+/* Class Stylings */
+
+.active {
+  background-color: #18377a;
+}
+
+.title {
+  text-align: center;
+  font-size: 64px;
+  padding-bottom: 1%;
+}
+
+.auth {
+  background-color: #214ba7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.box-description {
+  text-align: center;
+  padding-top: 1%;
+  padding-bottom: 1.5%;
+}
+
+.box-container {
+  margin-left: 10%;
+  margin-right: 10%;
+  text-align: center;
+  line-height: 300px;
+}
+
+.box-container div {
+  float: left;
+  height: auto;
+  text-align: center;
+  background-color: #346eeb;
+}
+
+.box-container a {
+  color: white;
+  text-decoration: none;
+}
+
+.box-container div:hover {
+  background-color: #224dab;
+}
+
+.box-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.box-column {
+  float: left;
+  border-radius: 40px;
+}
+
+.box-columnleft, .box-columnright {
+  width: 45%;
+}
+
+.box-columnmiddle {
+  width: 10%;
+}
+
+.box {
+  width: 50%;
+  float: left;
+  padding: 230px;
+  text-align: center;
+  color: white;
+  background-color: #346eeb;
+  margin: auto;
+  border: 50px solid white;
+  line-height: 300px;
+}
+
+/* 
+.box a:hover {
+  background-color:#224dab;
+} */
+
+.container {
+  padding: 16px;
+}
+.image {
+  position:absolute;
+  top:25%;
+  left: 25%;
+  width: 50%;
+  
+}
+/* Input Stylings */
+
+/*
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+*/
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input :focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+select {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+/*Collapsible*/
+
+.collapsible {
+  background-color: #224dab;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  /*border: 300px solid white;*/
+  text-align: center;
+  outline: none;
+  font-size: 15px;
+  
+}
+
+.active, .collapsible:hover {
+  background-color: #224dab;
+}
+
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: auto;
+  transition: max-height 0.3s ease-in-out;
+  background-color: #7c9ee9;
+}
+
+.clinic-container {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.clinic-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.clinic-column {
+  float: left;
+  border: 3px solid grey;
+  border-radius: 10px;
+}
+
+.clinic-columnleft, .clinic-columnright {
+  width: 30%;
+}
+
+.clinic-columnmiddle {
+  width: 30%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.clinic-heading {
+  margin-left: 3%;
+}
+
+.clinic-break {
+  width: 95%;
+}
+
+.clinic-table {
+  width: 100%;
+  /* border-top: 3px solid grey; */
+  text-align: center;
+  padding: 0% 1% 1% 1%;
+}
+
+.clinic-tablerow {
+  border: 1px solid grey;
+  border-radius: 10px;
+}
+
+.clinic-inventorybox {
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-bottom: 4%;
+  width: 100%;
+}
+
+.individual-break {
+  width: 95%;
+  margin-bottom: 4%;
+}
+
+.outbreaks-box {
+  margin: auto;
+  margin-bottom: 2%;
+  width: 65%;
+  border: 2px solid grey;
+  border-radius: 10px;
+  padding: 1%;
+}
