@@ -1,11 +1,7 @@
 import React from 'react';
 
-import './menu.css';
-
-
-export default function SimpleMenu() {
-  
-
+import './NavBar.css';
+export default function NavBar() {
   return (
     <ul className='App-header' style={{flexDirection:'row',justifyContent:'flex-end'}}> 
       <a
@@ -20,8 +16,6 @@ export default function SimpleMenu() {
         href="/signup"
         variant="signup"
         className="left_text"
-       
-        
       >
         Sign up
       </a>

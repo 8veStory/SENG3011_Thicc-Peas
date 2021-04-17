@@ -1,17 +1,20 @@
-.top_text{
+.top_text {
     color: aqua;
     justify-content: top;
   }
-  .left_text{
+
+  .left_text {
     color: rgb(20, 184, 45);
     justify-content: top;
     visibility: visible;
   }
-  .right_text{
+
+  .right_text {
     color: #66ccff;
     justify-content: top;
     visibility: visible;
   }
+
   .App-header {
     position: absolute;
     top: 0;

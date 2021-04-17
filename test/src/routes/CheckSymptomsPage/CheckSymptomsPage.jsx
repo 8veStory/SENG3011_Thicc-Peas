@@ -1,23 +1,18 @@
-
-
-import './check.css';
+import React from "react";
 
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 
-
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
-import React from "react";
-
 import Checkbox from '@material-ui/core/Checkbox';
 
+import './CheckSymptomsPage.css';
+
 export default function Check() {
-    
-    
     const [state, setState] = React.useState({
         hot: true,
         Fatigue: false,

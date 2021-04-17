@@ -1,3 +1,45 @@
+# SENG3011 Web Application Front End
+## How to Run
+Following commands start only the front-end. Back-end is still in development.
+1. In this directory, run ```npm install```.
+2. Run ```npm run```.
+
+The front-end should not be running on port 3000. Access it via ```localhost:3000```.
+## Technologies
+* React
+* Material-UI
+## File Structure
+* We are using the following file structure (sourced from this [Medium post](https://charles-stover.medium.com/optimal-file-structure-for-react-applications-f3e35ad0a145)): 
+```
+my-app
+├── public                                  # All static files.
+│   └── <static files go here...>
+└── src
+    ├── common                              # Common resources (e.g. css) used across different components.
+    ├── routes                              # The main pages (components provided directly to react-routers' <Routes> tags).
+    │   └── <route-name>
+    │       ├── <route-name>.css
+    │       └── <route-name>.js
+    ├── components                          # The components that make up each main page.
+    │   └── <component-name>
+    │       ├── components
+    │       │   └── <sub-components go here...>
+    │       ├── <component-name>.css
+    │       ├── <component-name>.js
+    │       └── <component-name>.test.js
+    ├── utils                               # Helpful methods/classes that are used globally.
+    │   └── <util-name>
+    │       ├── <util-name>.js
+    │       └── <util-name>.test.js
+    ├── images                              # Images used by components or routes.
+    │   └── logo.svg
+    ├── index.js                            # Entry point.
+    └── index.css
+```
+
+## Tips for First-time React Contributers
+* JSX is different to HTML. E.g. the 'class' attribute is called 'className' instead, and 'for' is called 'htmlFor'. Be careful of this.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

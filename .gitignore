@@ -3,3 +3,5 @@ PHASE_1/handy-amplifier-307202-7b79308ce4ea.json
 PHASE_1/thicc-peas-seng3031-test-9ba8332e43ee.json
 PHASE_1/Scraper_SourceCode/.vscode
 PHASE_1/Scraper_SourceCode/__pycache__
+.eslintcache
+node_modules
