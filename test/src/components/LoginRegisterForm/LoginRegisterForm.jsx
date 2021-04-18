@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import { usePrevious} from "../../utils/Helper";
 
 /**
  * The login and register from. Only one is visible at a time and can be
@@ -8,13 +9,22 @@ import RegisterForm from "./RegisterForm";
  * 
  * We use React 'refs'. This is a [good guide](https://reactjs.org/docs/refs-and-the-dom.html#:~:text=Refs%20provide%20a%20way%20to,created%20in%20the%20render%20method.&text=The%20child%20to%20be%20modified,React%20provides%20an%20escape%20hatch.) if you don't know how it works.
  */
-export default function LoginRegisterForm({ logIn }) {
-    const [isLogInActive, setIsLogInActive] = useState(logIn);
+export default function LoginRegisterForm(props) {
+    let fromLogIn = props.location.state.fromLogIn;
+    console.log(fromLogIn);
+
+    const [isLogInActive, setIsLogInActive] = useState(fromLogIn);
+    if (isLogInActive !== fromLogIn) {
+        // If we click 'Log In' or 'Sign Up' on the the register page, make the
+        // form update.
+        console.log(fromLogIn);
+        setIsLogInActive(fromLogIn);
+    }
 
     const currentInactive = isLogInActive ? "Register" : "Login";
     const currentActive = isLogInActive ? "Login" : "Register";
-
     let toggleFormButton;
+
     const changeForm = () => {
         setIsLogInActive(!isLogInActive);
     }
@@ -23,6 +33,9 @@ export default function LoginRegisterForm({ logIn }) {
      * Explanation: 'useEffect' is executed whenever React re-renders the
      * screen. Re-rendering occurs every single time a state variable is
      * changed.
+     * 
+     * Here, we change the position of the toggle button every single time it's
+     * clicked.
      */
     useEffect(() => {
         if (!isLogInActive) {
@@ -32,7 +45,7 @@ export default function LoginRegisterForm({ logIn }) {
             toggleFormButton.classList.remove("left");
             toggleFormButton.classList.add("right");
         }
-    })
+    }, [isLogInActive]);
 
     return (
         <div className="login-register-form">
