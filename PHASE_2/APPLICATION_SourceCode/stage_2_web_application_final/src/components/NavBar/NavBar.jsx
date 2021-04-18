@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import './NavBar.css';
+
 export default function NavBar() {
   return (
     <ul className='App-header' style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
