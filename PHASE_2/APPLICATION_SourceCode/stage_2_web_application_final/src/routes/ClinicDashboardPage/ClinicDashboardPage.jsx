@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import React from 'react';
 
+import "./ClinicDashBoardPage.css";
+
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
 var inventory = [
@@ -82,15 +84,15 @@ export default function ClinicDashboard(props) {
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="localOutbreak.html">Local Outbreaks</a></li>
-        <li styles="float:right"><a class="auth" href="loginPage.html">Login</a></li>
-        <li styles="float:right"><a class="auth" href="signUpPage.html">Sign Up</a></li>
+        <li styles="float:right"><a className="auth" href="loginPage.html">Login</a></li>
+        <li styles="float:right"><a className="auth" href="signUpPage.html">Sign Up</a></li>
       </ul>
-      <h1 class="title">Clinic Dashboard</h1>
-      <div class="clinic-container">
-        <div class="clinic-column clinic-columnleft">
-          <h2 class="clinic-heading">Recent Bookings</h2>
+      <h1 className="title">Clinic Dashboard</h1>
+      <div className="clinic-container">
+        <div className="clinic-column clinic-columnleft">
+          <h2 className="clinic-heading">Recent Bookings</h2>
 
-          <table class="clinic-table">
+          <table className="clinic-table">
             <tr>
               <th>No.</th>
               <th>Name</th>
@@ -102,20 +104,20 @@ export default function ClinicDashboard(props) {
 
               return (
                 <tr key={index}>
-                  <td class="clinic-tablerow">{item.id}</td>
-                  <td class="clinic-tablerow">{item.name}</td>
-                  <td class="clinic-tablerow">{item.Type}</td>
-                  <td class="clinic-tablerow">{item.Disease}</td>
+                  <td className="clinic-tablerow">{item.id}</td>
+                  <td className="clinic-tablerow">{item.name}</td>
+                  <td className="clinic-tablerow">{item.Type}</td>
+                  <td className="clinic-tablerow">{item.Disease}</td>
                 </tr>
               );
             })}
 
           </table>
         </div>
-        <div class="clinic-column clinic-columnmiddle">
-          <h2 class="clinic-heading">Inventory</h2>
+        <div className="clinic-column clinic-columnmiddle">
+          <h2 className="clinic-heading">Inventory</h2>
 
-          <table class="clinic-table" id="inventory-table">
+          <table className="clinic-table" id="inventory-table">
             <tr>
               <th>Disease</th>
               <th>Type</th>
@@ -126,9 +128,9 @@ export default function ClinicDashboard(props) {
               console.log(item);
               return (
                 <tr key={index}>
-                  <td class="clinic-tablerow">{item.Disease}</td>
-                  <td class="clinic-tablerow">{item.Type}</td>
-                  <td class="clinic-tablerow">{item.Amount}</td>
+                  <td className="clinic-tablerow">{item.Disease}</td>
+                  <td className="clinic-tablerow">{item.Type}</td>
+                  <td className="clinic-tablerow">{item.Amount}</td>
                 </tr>
               );
             })}
@@ -136,10 +138,10 @@ export default function ClinicDashboard(props) {
           </table>
         </div>
 
-        <div class="clinic-column clinic-columnright">
-          <h2 class="clinic-heading">Add to Inventory</h2>
+        <div className="clinic-column clinic-columnright">
+          <h2 className="clinic-heading">Add to Inventory</h2>
 
-          <div class="clinic-inventorybox">
+          <div className="clinic-inventorybox">
             <form id="add-to-inv-form">
               <label for="disease"><b>Disease</b></label>
               <input type="text" placeholder="Enter Disease" name="disease" required></input>
@@ -150,10 +152,10 @@ export default function ClinicDashboard(props) {
               </select>
               <label for="amount"><b>Amount</b></label>
               <input type="number" placeholder="1234" name="amount" required></input>
-              <button type="button" class="clearbtn" onClick={
+              <button type="button" className="clearbtn" onClick={
                 () => clearInv(setInv)
               }>Clear</button>
-              <button type="submit" class="addbtn" onClick={
+              <button type="submit" className="addbtn" onClick={
                 () => addInv(inv, setInv, { Amount: amo, Type: type, Disease: disease })
               }>Add</button>
             </form>
