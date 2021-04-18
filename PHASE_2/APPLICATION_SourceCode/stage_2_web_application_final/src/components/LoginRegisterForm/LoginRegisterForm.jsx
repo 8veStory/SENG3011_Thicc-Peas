@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { usePrevious} from "../../utils/Helper";
+import "./LoginRegisterForm.css";
 
 /**
  * The login and register from. Only one is visible at a time and can be

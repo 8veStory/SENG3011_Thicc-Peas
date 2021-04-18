@@ -1,5 +1,4 @@
-import "./style.css";
-import "./LoginRegisterForm.css";
+import "./LoginForm.css";
 import React, { useState } from "react";
 import loginImg from "../../images/LoginRegisterLogo.svg";
 

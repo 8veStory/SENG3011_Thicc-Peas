@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import registerImg from "../../images/LoginRegisterLogo.svg";
+import "./RegisterForm.css";
 
 export default function RegisterForm() {
   // React States
