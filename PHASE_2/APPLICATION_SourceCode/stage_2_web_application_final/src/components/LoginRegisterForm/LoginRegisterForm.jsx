@@ -11,15 +11,15 @@ import { usePrevious} from "../../utils/Helper";
  */
 export default function LoginRegisterForm(props) {
     let fromLogIn = props.location.state.fromLogIn;
-    console.log(fromLogIn);
+    // console.log(fromLogIn);
 
-    const [isLogInActive, setIsLogInActive] = useState(fromLogIn);
-    if (isLogInActive !== fromLogIn) {
-        // If we click 'Log In' or 'Sign Up' on the the register page, make the
-        // form update.
-        console.log(fromLogIn);
-        setIsLogInActive(fromLogIn);
-    }
+    const [isLogInActive, setIsLogInActive] = useState(false);
+    // if (isLogInActive !== fromLogIn) {
+    //     // If we click 'Log In' or 'Sign Up' on the the register page, make the
+    //     // form update.
+    //     console.log(fromLogIn);
+    //     setIsLogInActive(fromLogIn);
+    // }
 
     const currentInactive = isLogInActive ? "Register" : "Login";
     const currentActive = isLogInActive ? "Login" : "Register";
