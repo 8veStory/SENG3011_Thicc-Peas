@@ -1,5 +1,6 @@
+@import 'bulma/css/bulma.css';
+
 .App {
-  text-align: center;
 }
 
 .App-link {
@@ -10,9 +11,6 @@
   position: absolute;
   top: 100%; left: 50%;
 }
-
-
-@import 'bulma/css/bulma.css';
 
 body {
   margin: 0;
@@ -167,17 +165,17 @@ button:hover {
   background-color:#224dab;
 } */
 
-.container {
+/* .container {
   padding: 16px;
-}
+} */
 
-.image {
+/* .image {
   position:absolute;
   top:25%;
   left: 25%;
   width: 50%;
-  
-}
+} */
+
 /* Input Stylings */
 
 /*
@@ -243,13 +241,13 @@ select {
   background-color: #224dab;
 }
 
-.content {
+/* .content {
   padding: 0 18px;
   max-height: 0;
   overflow: auto;
   transition: max-height 0.3s ease-in-out;
   background-color: #7c9ee9;
-}
+} */
 
 .clinic-container {
   margin-left: 10%;

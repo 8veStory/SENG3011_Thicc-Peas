@@ -10,6 +10,9 @@ import LoginPage from '../LoginPage/LoginPage';
 import SignUpPage from '../SignUpPage/SignUpPage';
 import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
+import LoginForm from '../../components/LoginRegisterForm/LoginForm';
+import RegisterForm from '../../components/LoginRegisterForm/RegisterForm';
+import LoginRegisterForm from '../../components/LoginRegisterForm/LoginRegisterForm';
 
 /**
  * The main React component that links to the others.
@@ -19,16 +22,21 @@ export default function App(props) {
     let history = useHistory();
     console.log(history);
 
+    let LoginRegisterFormWithRouter = withRouter((props) => <LoginRegisterForm {...props}/>);
+
     return (
         <div className="App">
             <NavBar />
-            <SideMenu />
+            {/* <SideMenu /> */}
             <Switch>
                 <Route path='/' exact component={withRouter(HomePage)} />
-                <Route path='/signup' exact component={withRouter(SignUpPage)} />
-                <Route path='/login' exact component={withRouter(LoginPage)} />
+                <Route path='/signup' exact component={withRouter(LoginRegisterFormWithRouter)} />
+                <Route path='/login' exact component={withRouter(LoginRegisterFormWithRouter)} />
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
+                <Route path='/logintest' exact component={withRouter(LoginForm)} />
+                <Route path='/registertest' exact component={withRouter(RegisterForm)} />
+                <Route path='/loginregistertest' exact component={withRouter(LoginRegisterForm)} />
             </Switch>
         </div>
     );
