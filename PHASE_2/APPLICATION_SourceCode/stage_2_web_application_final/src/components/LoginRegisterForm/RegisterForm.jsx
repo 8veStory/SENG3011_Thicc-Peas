@@ -2,17 +2,39 @@ import React, { useState } from 'react'
 import registerImg from "../../images/LoginRegisterLogo.svg";
 import "./RegisterForm.css";
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
   // React States
+  const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [checkPwd, setCheck] = useState('');
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState('Australia');
   const [state, setState] = useState('New South Wales');
-  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.table({ pwd: pwd, checkPwd: checkPwd, address: address, country: country, state: state, email: email });
+
+    // Check all fields are not empty...
+    if (!email)
+      alert("Email cannot be empty.");
+    else if (!pwd)
+      alert("Password cannot be empty.");
+    else if (!address)
+      alert("Address cannot be empty.");
+    else if (!state)
+      alert("State cannot be empty.");
+    else if (!country)
+      alert("Country cannot be empty.");
+
+    console.log("Make API call here and check that signup is successful...")
+
+    console.log("Successful signup");
+  }
 
   return (
-    <div className="base-container">
+    <form className="base-container" onSubmit={handleSubmit}>
       <div className="header">Register</div>
       <div className="content">
         <div className="login-image">
@@ -20,22 +42,22 @@ export default function RegisterForm() {
         </div>
         <div className="form">
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" onChange={e => setEmail(e.target.value)}>Email</label>
             <input type="email" name="email" placeholder="Email" />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" onChange={e => setPwd(e.target.value)}>Password</label>
             <input type="password" name="password" placeholder="Password" />
           </div>
 
           <div className="form-group">
-            <label htmlFor="repeatPassword">Repeat Password</label>
+            <label htmlFor="repeatPassword" onChange={e => setCheck(e.target.value)}>Repeat Password</label>
             <input type="password" name="repeatPassword" placeholder="Repeat your password" />
           </div>
 
           <div className="form-group">
-            <label htmlFor="address">Clinic Address</label>
+            <label htmlFor="address" onChange={e => setAddress(e.target.value)}>Clinic Address</label>
             <input type="text" name="clinicAddress" placeholder="123 John Street, Flemington, 2532, Sydney" />
           </div>
 
@@ -62,9 +84,10 @@ export default function RegisterForm() {
           </div>
         </div>
       </div>
+
       <div className="buttons">
-        <button type="button" className="btn">Register</button>
+        <button type="submit" className="btn">Register</button>
       </div>
-    </div>
+    </form>
   );
 }

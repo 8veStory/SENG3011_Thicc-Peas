@@ -44,6 +44,11 @@ export default function SignUpPage() {
     }
 
     login = valid;
+
+    console.log("Make API call here and check that signup is successful...")
+
+    console.log("Successful signup");
+    this.props.push("/clinic")
   }
 
   return (

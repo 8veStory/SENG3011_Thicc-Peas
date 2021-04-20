@@ -10,7 +10,9 @@ export default function LoginForm() {
     e.preventDefault();
     console.log("Log-in details:", {email: email, password: pwd});
 
-    console.log("Make API call here and wait for response...");
+    console.log("Make API call here and check if details are correct...");
+
+    console.log("Successful login");
   }
 
   return (
