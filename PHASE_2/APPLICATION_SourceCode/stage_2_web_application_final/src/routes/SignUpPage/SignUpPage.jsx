@@ -47,7 +47,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="form">
+    <form className="form">
 
       <h1>Sign Up</h1>
       <p>Please fill in this form to create an account.</p>
@@ -85,6 +85,6 @@ export default function SignUpPage() {
       <div className="clearfix" onClick={handleSubmit}>
         <ConditionalLink condition={(() => login)} to='/clinic'>Sign Up</ConditionalLink>
       </div>
-    </div>
+    </form>
   )
 }
