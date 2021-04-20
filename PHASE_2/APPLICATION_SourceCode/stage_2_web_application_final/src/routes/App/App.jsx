@@ -33,9 +33,6 @@ export default function App(props) {
                 <Route path='/register' exact component={LoginRegisterFormWithRouter} />
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
-                <Route path='/login' exact component={withRouter(LoginForm)} />
-                <Route path='/signup' exact component={withRouter(RegisterForm)} />
-                <Route path='/loginregistertest' exact component={withRouter(LoginRegisterForm)} />
             </Switch>
         </div>
     );
