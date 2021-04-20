@@ -2,7 +2,7 @@ import "./LoginForm.css";
 import React, { useState } from "react";
 import loginImg from "../../images/LoginRegisterLogo.svg";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
 
@@ -13,7 +13,7 @@ export default function LoginForm() {
     console.log("Make API call here and check if details are correct...");
 
     console.log("Successful login");
-
+    props.set_login_status(true);
     window.location.href = "/clinic";
   }
 
