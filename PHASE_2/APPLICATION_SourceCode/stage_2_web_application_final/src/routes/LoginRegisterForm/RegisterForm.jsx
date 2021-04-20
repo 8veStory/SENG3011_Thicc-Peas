@@ -29,7 +29,7 @@ export default function RegisterForm(props) {
       alert("Country cannot be empty.");
 
     console.log("Make API call here and check that signup is successful...")
-
+    props.set_login_status(true);
     console.log("Successful signup");
     window.location.href = "/clinic";
   }
