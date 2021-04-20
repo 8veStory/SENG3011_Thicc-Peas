@@ -11,18 +11,22 @@ import "./LoginRegisterForm.css";
  * We use React 'refs'. This is a [good guide](https://reactjs.org/docs/refs-and-the-dom.html#:~:text=Refs%20provide%20a%20way%20to,created%20in%20the%20render%20method.&text=The%20child%20to%20be%20modified,React%20provides%20an%20escape%20hatch.) if you don't know how it works.
  */
 export default function LoginRegisterForm(props) {
-    // state variable passed from <Link> tags in NavBar.
-    let fromLogIn = props.location.state.fromLogIn;
-    let cameFromLink = props.location.state.cameFromLink;
+    // State variable passed from <Link> tags in NavBar.
+    let fromLogIn;
+    let cameFromLink;
+    if (props.location.state) {
+        fromLogIn = props.location.state.fromLogIn;
+        cameFromLink = props.location.state.cameFromLink;
+    }
 
+    // React state
     const [isLogInActive, setIsLogInActive] = useState(false);
 
     // if ((fromLogIn != null || fromLogIn != undefined)) {
     //     setIsLogInActive(fromLogIn);
     // }
 
-    console.log({ cameFromLink: cameFromLink, isLogIn: isLogInActive, fromLogIn: fromLogIn });
-    if (cameFromLink && isLogInActive !== fromLogIn) {
+    if (fromLogIn !== undefined && cameFromLink && isLogInActive !== fromLogIn) {
         // If we click 'Log In' or 'Sign Up' on the the register page, make the
         // form update.
         setIsLogInActive(fromLogIn);
@@ -33,7 +37,9 @@ export default function LoginRegisterForm(props) {
     let toggleFormButton;
 
     const changeForm = () => {
-        props.location.state.cameFromLink = false;
+        if (props.location.state) {
+            props.location.state.cameFromLink = false;
+        }
         setIsLogInActive(!isLogInActive);
     }
 

@@ -6,6 +6,13 @@ export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Log-in details:", {email: email, password: pwd});
+
+    console.log("Make API call here and wait for response...");
+  }
+
   return (
     <div className="base-container">
       <div className="header">Login</div>
@@ -13,19 +20,19 @@ export default function LoginForm() {
         <div className="login-image">
           <img src={loginImg} alt="A doctor" />
         </div>
-        <div className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="text" name="email" placeholder="Email" />
+            <input type="text" name="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input type="password" name="password" placeholder="Password" />
+            <input type="password" name="password" placeholder="Password" onChange={e => setPwd(e.target.value)}/>
           </div>
-        </div>
-      </div>
-      <div className="buttons">
-        <button type="button" className="btn">Login</button>
+          <div className="buttons">
+            <button type="submit" className="btn">Login</button>
+          </div>
+        </form>
       </div>
     </div>
   );
