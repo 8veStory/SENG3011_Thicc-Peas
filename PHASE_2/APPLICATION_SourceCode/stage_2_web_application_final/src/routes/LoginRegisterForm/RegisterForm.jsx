@@ -31,6 +31,7 @@ export default function RegisterForm(props) {
     console.log("Make API call here and check that signup is successful...")
 
     console.log("Successful signup");
+    window.location.href = "/clinic";
   }
 
   return (

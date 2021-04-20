@@ -13,6 +13,8 @@ export default function LoginForm() {
     console.log("Make API call here and check if details are correct...");
 
     console.log("Successful login");
+
+    window.location.href = "/clinic";
   }
 
   return (

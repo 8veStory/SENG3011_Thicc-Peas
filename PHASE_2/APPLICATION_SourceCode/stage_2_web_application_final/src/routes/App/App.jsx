@@ -6,13 +6,9 @@ import NavBar from '../../components/NavBar/NavBar';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
 import HomePage from '../HomePage/HomePage';
-import LoginPage from '../LoginPage/LoginPage';
-import SignUpPage from '../SignUpPage/SignUpPage';
 import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
-import LoginForm from '../../components/LoginRegisterForm/LoginForm';
-import RegisterForm from '../../components/LoginRegisterForm/RegisterForm';
-import LoginRegisterForm from '../../components/LoginRegisterForm/LoginRegisterForm';
+import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 
 /**
  * The main React component that links to the others.
