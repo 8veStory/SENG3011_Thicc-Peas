@@ -84,6 +84,8 @@ body {
     width: 100%;
     align-content: center;
     display: table;
+    margin-bottom: 5px;
+    padding: 3px;
     /* margin: auto; */
     /* vertical-align: middle; */
     background-color: var(--background-color);
