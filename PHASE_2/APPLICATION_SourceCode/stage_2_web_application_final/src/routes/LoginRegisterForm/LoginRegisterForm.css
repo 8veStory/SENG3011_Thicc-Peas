@@ -44,7 +44,7 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    background-color: #536DFE;
+    background-color: var(--secondary-color);
 }
 
 .toggle-form-button .text {

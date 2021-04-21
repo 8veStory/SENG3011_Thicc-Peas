@@ -27,7 +27,7 @@ ul {
   padding-bottom: 8px;
   list-style-type: none;
   overflow: hidden;
-  background-color: #346eeb;
+  background-color: var(--main-color);
 }
 
 li a {

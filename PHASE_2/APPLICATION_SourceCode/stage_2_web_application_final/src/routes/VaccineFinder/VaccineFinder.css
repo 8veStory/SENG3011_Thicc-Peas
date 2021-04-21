@@ -38,7 +38,7 @@
     font-size: 18;
     border-radius: 5px;
     transition: all 250ms ease-in-out;
-    background-color: #536DFE;
+    background-color: var(--secondary-color);
 }
 
 .buttons .btn:hover {
@@ -62,7 +62,7 @@
     border: none;
     font-family: "Segoe UI";
     color: white;
-    background-color: #346eeb;
+    background-color: var(--main-color);
     padding: 14px 16px;
     border-radius: 15px;
     border: solid white;
