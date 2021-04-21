@@ -11,6 +11,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import VaccineFinder from '../VaccineFinder/VaccineFinder';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,8 +89,9 @@ export default function LeftSlider(props) {
               <Tab label="Symptom Checker" {...a11yProps(1)} />
               <Tab label="Local Outbreaks" {...a11yProps(2)} />
             </Tabs>
-            <TabPanel value={value} index={0}>
+            <TabPanel className="vaccine-tab-panel" value={value} index={0}>
               Vaccine Finder
+              <VaccineFinder></VaccineFinder>
             </TabPanel>
             <TabPanel value={value} index={1}>
               Symptom Checker
