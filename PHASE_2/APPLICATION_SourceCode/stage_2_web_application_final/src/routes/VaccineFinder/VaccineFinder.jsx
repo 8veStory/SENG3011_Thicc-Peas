@@ -13,7 +13,7 @@ export default function VaccineFinder() {
     - [x] Space on the right-hand side???
     - [x] Scaling google map.
     - [x] Multiple cards please.
-    - [ ] Add pog filters.
+    - [x] Add pog filters.
     - [ ] List of available vaccine at each clinic.
     - [ ] Location markers for each clinic.
     - [ ] Click to locate each clinic on google map.
@@ -40,17 +40,6 @@ export default function VaccineFinder() {
             { label: "Mumps", value: "Mumps"},
             { label: "Rubella", value: "Rubella"},
         ].sort((a, b) => a.label > b.label);
-        // return [
-        //     { label: "Grapes 🍇", value: "grapes" },
-        //     { label: "Mango 🥭", value: "mango" },
-        //     { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-        //     { label: "Watermelon 🍉", value: "watermelon" },
-        //     { label: "Pear 🍐", value: "pear" },
-        //     { label: "Apple 🍎", value: "apple" },
-        //     { label: "Tangerine 🍊", value: "tangerine" },
-        //     { label: "Pineapple 🍍", value: "pineapple" },
-        //     { label: "Peach 🍑", value: "peach" },
-        // ];
     }
 
     /**
