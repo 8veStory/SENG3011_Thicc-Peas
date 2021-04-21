@@ -1,31 +1,74 @@
 import mainLogo from '../../images/mainLogo.png';
-import React from 'react';
+import clinicLogo from '../../images/clinicLogo.png';
+import individualLogo from '../../images/individualLogo.png';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import LeftSlider from './LeftSlider';
+import RightSlider from './RightSlider';
+import Backdrop from './Backdrop';
+import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 
 import "./HomePage.css";
 
-export default function HomePage() {
-    return (
-        <div>
-            {/* <p>I am a placeholder</p> */}
-            <h1>VaccTracc</h1>
-            <div class="image">
-                <img src={mainLogo} alt="logo"/>
-            </div>
-            <div className="linkButtonWrapper">
-                <Link className="indvButton-text" to={{ pathname: "/" }}>
-                    <div className="linkButton indv">
-                        Individual
-                    </div>
-                </Link>
-                
-                <Link  className="clinicButton-text" to={{ pathname: "/" }}>
-                    <div className="linkButton clinic">
-                        Clinic/Hospital
-                    </div>
-                </Link>
-            </div>
-            
+export default function HomePage(props) {
+  const [leftSliderOpen, setLeftSliderOpen] = useState(false);
+  const [rightSliderOpen, setRightSliderOpen] = useState(false);
+
+  let leftSliderHandler = () => {
+    // setLeftSliderOpen((prevState) => {
+    //   return {leftSliderOpen: !prevState.leftSliderOpen};
+    // });
+    setLeftSliderOpen(true);
+  };
+
+  let rightSliderHandler = () => {
+    // setRightSliderOpen((prevState) => {
+    //   return {rightSliderOpen: !prevState.rightSliderOpen};
+    // });
+    setRightSliderOpen(true);
+  };
+
+  // let backdropClickHandler = () => {
+  //   setLeftSliderOpen(false);
+  //   setRightSliderOpen(false);
+  // };
+
+  let backClickHandler = () => {
+    setLeftSliderOpen(false);
+    setRightSliderOpen(false);
+  };
+
+  // let leftSlider;
+  // let backdrop;
+
+  if (leftSliderOpen) {
+    // leftSlider = <LeftSlider/>;
+    // backdrop = <Backdrop click={backdropClickHandler}/>;
+  }
+
+  return (
+    <body>
+      <LeftSlider show={leftSliderOpen} hide={backClickHandler}/>
+      <RightSlider show={rightSliderOpen} hide={backClickHandler}/>
+      {/* <LoginRegisterForm/> */}
+      {/* {leftSlider} */}
+      {/* {backdrop} */}
+      <div className="header">
+        <h1>
+          VaccTracc
+        </h1>
+      </div>
+      <div className="choice">
+        <div className="individual-box" onClick={leftSliderHandler}>
+          <img src={individualLogo}/>
+          <h2>Individual</h2>
         </div>
-    );
+        <div className="clinic-box" onClick={rightSliderHandler}>
+          <img src={clinicLogo}/>
+          <h2>Clinic</h2>
+        </div>
+      </div>
+    </body>
+  );
 }
