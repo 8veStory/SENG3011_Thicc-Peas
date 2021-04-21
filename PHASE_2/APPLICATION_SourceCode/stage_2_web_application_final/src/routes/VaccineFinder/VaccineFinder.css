@@ -98,6 +98,10 @@
     outline: none;
 }
 
+.multiselect .dropdown-container {
+    overflow: hidden;
+}
+
 .multiselect .dropdown-container .dropdown-heading .dropdown-heading-value {
     overflow: initial;
 }
