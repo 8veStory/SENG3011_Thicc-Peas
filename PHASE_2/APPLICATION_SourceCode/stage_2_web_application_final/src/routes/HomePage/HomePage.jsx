@@ -1,7 +1,7 @@
 import mainLogo from '../../images/mainLogo.png';
 import clinicLogo from '../../images/clinicLogo.png';
 import individualLogo from '../../images/individualLogo.png';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import LeftSlider from './LeftSlider';
