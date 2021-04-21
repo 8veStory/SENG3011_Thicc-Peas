@@ -54,7 +54,7 @@
 .buttons .btn {
     font-size: 18;
     transition: all 250ms ease-in-out;
-    background-color: #536DFE;
+    background-color: var(--secondary-color);
 }
 
 .buttons .btn:hover {

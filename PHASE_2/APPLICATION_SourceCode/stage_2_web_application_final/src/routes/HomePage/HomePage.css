@@ -11,7 +11,7 @@
 
 .linkButton {
     float: left;
-    background-color: #346eeb;
+    background-color: var(--main-color);
     border: 10px white;
     color: white;
     display: block;
@@ -32,7 +32,7 @@
 .clinicButton-text {
 
     float: left;
-    background-color: #346eeb;
+    background-color: var(--main-color);
     border: 10px white;
     color: white;
     display: block;
@@ -47,7 +47,7 @@
 .indvButton-text {
 
     float: right;
-    background-color: #346eeb;
+    background-color: var(--main-color);
     border: 10px white;
     color: white;
     display: block;
