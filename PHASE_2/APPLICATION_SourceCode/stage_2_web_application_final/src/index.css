@@ -1,7 +1,11 @@
 #root {
 }
 
-#root, html, body {
+#html {
+  overflow-y: auto;
+}
+
+#root, body {
   height: 100%;
   overflow: auto;
   margin: 0;

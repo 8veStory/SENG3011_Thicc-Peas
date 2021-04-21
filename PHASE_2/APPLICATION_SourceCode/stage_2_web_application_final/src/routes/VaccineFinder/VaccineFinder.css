@@ -1,16 +1,38 @@
+.vaccine-finder-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+
 .vaccine-finder-container {
     display: grid;
-    grid-template-columns: [map] 75% [pharmacy] auto;
-    grid-template-rows: auto;
-    grid-template-areas:
-        "map | pharmacy";
-    height: fit-content;
+    grid-template-columns: 75% auto;
+    grid-template-rows: 100%;
+    grid-template-areas: "map pharmacy";
+    height: 100%;
+}
+
+.pharmacy-list-module {
+    grid-area: pharmacy;
+    width: 100%;
+    height: 100%;
+    margin: 5px;
+}
+
+.pharmacy-list-card {
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-color);
 }
 
 .vaccine-map-module {
     grid-area: map;
     width: 100%;
     height: 100%;
+    margin: 5px;
 }
 
 .vaccine-map-container {
@@ -21,17 +43,8 @@
 .vaccine-finder__card {
     display: block;
     border-radius: 15px;
-    margin: 10px;
+    margin: 5px;
     overflow: hidden;
-}
-
-.pharmacy-list-module {
-    width: auto;
-    height: auto;
-    grid-area: pharmacy;
-    background-color: white;
-    border-radius: 5px;
-    padding: 5px;
 }
 
 .buttons .btn {
