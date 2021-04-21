@@ -1,39 +1,48 @@
 import mainLogo from '../../images/mainLogo.png';
 import clinicLogo from '../../images/clinicLogo.png';
 import individualLogo from '../../images/individualLogo.png';
-import React from 'react';
+import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
+
+import IndividualPages from './IndividualPages';
+import Backdrop from './Backdrop';
 
 import "./HomePage.css";
 
-export default function HomePage() {
+export default function HomePage(props) {
+  const [leftSliderOpen, setLeftSliderOpen] = useState(false);
+
+  let leftSliderHandler = () => {
+    // setLeftSliderOpen((prevState) => {
+    //   return {leftSliderOpen: !prevState.leftSliderOpen};
+    // });
+    setLeftSliderOpen(true);
+  };
+
+  let backdropClickHandler = () => {
+    setLeftSliderOpen(false);
+  };
+
+  // let leftSlider;
+  let backdrop;
+
+  if (leftSliderOpen) {
+    // leftSlider = <IndividualPages/>;
+    backdrop = <Backdrop click={backdropClickHandler}/>;
+  }
+
   return (
     <body>
-      {/* <h1>VaccTracc</h1>
-      <div class="image">
-        <img src={mainLogo} alt="logo" />
-      </div>
-      <div className="linkButtonWrapper">
-        <Link className="indvButton-text" to={{ pathname: "/" }}>
-          <div className="linkButton indv">
-            Individual
-          </div>
-        </Link>
-
-        <Link className="clinicButton-text" to={{ pathname: "/" }}>
-          <div className="linkButton clinic">
-            Clinic/Hospital
-          </div>
-        </Link>
-      </div> */}
-
+      <IndividualPages show={leftSliderOpen}/>
+      {/* {leftSlider} */}
+      {backdrop}
       <div className="header">
         <h1>
           VaccTracc
         </h1>
       </div>
       <div className="choice">
-        <div className="individual-box">
+        <div className="individual-box" onClick={leftSliderHandler}>
           <img src={individualLogo}/>
           <h2>Individual</h2>
         </div>
