@@ -81,12 +81,6 @@ export default function ClinicDashboard(props) {
 
   return (
     <body>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="localOutbreak.html">Local Outbreaks</a></li>
-        <li styles="float:right"><a className="auth" href="loginPage.html">Login</a></li>
-        <li styles="float:right"><a className="auth" href="signUpPage.html">Sign Up</a></li>
-      </ul>
       <h1 className="title">Clinic Dashboard</h1>
       <div className="clinic-container">
         <div className="clinic-column clinic-columnleft">

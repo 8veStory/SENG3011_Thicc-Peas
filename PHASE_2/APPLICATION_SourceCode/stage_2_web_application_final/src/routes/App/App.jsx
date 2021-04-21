@@ -1,5 +1,5 @@
 import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
-import React from 'react';
+import React,{useState} from 'react';
 
 import './App.css';
 import '../../common/Shared.css';
@@ -18,12 +18,12 @@ export default function App(props) {
     console.log(useHistory);
     let history = useHistory();
     console.log(history);
-
-    let LoginRegisterFormWithRouter = withRouter((props) => <LoginRegisterForm {...props}/>);
+    const [login_status, set_login_status] = useState(false);
+    let LoginRegisterFormWithRouter = withRouter((props) => <LoginRegisterForm {...props} set_login_status={set_login_status}/>);
 
     return (
         <div className="App">
-            <NavBar />
+            <NavBar log_status={login_status} set_login_status={set_login_status}/>
             {/* <SideMenu /> */}
             <Switch>
                 <Route path='/' exact component={withRouter(HomePage)} />

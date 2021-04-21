@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import registerImg from "../../images/LoginRegisterLogo.svg";
 import "./RegisterForm.css";
 
@@ -10,6 +11,8 @@ export default function RegisterForm(props) {
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState('Australia');
   const [state, setState] = useState('New South Wales');
+
+  let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,9 +32,9 @@ export default function RegisterForm(props) {
       alert("Country cannot be empty.");
 
     console.log("Make API call here and check that signup is successful...")
-
+    props.set_login_status(true);
     console.log("Successful signup");
-    window.location.href = "/clinic";
+    history.pushState("/clinic");
   }
 
   return (

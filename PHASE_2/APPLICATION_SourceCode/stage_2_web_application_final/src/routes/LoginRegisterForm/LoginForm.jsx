@@ -1,10 +1,12 @@
 import "./LoginForm.css";
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import loginImg from "../../images/LoginRegisterLogo.svg";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
+  let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,8 +15,9 @@ export default function LoginForm() {
     console.log("Make API call here and check if details are correct...");
 
     console.log("Successful login");
-
-    window.location.href = "/clinic";
+    props.set_login_status(true);
+    history.push("/clinic");
+    // window.location.href = "/clinic";
   }
 
   return (

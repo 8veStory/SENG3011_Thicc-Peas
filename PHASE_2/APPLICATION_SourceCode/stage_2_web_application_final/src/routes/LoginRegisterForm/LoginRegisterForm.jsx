@@ -65,8 +65,8 @@ export default function LoginRegisterForm(props) {
         <div className="login-register-form">
             <div className="container">
                 <div className="form-container">
-                    {isLogInActive && <LoginForm />}
-                    {!isLogInActive && <RegisterForm />}
+                    {isLogInActive && <LoginForm set_login_status={props.set_login_status}/>}
+                    {!isLogInActive && <RegisterForm set_login_status={props.set_login_status}/>}
                 </div>
                 <ToggleFormButton containerRef={ref => toggleFormButton = ref} onClick={changeForm.bind(this)} textContent={currentInactive}></ToggleFormButton>
             </div>
