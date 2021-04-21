@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import VaccineMap from './components/VaccineMap/VaccineMap';
+import PharmacyCard from './components/PharmarcyCard/PharmacyCard';
 
 import './VaccineFinder.css';
 
@@ -103,20 +104,22 @@ export default function VaccineFinder() {
         <div className="vaccine-finder-root">
             <div className="vaccine-finder-container">
                 <div className="vaccine-map-module">
-                    <div className="vaccine-finder__card">
+                    <div className="vaccine-finder__card vaccine-map-card">
                         <div className="vaccine-map-container">
                             <VaccineMap></VaccineMap>
                         </div>
                     </div>
 
-                    <div className="vaccine-finder__card buttons">
+                    <div className="buttons">
                         <button className="btn" id="addressbutton" >Find Available Clinics</button>
                     </div>
                 </div>
 
                 <div className="pharmacy-list-module">
                     <div className="vaccine-finder__card pharmacy-list-card">
-                        <div id="pharmacylist"></div>
+                        <div id="pharmacy-list">
+                            <PharmacyCard pharmacyId="12" name="Lidcombe Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
+                        </div>
                     </div>
                 </div>
             </div>
