@@ -1,0 +1,72 @@
+h1 {
+    font-size: 100px
+}
+
+.image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 35%;
+}
+
+.linkButton {
+    float: left;
+    background-color: #346eeb;
+    border: 10px white;
+    color: white;
+    display: block;
+    width: 30%;
+    height: 30%;
+    text-align: center;
+    padding: 100px;
+}
+
+.linkButtonWrapper {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+
+}
+
+.clinicButton-text {
+
+    float: left;
+    background-color: #346eeb;
+    border: 10px white;
+    color: white;
+    display: block;
+    width: 30%;
+    height: 30%;
+    text-align: center;
+    padding: 100px;
+    margin-left:20px;
+    margin-top: 20px;
+}
+
+.indvButton-text {
+
+    float: right;
+    background-color: #346eeb;
+    border: 10px white;
+    color: white;
+    display: block;
+    width: 30%;
+    height: 30%;
+    text-align: center;
+    padding: 100px;
+    margin-right:20px;
+    margin-top: 20px;
+}
+
+.indv {
+    color: white;
+    width: fit-content;
+    height: fit-content;
+}
+
+.clinic {
+    color: white;
+    width: fit-content;
+    height: fit-content;
+}
