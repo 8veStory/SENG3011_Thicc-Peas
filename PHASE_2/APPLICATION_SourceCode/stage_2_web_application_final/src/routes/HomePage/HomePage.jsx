@@ -6,7 +6,7 @@ import "./HomePage.css";
 
 export default function HomePage() {
     return (
-        <body>
+        <div>
             {/* <p>I am a placeholder</p> */}
             <h1>VaccTracc</h1>
             <div class="image">
@@ -26,6 +26,6 @@ export default function HomePage() {
                 </Link>
             </div>
             
-        </body>
+        </div>
     );
 }

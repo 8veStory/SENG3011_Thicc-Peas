@@ -80,7 +80,7 @@ export default function ClinicDashboard(props) {
   }
 
   return (
-    <body>
+    <div>
       <h1 className="title">Clinic Dashboard</h1>
       <div className="clinic-container">
         <div className="clinic-column clinic-columnleft">
@@ -158,6 +158,6 @@ export default function ClinicDashboard(props) {
         </div>
 
       </div>
-    </body>
+    </div>
   );
 }

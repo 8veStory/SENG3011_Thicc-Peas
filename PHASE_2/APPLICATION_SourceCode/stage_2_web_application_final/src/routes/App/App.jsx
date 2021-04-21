@@ -6,6 +6,7 @@ import '../../common/Shared.css';
 import NavBar from '../../components/NavBar/NavBar';
 
 import HomePage from '../HomePage/HomePage';
+import HomePagev2 from '../HomePageV2/HomePage';
 import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
 import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
@@ -27,10 +28,11 @@ export default function App(props) {
             {/* <SideMenu /> */}
             <Switch>
                 <Route path='/' exact component={withRouter(HomePage)} />
+                <Route path='/homepagev2' exact component={withRouter(HomePagev2)} />
                 <Route path='/register' exact component={LoginRegisterFormWithRouter} />
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
-                <Route path='/vaccinefounder' exact component={withRouter(VaccineFinder)} />
+                <Route path='/vaccinefinder' exact component={withRouter(VaccineFinder)} />
             </Switch>
         </div>
     );

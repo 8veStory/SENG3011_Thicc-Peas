@@ -1,32 +1,54 @@
 .vaccine-finder-container {
+    display: grid;
+    grid-template-columns: [map] 75% [pharmacy] auto;
+    grid-template-rows: auto;
+    grid-template-areas:
+        "map | pharmacy";
     height: fit-content;
 }
 
-.vaccine-map-container {
-    width: 500px;
-    height: 500px;
-}
-
 .vaccine-map-module {
+    grid-area: map;
     width: 100%;
     height: 100%;
 }
 
-.pharmacy-list-module {
-    background-color: white;
-    border-radius: 5px;
-    padding: 5px;
+.vaccine-map-container {
+    width: auto;
+    height: 750px;
 }
 
 .vaccine-finder__card {
     display: block;
-    width: 100%;
-    height: 100%;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: white;
+    border-radius: 15px;
+    margin: 10px;
+    overflow: hidden;
 }
 
+.pharmacy-list-module {
+    width: auto;
+    height: auto;
+    grid-area: pharmacy;
+    background-color: var(--neutral-color_1);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.buttons .btn {
+    font-size: 18;
+    border-radius: 5px;
+    transition: all 250ms ease-in-out;
+    background-color: #536DFE;
+}
+
+.buttons .btn:hover {
+    background-color: #3e5bff;
+}
+
+.buttons .btn:focus {
+    outline: none;
+}
+/* 
 #map {
     height: 75%;
     width: 80%;
@@ -48,4 +70,4 @@
 
 #pharmacynode:hover {
     background-color: #224dab;
-}
+} */

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import VaccineMap from './components/VaccineMap/VaccineMap';
 
+import './VaccineFinder.css';
+
 export default function VaccineFinder() {
     const [addresses, setAddresses] = useState();
     // let map;
@@ -99,23 +101,23 @@ export default function VaccineFinder() {
 
     return (
         <div className="vaccine-finder-container">
-            <VaccineMap className="vaccine-map"></VaccineMap>
-            {/* <div className="vaccine-map-module">
+            <div className="vaccine-map-module">
                 <div className="vaccine-finder__card">
                     <div className="vaccine-map-container">
+                        <VaccineMap></VaccineMap>
                     </div>
                 </div>
 
-                <div className="vaccine-finder__card">
-                    <button id="addressbutton" onclick="addAddresses()">Find Available Clinics</button>
+                <div className="vaccine-finder__card buttons">
+                    <button className="btn" id="addressbutton" >Find Available Clinics</button>
                 </div>
             </div>
 
-            <div className="pharmarcy-list-module">
+            <div className="pharmacy-list-module">
                 <div className="vaccine-finder__card">
                     <div id="pharmacylist"></div>
                 </div>
-            </div> */}
+            </div>
         </div>
     )
 }
