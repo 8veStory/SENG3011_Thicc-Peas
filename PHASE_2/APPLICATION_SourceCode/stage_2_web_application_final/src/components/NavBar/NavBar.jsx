@@ -5,15 +5,16 @@ import './NavBar.css';
 
 export default function NavBar() {
   return (
-    <ul className='App-header' style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-      <Link className="top_text" to={{pathname: "/register", state: {fromLogIn: true, cameFromLink: true }}}>Log In</Link>
-      <Link className="left_text" to={{pathname: "/register", state: {fromLogIn: false, cameFromLink: true }}}>Sign Up</Link>
+    <ul className='Nav-Bar' style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+      <li> <Link className="Login-Text" to={{ pathname: "/register", state: { fromLogIn: true, cameFromLink: true } }}><a>Log In</a></Link> </li>
 
-      <a href="/" variant="logout" className="right_text" onClick={() => console.log(this)}>
+      <li><Link className="Signup-Text" to={{ pathname: "/register", state: { fromLogIn: false, cameFromLink: true } }}><a>Sign Up</a></Link></li>
+
+      <li><Link><a href="/" variant="logout" className="Logout-Text" onClick={() => console.log(this)}>
         {/* Get rid of log out if user is not signed in. Will probably have
         to implement some pretty pog authentication in React somehow. */}
         Log out
-      </a>
+      </a></Link></li>
     </ul>
   );
 }

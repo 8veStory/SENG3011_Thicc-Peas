@@ -2,6 +2,7 @@ import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
 import React from 'react';
 
 import './App.css';
+import '../../common/Shared.css';
 import NavBar from '../../components/NavBar/NavBar';
 import SideMenu from '../../components/SideMenu/SideMenu';
 

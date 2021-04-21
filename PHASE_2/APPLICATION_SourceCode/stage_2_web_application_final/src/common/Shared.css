@@ -1,3 +1,10 @@
 /* Font Family Here */
 
 /* Colour Scheme Here */
+
+:root {
+    --main-color:      #346EEB;
+    --secondary-color: #536DFE;
+    --neutral_color_1: #f3f5ff;
+    --neutral_color_2: #f3f5ff;
+}
