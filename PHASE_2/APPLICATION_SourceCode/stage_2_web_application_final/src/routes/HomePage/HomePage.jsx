@@ -4,13 +4,16 @@ import individualLogo from '../../images/individualLogo.png';
 import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
 
-import IndividualPages from './IndividualPages';
+import LeftSlider from './LeftSlider';
+import RightSlider from './RightSlider';
 import Backdrop from './Backdrop';
+import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 
 import "./HomePage.css";
 
 export default function HomePage(props) {
   const [leftSliderOpen, setLeftSliderOpen] = useState(false);
+  const [rightSliderOpen, setRightSliderOpen] = useState(false);
 
   let leftSliderHandler = () => {
     // setLeftSliderOpen((prevState) => {
@@ -19,23 +22,38 @@ export default function HomePage(props) {
     setLeftSliderOpen(true);
   };
 
-  let backdropClickHandler = () => {
+  let rightSliderHandler = () => {
+    // setRightSliderOpen((prevState) => {
+    //   return {rightSliderOpen: !prevState.rightSliderOpen};
+    // });
+    setRightSliderOpen(true);
+  };
+
+  // let backdropClickHandler = () => {
+  //   setLeftSliderOpen(false);
+  //   setRightSliderOpen(false);
+  // };
+
+  let backClickHandler = () => {
     setLeftSliderOpen(false);
+    setRightSliderOpen(false);
   };
 
   // let leftSlider;
-  let backdrop;
+  // let backdrop;
 
   if (leftSliderOpen) {
-    // leftSlider = <IndividualPages/>;
-    backdrop = <Backdrop click={backdropClickHandler}/>;
+    // leftSlider = <LeftSlider/>;
+    // backdrop = <Backdrop click={backdropClickHandler}/>;
   }
 
   return (
     <body>
-      <IndividualPages show={leftSliderOpen}/>
+      <LeftSlider show={leftSliderOpen} hide={backClickHandler}/>
+      <RightSlider show={rightSliderOpen} hide={backClickHandler}/>
+      {/* <LoginRegisterForm/> */}
       {/* {leftSlider} */}
-      {backdrop}
+      {/* {backdrop} */}
       <div className="header">
         <h1>
           VaccTracc
@@ -46,7 +64,7 @@ export default function HomePage(props) {
           <img src={individualLogo}/>
           <h2>Individual</h2>
         </div>
-        <div className="clinic-box">
+        <div className="clinic-box" onClick={rightSliderHandler}>
           <img src={clinicLogo}/>
           <h2>Clinic</h2>
         </div>

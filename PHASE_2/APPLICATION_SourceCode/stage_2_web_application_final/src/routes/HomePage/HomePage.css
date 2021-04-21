@@ -109,6 +109,7 @@ body {
 .choice div {
     /* background-color: blue; */
     margin: auto;
+    cursor: pointer;
 }
 
 .choice img {
