@@ -7,4 +7,11 @@
     --secondary-color: #536DFE;
     --neutral_color_1: #f3f5ff;
     --neutral_color_2: #f3f5ff;
+
+    --dark-accent-color:       #346EEB;    /* Main accent colour. Use for buttons or for anything to stand out. */
+    --dark-secondary-color:    #536DFE;    /* Darker shade of the main accent. Good for :hover on anything using the accent colour. */
+    --dark-neutral-color_1:    #1E2834;    /* Darkest shade. Should be used for tiles/panels/cards to differentiate from background. */
+    --dark-neutral-color_2:    #26323B;    /* background colour */
+    --dark-netural-color_3:    #2F3E4B;    /* Use for tab ribbon or headers */
+    --dark-neutral-text-color: #BFC5CA; /* Use for unfocused text */
 }
