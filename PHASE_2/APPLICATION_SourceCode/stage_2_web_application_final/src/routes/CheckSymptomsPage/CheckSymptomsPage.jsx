@@ -76,7 +76,7 @@ export default function Check() {
     return(
         <div id="parent">
 
-            <div class="child">
+            <div className="child">
                 <Button aria-controls="covid-menu" aria-haspopup="true" onClick={handleClick}>
                     check covid-19
                 </Button>
@@ -109,7 +109,7 @@ export default function Check() {
                     </FormControl>
                 </Menu>
             </div>
-            <div class="child">
+            <div className="child">
                 <Button aria-controls="HIV-menu" aria-haspopup="true" onClick={handleHIVClick}>
                     check HIV
                 </Button>
