@@ -69,10 +69,6 @@ export default function LeftSlider(props) {
   };
 
   return (
-    // <nav className={sliderClasses} onClick={props.hide}></nav>
-
-
-
     <nav className={sliderClasses}>
       <div className="layout">
         <div className="individual-pages">
@@ -84,6 +80,7 @@ export default function LeftSlider(props) {
               onChange={handleChange}
               aria-label="Vertical tabs example"
               className={classes.tabs}
+              TabIndicatorProps={{style: {background:'#346EEB'}}}
             >
               <Tab label="Vaccine Finder" {...a11yProps(0)} />
               <Tab label="Symptom Checker" {...a11yProps(1)} />
