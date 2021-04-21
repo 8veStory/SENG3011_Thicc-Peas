@@ -99,7 +99,7 @@
 }
 
 .multiselect .dropdown-container {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .multiselect .dropdown-container .dropdown-heading .dropdown-heading-value {

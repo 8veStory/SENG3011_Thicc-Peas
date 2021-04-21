@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 
 import './PharmacyCard.css';
 
-export default function PharmacyCard({ pharmacyId, name, image, location,  openCloseTime}) {
+export default function PharmacyCard({ pharmacyId, name, image, location,  openCloseTimes, phone, email}) {
     if (!name)
         name = " TEST NAME";
     if (!location)
-        location = "TEST DATE";
-    if (!openCloseTime)
-        openCloseTime = "TEST TIMES";
+        location = "TEST ADDRESS";
+    if (!openCloseTimes)
+        openCloseTimes = "TEST TIMES";
 
-    console.log(openCloseTime);
+    console.log(openCloseTimes);
 
     return (
         <div className="pharmacy-card">
@@ -20,15 +20,27 @@ export default function PharmacyCard({ pharmacyId, name, image, location,  openC
             <div className="pharmacy-location">
                 <i>{location}</i>
             </div>
+
+            <div className="pharmacy-contact-info">
+                <h3>Contact Info</h3>
+                <div className="pharmacy-phone">
+                    {phone ? `Ph: ${phone}` : ""}
+                </div>
+                <div className="pharmacy-email">
+                    {email ? `Email: ${email}` : ""}
+                </div>
+            </div>
+
             <div className="pharmacy-time">
+                <h3>Opening/Closing Times</h3>
                 <ul>
-                    <li>Sunday: {openCloseTime.sunday}</li>
-                    <li>Monday: {openCloseTime.monday}</li>
-                    <li>Tuesday: {openCloseTime.tuesday}</li>
-                    <li>Wednesday: {openCloseTime.wednesday}</li>
-                    <li>Thursday: {openCloseTime.thursday}</li>
-                    <li>Friday: {openCloseTime.friday}</li>
-                    <li>Saturday: {openCloseTime.saturday}</li>
+                    <li>Sunday: {openCloseTimes.sunday}</li>
+                    <li>Monday: {openCloseTimes.monday}</li>
+                    <li>Tuesday: {openCloseTimes.tuesday}</li>
+                    <li>Wednesday: {openCloseTimes.wednesday}</li>
+                    <li>Thursday: {openCloseTimes.thursday}</li>
+                    <li>Friday: {openCloseTimes.friday}</li>
+                    <li>Saturday: {openCloseTimes.saturday}</li>
                 </ul>
             </div>
         </div>

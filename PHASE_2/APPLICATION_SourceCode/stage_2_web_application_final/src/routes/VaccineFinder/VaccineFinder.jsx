@@ -9,14 +9,16 @@ export default function VaccineFinder() {
     const [addresses, setAddresses] = useState();
     const [selectedVaccines, setSelectedVaccines] = useState([]);
     const [selectedTests, setSelectedTests] = useState([]);
+    const [clinics, setClinics] = useState([]);
     /* 
     - [x] Space on the right-hand side???
     - [x] Scaling google map.
     - [x] Multiple cards please.
     - [x] Add pog filters.
-    - [ ] List of available vaccine at each clinic.
-    - [ ] Location markers for each clinic.
-    - [ ] Click to locate each clinic on google map.
+    - [x] List of available vaccine at each clinic.
+    - [x] Location markers for each clinic.
+    - [ ] Click each card to locate each clinic on google map.
+    - [ ] Click each marker for the clnic list to scroll to the correct clinic.
     */
 
     /**
@@ -56,8 +58,54 @@ export default function VaccineFinder() {
      * 
      * @param {[String]} vaccines 
      */
-    const getClinics = (vaccines) => {
+    const getClinics = (selectedVaccines, selectedTests) => {
+        console.log("Make API call that will fetch all available clinics from the DB...");
+        return [
+            {
+                name: "Lidcome Family Medical Centre",
+                address: "Shop 38/92 Parramatta Rd, Lidcombe NSW 2141",
+                openCloseTimes: { thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm"},
+                phone: "(02) 8022 8442" ,
+                emai: "lidcomefamilyhealthcentre@outlook.com",
+                location: { lat: -33.849427, lng: 151.0491153 },
+                vaccines: {
+                    "COVID-19": 23,
+                    "Measles": 2,
+                    "Meningococcal ACWY": 12,
+                },
+                tests: {
+                    "COVID-19": 32,
+                }
+            },
+            {
+                name: "Redfern Community Health Centre",
+                address: "103-105 Redfern St, Redfern NSW 2016",
+                openCloseTimes: { thursday: "8:30am–3pm", friday: "8:30am–3pm", saturday: "Closed", sunday: "Closed", monday: "8:30am–3pm", tuesday: "8:30am–3pm", wednesday: "8:30am–3pm"},
+                phone: "(02) 9395 0444",
+                email: "redfernhealthcentre@outlook.com",
+                location: { lat: -33.89307240000001, lng: 151.2033416 },
+                vaccines: {
+                    "COVID-19": 82,
+                    "Polio": 9,
+                    "Rubella": 26,
+                },
+                tests: {
+                    "COVID-19": 72,
+                }
+            }
+        ]
+    }
 
+    const populateMapAndListWithClinics = (e) => {
+        e.preventDefault();
+
+        // Get the filters.
+        let vaccines = selectedVaccines;
+        let tests    = selectedTests;
+
+        // Get clinics according to filter. When this setter is called, the clinic
+        // list and google map shall be populated accordingly.
+        setClinics(getClinics(vaccines, tests))
     }
 
     return (
@@ -66,7 +114,7 @@ export default function VaccineFinder() {
                 <div className="vaccine-map-module">
                     <div className="vaccine-finder__card vaccine-map-card">
                         <div className="vaccine-map-container">
-                            <VaccineMap></VaccineMap>
+                            <VaccineMap clinics={clinics}></VaccineMap>
                         </div>
                     </div>
 
@@ -86,13 +134,14 @@ export default function VaccineFinder() {
                             labelledBy="Select"
                         ></MultiSelect>
 
-                        <button className="btn" id="addressbutton" >Find Available Clinics</button>
+                        <button className="btn" id="addressbutton" onClick={populateMapAndListWithClinics} >Find Available Clinics</button>
                     </div>
                 </div>
 
                 <div className="pharmacy-list-module">
                     <div className="vaccine-finder__card pharmacy-list-card">
-                        <div id="pharmacy-list">
+                        <ClinicList clinics={clinics}></ClinicList>
+                        {/* <div id="pharmacy-list">
                             <PharmacyCard pharmacyId="12" name="Lidcombe Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
                             <PharmacyCard pharmacyId="12" name="Redfern Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
                             <PharmacyCard pharmacyId="12" name="Central Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
@@ -106,10 +155,22 @@ export default function VaccineFinder() {
                             <PharmacyCard pharmacyId="12" name="Lidcombe Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
                             <PharmacyCard pharmacyId="12" name="Lidcombe Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
                             <PharmacyCard pharmacyId="12" name="Lidcombe Family Medical Centre" location="Shop 38/92 Parramatta Rd, Lidcombe NSW 2141" openCloseTime={{ thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm", }}></PharmacyCard>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
+        </div>
+    )
+}
+
+function ClinicList({clinics}) {
+    return (
+        <div id="pharmacy-list">
+            {
+                clinics.map((clinic) => (
+                    <PharmacyCard name={clinic.name} location={clinic.address} openCloseTimes={clinic.openCloseTimes} email={clinic.email} phone={clinic.phone}></PharmacyCard>
+                ))
+            }
         </div>
     )
 }
