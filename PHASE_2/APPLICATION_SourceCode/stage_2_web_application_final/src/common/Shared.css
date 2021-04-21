@@ -13,6 +13,6 @@
     --dark-neutral-color_1:    #1E2834;    /* Darkest shade. Should be used for tiles/panels/cards to differentiate from background. */
     --dark-neutral-color_2:    #26323B;    /* background colour */
     --dark-netural-color_3:    #2F3E4B;    /* Use for tab ribbon or headers */
-    --dark-netural-color_4:    #25313C;    /* Use for tab ribbon or headers */
+    --dark-netural-color_4:    #25313C;    /* Use for navbars I guess idk */
     --dark-neutral-text-color: #BFC5CA;    /* Use for unfocused text */
 }
