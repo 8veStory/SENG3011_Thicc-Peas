@@ -23,7 +23,7 @@ export default function App(props) {
 
     return (
         <div className="App">
-            <NavBar log_status={login_status} set_login_status={set_login_status}/>
+            {/* <NavBar log_status={login_status} set_login_status={set_login_status}/> */}
             {/* <SideMenu /> */}
             <Switch>
                 <Route path='/' exact component={withRouter(HomePage)} />
