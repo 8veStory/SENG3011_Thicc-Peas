@@ -22,20 +22,20 @@
 }
 
 ul {
-  margin: 0;
+  /* margin: 0;
   padding-top: 8px;
   padding-bottom: 8px;
   list-style-type: none;
   overflow: hidden;
-  background-color: var(--main-color);
+  background-color: var(--main-color); */
 }
 
 li a {
-  color: white;
+  /* color: white;
   text-align: center;
   padding: 8px 8px;
   text-decoration: none;
-  font-family: "Segoe UI";
+  font-family: "Segoe UI"; */
 }
 
 /* Change the link color to #111 (black) on hover */

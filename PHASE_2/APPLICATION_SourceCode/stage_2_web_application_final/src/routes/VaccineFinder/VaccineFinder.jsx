@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import MultiSelect from "react-multi-select-component";
+
+import './VaccineFinder.css';
 import VaccineMap from './components/VaccineMap/VaccineMap';
 import PharmacyCard from './components/PharmarcyCard/PharmacyCard';
 
-import './VaccineFinder.css';
-
 export default function VaccineFinder() {
     const [addresses, setAddresses] = useState();
+    const [selectedVaccines, setSelectedVaccines] = useState([]);
+    const [selectedTests, setSelectedTests] = useState([]);
     /* 
     - [x] Space on the right-hand side???
     - [x] Scaling google map.
@@ -17,11 +20,55 @@ export default function VaccineFinder() {
     */
 
     /**
+     * Fetches all vaccines from database to fill out the filter box.
+     */
+    const getAllVaccines = () => {
+        console.log("Make API call that will fetch all available vaccines from the DB...");
+        return [
+            { label: "COVID-19", value: "COVID-19"},
+            { label: "Measles", value: "Measles"},
+            { label: "Flu", value: "Flu"},
+            { label: "Hepatitis B", value: "Hepatitis B"},
+            { label: "Rotavirus", value: "Rotavirus"},
+            { label: "Meningococcal ACWY", value: "Meningococcal ACWY"},
+            { label: "Penumonococcal", value: "Penumonococcal"},
+            { label: "Pertussis", value: "Pertussis"},
+            { label: "Tetanus", value: "Tetanus"},
+            { label: "Diphtheria", value: "Diphtheria"},
+            { label: "Shingles (herpes zoster)", value: "Shingles (herpes zoster)"},
+            { label: "Polio", value: "Polio"},
+            { label: "Mumps", value: "Mumps"},
+            { label: "Rubella", value: "Rubella"},
+        ].sort((a, b) => a.label > b.label);
+        // return [
+        //     { label: "Grapes 🍇", value: "grapes" },
+        //     { label: "Mango 🥭", value: "mango" },
+        //     { label: "Strawberry 🍓", value: "strawberry", disabled: true },
+        //     { label: "Watermelon 🍉", value: "watermelon" },
+        //     { label: "Pear 🍐", value: "pear" },
+        //     { label: "Apple 🍎", value: "apple" },
+        //     { label: "Tangerine 🍊", value: "tangerine" },
+        //     { label: "Pineapple 🍍", value: "pineapple" },
+        //     { label: "Peach 🍑", value: "peach" },
+        // ];
+    }
+
+    /**
+     * Fetches all tests from database to fill out the filter box.
+     */
+    const getAllTests = () => {
+        console.log("Make API call that will fetch all available tests from the DB...");
+        return [
+            { label: "COVID-19", value: "COVID-19"},
+        ].sort((a, b) => a.label > b.label);
+    }
+
+    /**
      * 
      * @param {[String]} vaccines 
      */
     const getClinics = (vaccines) => {
-        
+
     }
 
     return (
@@ -35,6 +82,21 @@ export default function VaccineFinder() {
                     </div>
 
                     <div className="buttons">
+                        <MultiSelect
+                            className="multiselect vaccine-multiselect"
+                            options={getAllVaccines()}
+                            value={selectedVaccines}
+                            onChange={setSelectedVaccines}
+                            labelledBy="Select"
+                        ></MultiSelect>
+                        <MultiSelect
+                            className="multiselect test-multiselect"
+                            options={getAllTests()}
+                            value={selectedTests}
+                            onChange={setSelectedTests}
+                            labelledBy="Select"
+                        ></MultiSelect>
+
                         <button className="btn" id="addressbutton" >Find Available Clinics</button>
                     </div>
                 </div>
