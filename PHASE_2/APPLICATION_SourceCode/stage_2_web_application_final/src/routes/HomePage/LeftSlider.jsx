@@ -3,6 +3,8 @@ import React from 'react';
 import './LeftSlider.css';
 import forwardArrow from './../../images/arrow-forward.svg';
 
+import Check from './../CheckSymptomsPage/CheckSymptomsPage';
+
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -91,6 +93,7 @@ export default function LeftSlider(props) {
             </TabPanel>
             <TabPanel value={value} index={1}>
               Symptom Checker
+              <Check/>
             </TabPanel>
             <TabPanel value={value} index={2}>
               Local Outbreaks
