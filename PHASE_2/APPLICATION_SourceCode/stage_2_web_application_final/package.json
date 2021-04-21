@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "bulma": "^0.9.2",
     "fs": "0.0.1-security",
+    "google-map-react": "^2.1.9",
     "npm-link-shared": "^0.5.6",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",

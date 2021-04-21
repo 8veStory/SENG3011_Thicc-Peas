@@ -1,0 +1,51 @@
+.vaccine-finder-container {
+    height: fit-content;
+}
+
+.vaccine-map-container {
+    width: 500px;
+    height: 500px;
+}
+
+.vaccine-map-module {
+    width: 100%;
+    height: 100%;
+}
+
+.pharmacy-list-module {
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.vaccine-finder__card {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+#map {
+    height: 75%;
+    width: 80%;
+}
+
+#h1 {
+    font-size: 5px;
+}
+
+#pharmacynode {
+    border: none;
+    font-family: "Segoe UI";
+    color: white;
+    background-color: #346eeb;
+    padding: 14px 16px;
+    border-radius: 15px;
+    border: solid white;
+}
+
+#pharmacynode:hover {
+    background-color: #224dab;
+}

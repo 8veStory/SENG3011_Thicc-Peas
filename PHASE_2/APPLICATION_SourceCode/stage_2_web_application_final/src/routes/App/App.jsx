@@ -4,12 +4,12 @@ import React,{useState} from 'react';
 import './App.css';
 import '../../common/Shared.css';
 import NavBar from '../../components/NavBar/NavBar';
-import SideMenu from '../../components/SideMenu/SideMenu';
 
 import HomePage from '../HomePage/HomePage';
 import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
 import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
+import VaccineFinder from '../VaccineFinder/VaccineFinder';
 
 /**
  * The main React component that links to the others.
@@ -30,6 +30,7 @@ export default function App(props) {
                 <Route path='/register' exact component={LoginRegisterFormWithRouter} />
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
+                <Route path='/vaccinefounder' exact component={withRouter(VaccineFinder)} />
             </Switch>
         </div>
     );

@@ -63,8 +63,8 @@ export default function LoginRegisterForm(props) {
 
     return (
         <div className="login-register-form">
-            <div className="container">
-                <div className="form-container">
+            <div className="form-container">
+                <div className="input-container">
                     {isLogInActive && <LoginForm set_login_status={props.set_login_status}/>}
                     {!isLogInActive && <RegisterForm set_login_status={props.set_login_status}/>}
                 </div>
