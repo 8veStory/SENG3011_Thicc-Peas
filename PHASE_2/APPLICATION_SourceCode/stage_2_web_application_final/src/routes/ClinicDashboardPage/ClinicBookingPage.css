@@ -1,0 +1,70 @@
+.auth {
+    background-color: #214ba7;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 64px;
+    padding-bottom: 1%;
+  }
+  
+  .clinic-container {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+  .clinic-container:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  .clinic-column {
+    float: left;
+    border: 3px solid grey;
+    border-radius: 10px;
+  }
+  
+  .clinic-columnleft, .clinic-columnright {
+    width: 30%;
+  }
+  
+  .clinic-columnmiddle {
+    width: 30%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  
+  .clinic-heading {
+    margin-left: 3%;
+  }
+  
+  .clinic-break {
+    width: 95%;
+  }
+  
+  .clinic-table {
+    width: 100%;
+    /* border-top: 3px solid grey; */
+    text-align: center;
+    padding: 0% 1% 1% 1%;
+    border-bottom: 1px solid #fff;
+  }
+  
+  .clinic-tablerow {
+    border: 1px solid grey;
+    border-radius: 10px;
+
+    border-top: 1px solid #fff;
+    border-left: 1px  #fff;
+    border-right: 1px  #fff;
+  }
+  
+  .clinic-inventorybox {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 4%;
+    width: 100%;
+  }
+  
+  
