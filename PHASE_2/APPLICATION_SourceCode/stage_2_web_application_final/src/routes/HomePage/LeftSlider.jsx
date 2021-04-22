@@ -98,9 +98,9 @@ export default function LeftSlider(props) {
               Symptom Checker
               <Check/>
             </TabPanel>
-            <TabPanel value={value} index={2} style={{height: '100%', width: '100%'}}>
+            {/* <TabPanel value={value} index={2} style={{height: '100%', width: '100%'}}>
               Local Outbreaks
-            </TabPanel>
+            </TabPanel> */}
           </div>
         </div>
         <div className="forward-arrow" onClick={props.hide}>
