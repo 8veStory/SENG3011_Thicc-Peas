@@ -1,9 +1,121 @@
 // server/index.js
 
 const express = require("express");
+const admin   = require('firebase-admin');
+const express = require('express');
+var hash      = require('object-hash')
+
 const PORT = process.env.PORT || 3001;
 const apiurl = "https://thicc-peas-cdc-api-o54gbxra3a-an.a.run.app"
+const FS_KEY_PATH = "thicc-peas-seng3031-web-app-29309605b7bf.json"
+const FS_CLINICS_COLLECTION = "clinic";
+const FS_INDIVIDUALS_COLLECTION = "individual";
+const FS_INVENTORY_COLLECTION = "inventory";
+const FS_HASINVENTORY_COLLECTION = "hasInventory"
+
+// CONNECT TO FIRESTORE
+let serviceAccount;
+try {
+    serviceAccount = require(FS_KEY_PATH);
+} catch(err) {
+    if (err.code == "MODULE_NOT_FOUND")
+        console.log(`Couldn't find ${FS_KEY_PATH}. Please add it in order to authenticate the FireStore client.`);
+    exit(1);
+}
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+})
+const db = admin.firestore();
 const app = express();
+
+/**
+ * 
+ * @param {*} clinicjson A JSON containing clinic information to add / edit
+ * @returns Outcome in a json file with the argument `result`
+ */
+function setClinic(clinicjson) {
+  const clinic = db.collection(FS_CLINICS_COLLECTION).doc(clinicjson.clinic_id);
+  var result = "Success";
+  try {
+    await clinic.set(clinicjson);
+  } catch (err) {
+    result = `Error: ${err}`;
+  }
+  return {result: result};
+}
+
+/**
+ * 
+ * @param {*} clinic_id A string containing the clinic's ID 
+ * @returns Outcome in a json file with the argument `result`
+ */
+ function getClinic(clinic_id) {
+  const clinic = await db.collection(FS_CLINICS_COLLECTION).doc(clinic_id).get();
+  return clinic;
+}
+
+/**
+ * 
+ * @param {*} individualjson A JSON containing individual information to add / edit
+ * @returns Outcome in a json file with the argument `result`
+ */
+function setIndividual(individualjson) {
+  const individual = db.collection(FS_INDIVIDUALS_COLLECTION).doc(individualjson.individual_id);
+  var result = "Success";
+  try {
+    await individual.set(individualjson);
+  } catch (err) {
+    result = `Error: ${err}`;
+  }
+  return {result: result};
+}
+
+/**
+ * 
+ * @param {*} individual_id
+ * @returns Outcome in a json file with the argument `result`
+ */
+function getIndividual(individual_id) {
+  const individual = await db.collection(FS_INDIVIDUALS_COLLECTION).doc(individual_id).get();
+  return individual;
+}
+
+/**
+ * 
+ * @param {*} inventoryjson The JSON to be added to the document
+ * @param {*} clinic_id 
+ * @returns 
+ */
+function setInventory(inventoryjson, clinic_id, quantity) {
+  const inventory = db.collection(FS_INVENTORY_COLLECTION).doc(inventoryjson.inventory_id);
+  const hasinventory = db.collection(FS_HASINVENTORY_COLLECTION).doc(`hasInventory/${inventoryjson.inventory_id}/${clinic_id}/`)
+  const clinic = await db.collection(FS_CLINIC_COLLECTION).doc(clinic_id).get();
+  var result = "Success";
+  try {
+    await inventory.set(inventoryjson);
+    await hasinventory.set({
+      clinic_id: clinic_id,
+      inventory_id: inventoryjson.inventory_id,
+      quantity: quantity
+    });
+  } catch (err) {
+    result = `Error: ${err}`;
+  }
+  return {result: result};
+}
+
+/*
+function getInventory() {
+
+}
+*/
+
+// ENDPOINTS
+/**
+ * Listen on $PORT for JSON.
+ */
+ app.use(express.json())
 
 /**
  * API API Endpoint: GET '/log'
@@ -103,6 +215,11 @@ app.get('/article/:articleid', (req, res) => {
 
   fetch(`${apiurl}/article/${articleID}`)
     .then(response => res.json(response.json()));
+})
+
+app.post('/addclinic', (req, res) => {
+  const clinicdetails = req.params.clinicjson
+
 })
 
 app.listen(PORT, () => {
