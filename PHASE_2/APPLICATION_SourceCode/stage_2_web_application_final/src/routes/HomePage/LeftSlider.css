@@ -4,7 +4,7 @@
     overflow-y: scroll;
 }
 
-.vaccine-tab-panel .MuiBox-root, .MuiTypography-root {
+.MuiBox-root, .MuiTypography-root {
     height: 100%;
     width: 100%;
 }

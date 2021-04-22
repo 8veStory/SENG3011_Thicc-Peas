@@ -57,8 +57,9 @@ export default function VaccineFinder() {
     - [x] Add pog filters.
     - [x] List of available vaccine at each clinic.
     - [x] Location markers for each clinic.
-    - [ ] Click each card to locate each clinic on google map.
-    - [ ] Click each marker for the clnic list to scroll to the correct clinic.
+    - [x] Click each card to locate each clinic on google map.
+    - [ ] Click each marker for the clinic list to scroll to the correct clinic.
+    - [ ] Actually filter lmao.
     */
 
     /**
