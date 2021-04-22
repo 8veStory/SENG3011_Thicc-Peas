@@ -5,12 +5,6 @@ import './VaccineMap.css';
 
 const defaultProps = { center: { lat: -34.397, lng: 150.644 }, zoom: 8 } ;
 export default function VaccineMap({center, zoom, clinics}) {
-    if (!center || !zoom) {
-        center = defaultProps.center;
-        zoom = defaultProps.zoom;
-        console.log("Using default props.");
-    }
-
     const state = useState();
 
     const onMapEnter = (e) => {
@@ -27,8 +21,10 @@ export default function VaccineMap({center, zoom, clinics}) {
                 key: 'AIzaSyAGrnG8WTVBcpYTlFF_dHJe4X8-XMcWduA',
                 language: 'en'
             }}
-            defaultCenter={center}
-            defaultZoom={zoom}
+            defaultCenter={defaultProps.center}
+            defaultZoom={defaultProps.zoom}
+            center={center}
+            zoom={zoom}
             onChildMouseEnter={onMapEnter}
             onChildMouseLeave={onMapLeave}
         >
@@ -43,6 +39,6 @@ export default function VaccineMap({center, zoom, clinics}) {
 
 function Marker() {
     return (
-        <div class="marker"><div className="inner-marker"></div></div>
+        <div className="marker"><div className="inner-marker"></div></div>
     )
 }
