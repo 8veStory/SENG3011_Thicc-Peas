@@ -11,6 +11,7 @@ import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
 import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 import VaccineFinder from '../VaccineFinder/VaccineFinder';
+import BookingPage from '../BookingPage/BookingPage';
 
 /**
  * The main React component that links to the others.
@@ -33,6 +34,7 @@ export default function App(props) {
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
                 <Route path='/vaccinefinder' exact component={withRouter(VaccineFinder)} />
+                <Route path='/book' exact component={withRouter(BookingPage)} />
             </Switch>
         </div>
     );
