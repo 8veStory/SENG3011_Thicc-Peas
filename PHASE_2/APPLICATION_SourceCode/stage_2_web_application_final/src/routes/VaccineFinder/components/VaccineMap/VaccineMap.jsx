@@ -4,15 +4,21 @@ import GoogleMapReact from 'google-map-react'
 import './VaccineMap.css';
 
 const defaultProps = { center: { lat: -34.397, lng: 150.644 }, zoom: 8 } ;
-export default function VaccineMap({center, zoom, clinics}) {
+export default function VaccineMap({center, zoom, clinics, onMarkerClick}) {
     const state = useState();
 
-    const onMapEnter = (e) => {
+    const onMarkerClickDefault = (e) => {
         console.log(e);
     }
 
-    const onMapLeave = (e) => {
-        console.log(e);
+    if (!onMarkerClick){
+        onMarkerClick = onMarkerClickDefault;
+    }
+
+    const Marker = () => {
+        return (
+            <div className="marker" onClick={onMarkerClick}><div className="inner-marker"></div></div>
+        )
     }
 
     return (
@@ -25,8 +31,6 @@ export default function VaccineMap({center, zoom, clinics}) {
             defaultZoom={defaultProps.zoom}
             center={center}
             zoom={zoom}
-            onChildMouseEnter={onMapEnter}
-            onChildMouseLeave={onMapLeave}
         >
             {
                 clinics.map((clinic) => (
@@ -34,11 +38,5 @@ export default function VaccineMap({center, zoom, clinics}) {
                 ))
             }
         </GoogleMapReact>
-    )
-}
-
-function Marker() {
-    return (
-        <div className="marker"><div className="inner-marker"></div></div>
     )
 }

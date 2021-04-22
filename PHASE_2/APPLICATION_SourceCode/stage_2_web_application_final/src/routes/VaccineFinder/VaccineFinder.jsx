@@ -12,7 +12,7 @@ const clinicsData = [
         address: "Shop 38/92 Parramatta Rd, Lidcombe NSW 2141",
         openCloseTimes: { thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm" },
         phone: "(02) 8022 8442",
-        emai: "lidcomefamilyhealthcentre@outlook.com",
+        email: "lidcomefamilyhealthcentre@outlook.com",
         location: { lat: -33.849427, lng: 151.0491153 },
         vaccines: {
             "COVID-19": 23,
@@ -59,6 +59,7 @@ export default function VaccineFinder() {
     - [x] Location markers for each clinic.
     - [x] Click each card to locate each clinic on google map.
     - [ ] Click each marker for the clinic list to scroll to the correct clinic.
+    - [ ] Only show clinics in a certain radius.
     - [ ] Actually filter lmao.
     */
 
@@ -111,7 +112,7 @@ export default function VaccineFinder() {
             target = target.parentElement;
         }
 
-        let clinicId = target.dataset.internalid;
+        let clinicId = target.dataset.clinic.id;
         console.log(target.dataset);
         console.log(target);
 
@@ -134,11 +135,19 @@ export default function VaccineFinder() {
             <div id="pharmacy-list">
                 {
                     clinics.map((clinic) => (
-                        <PharmacyCard id={clinic.id} onclick={handleCardClick} name={clinic.name} address={clinic.address} openCloseTimes={clinic.openCloseTimes} email={clinic.email} phone={clinic.phone}></PharmacyCard>
+                        <PharmacyCard clinic={clinic} onclick={handleCardClick}></PharmacyCard>
                     ))
                 }
             </div>
         )
+    }
+
+    const onMarkerClick = () => {
+        // Get the clinic-id from the marker.
+        
+        // Scroll in the scroll-list until that element.
+
+        // 
     }
 
     const populateMapAndListWithClinics = (e) => {

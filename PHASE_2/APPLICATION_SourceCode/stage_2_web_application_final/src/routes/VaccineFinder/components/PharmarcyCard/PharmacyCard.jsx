@@ -5,7 +5,13 @@ import BookingPage from './../../../BookingPage/EmailPhoneForm';
 
 import './PharmacyCard.css';
 
-export default function PharmacyCard({ id, name, image, address, openCloseTimes, phone, email, onclick}) {
+export default function PharmacyCard({clinic, onclick}) {
+    let name           = clinic.name;
+    let address        = clinic.address;
+    let openCloseTimes = clinic.openCloseTimes;
+    let phone          = clinic.phone;
+    let email          = clinic.email;
+
     if (!name)
         name = " TEST NAME";
     if (!address)
@@ -16,16 +22,17 @@ export default function PharmacyCard({ id, name, image, address, openCloseTimes,
         onclick = () => {};
     }
 
-    console.log(openCloseTimes);
-
     let history = useHistory();
     const handleBook = (e) => {
-        history.push("/book");
+        history.push({
+            pathname: "/book",
+            state: { clinic: clinic }
+        });
         // window.location.href = "/clinic";
     }
 
     return (
-        <div data-internalid={id} onClick={onclick} className="pharmacy-card">
+        <div data-clinic={clinic} onClick={onclick} className="pharmacy-card">
             <div className="pharmacy-name">
                 <b>{name}</b>
             </div>
