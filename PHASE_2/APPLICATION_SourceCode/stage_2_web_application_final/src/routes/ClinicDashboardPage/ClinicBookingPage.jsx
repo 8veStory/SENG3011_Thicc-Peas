@@ -3,6 +3,8 @@ import React from 'react';
 
 import "./ClinicBookingPage.css";
 import Checkbox from '@material-ui/core/Checkbox';
+import { v4 as uuid } from 'uuid';
+
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
 var inventory = [
@@ -171,7 +173,9 @@ function SubmitButton(props){
     var setBook = props.setBook;
 
     function HandleSubmit(){
-        var newArr = book;
+        var newArr = [...book];
+        
+
         newArr[book.length] = {
             id: book.length + 1,
             name: amo,
@@ -207,7 +211,7 @@ export default function ClinicBooking(props) {
     
     
   return (
-    <body>
+    <div>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="localOutbreak.html">Local Outbreaks</a></li>
@@ -220,7 +224,7 @@ export default function ClinicBooking(props) {
           <h2 className="clinic-heading">Recent Bookings</h2>
 
           <table className="clinic-table">
-            <tbody>
+            <tbody key={uuid()}>
                 <tr>
                 <th>No.</th>
                 <th>Name</th>
@@ -229,14 +233,19 @@ export default function ClinicBooking(props) {
                 </tr>
             </tbody>
             {book.map((item, index) => {
-
+                console.log(book);
+                
+                console.log(index);
+                var uid = uuid();
+                console.log(uid);
+                
               
                 if(index >= (ten_count * 10) && index < (10 + ten_count * 10)){
 
                     
                     return (
-                        <tbody>
-                            <tr key={index}>
+                        <tbody key={uid}>
+                            <tr >
                             <td className="clinic-tablerow">{item.id}</td>
                             <td className="clinic-tablerow">{item.name}</td>
                             <td className="clinic-tablerow">{item.Type}</td>
@@ -271,14 +280,14 @@ export default function ClinicBooking(props) {
 
           <div className="clinic-inventorybox">
             <form id="add-to-inv-form">
-              <label for="disease"><b>Disease</b></label>
+              <label htmlFor="disease"><b>Disease</b></label>
               <input type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
-              <label for="Type"><b>Type</b></label>
+              <label htmlFor="Type"><b>Type</b></label>
               <select name="type" id="type" onChange={e => setType(e.target.value)}>
                 <option value="Test">Test</option>
                 <option value="Vaccine">Vaccine</option>
               </select>
-              <label for="amount"><b>Name</b></label>
+              <label htmlFor="amount"><b>Name</b></label>
               <input type="text"  name="amount" onChange={e => setAmo(e.target.value)} required></input>
               <ClearButtion book={book} setBook={setBook}/>
               
@@ -290,6 +299,6 @@ export default function ClinicBooking(props) {
         </div>
 
       </div>
-    </body>
+    </div>
   );
 }
