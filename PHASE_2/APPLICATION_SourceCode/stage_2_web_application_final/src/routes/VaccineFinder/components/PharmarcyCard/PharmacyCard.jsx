@@ -32,7 +32,7 @@ export default function PharmacyCard({clinic, onclick}) {
     }
 
     return (
-        <div data-clinic={clinic} onClick={onclick} className="pharmacy-card">
+        <div data-internalid={clinic.id} onClick={onclick} className="pharmacy-card">
             <div className="pharmacy-name">
                 <b>{name}</b>
             </div>
