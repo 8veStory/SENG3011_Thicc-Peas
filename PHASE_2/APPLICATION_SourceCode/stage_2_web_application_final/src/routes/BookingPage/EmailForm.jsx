@@ -13,7 +13,7 @@ export default function EmailForm(props) {
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
   const [type, setType] = useState('Test');
-  const [clinic, setClinic] = useState('given clinic');
+  const [vaccTest, setVaccTest] = useState('');
 
   let history = useHistory();
 
@@ -24,7 +24,7 @@ export default function EmailForm(props) {
     console.log(date);
     console.log(props.clinicInfo.email);
     console.log(email);
-    emailjs.send('gmail', 'appointment', {type: type, name: name, date: date, clinic_email: 'maxemersonowen@gmail.com', client_email: email}, 'user_A8yNOUVbToXNXYZSDHypj')
+    emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email }, 'user_A8yNOUVbToXNXYZSDHypj')
       .then((result) => {
         console.log(result.text);
       }, (error) => {
@@ -48,6 +48,26 @@ export default function EmailForm(props) {
     // console.log("Successful signup");
     // history.pushState("/clinic");
   }
+
+  const VaccTestList = ({info}) => {
+    let tests = [];
+    for (let test in info.tests) {
+      console.log(test);
+      tests.push((
+        <option value={test}>{test} Test</option>
+      ));
+    }
+    for (let test in info.vaccines) {
+      tests.push((
+        <option value={test}>{test} Vaccine</option>
+      ));
+    }
+    // console.log(tests);
+    // console.log(info);
+    return tests;
+  }
+
+  console.log(props.clinicInfo);
 
   return (
     <form className="base-container" onSubmit={sendEmail}>
@@ -74,35 +94,25 @@ export default function EmailForm(props) {
             <input type="email" name="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
           </div>
 
-          {/* <div className="form-group">
-            <label htmlFor="phone" onChange={e => setPhone(e.target.value)}>Phone</label>
-            <input type="tel" name="phone" placeholder="Phone" pattern="\+[0-9]{2} ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}|[0-9]{4} ?[0-9]{3} ?[0-9]{3}" />
-          </div> */}
-
           <div className="form-group">
             <label htmlFor="date">Date</label>
             <input type="text" name="date" placeholder="Date" onChange={e => setDate(e.target.value)} />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="type">Type</label>
             <select name="types" id="types" value={type} onChange={e => setType(e.target.value)}>
               <option value="Test">Test</option>
               <option value="Vaccine">Vaccine</option>
             </select>
-          </div>
-
-          {/* <div className="form-group">
-            <label htmlFor="state">Clinic State</label>
-            <select name="states" id="states" value={state} onChange={f => setState(f.target.value)}>
-              <option value="New South Wales">New South Wales</option>
-              <option value="Queensland">Queensland</option>
-              <option value="South Autralia">South Autralia</option>
-              <option value="Victoria">Victoria</option>
-              <option value="Western Australia">Western Australia</option>
-              <option value="Tasmania">Tasmania</option>
-            </select>
           </div> */}
+
+          <div className="form-group">
+            <label htmlFor="vacctest">Vaccine / Test</label>
+            <select name="types" id="vacctest" value={vaccTest} onChange={e => setVaccTest(e.target.value)}>
+              <VaccTestList info={props.clinicInfo}/>
+            </select>
+          </div>
         </div>
       </div>
 
