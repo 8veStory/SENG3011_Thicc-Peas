@@ -39,6 +39,23 @@ const clinicsData = [
         tests: {
             "COVID-19": 72,
         }
+    },
+    {
+        id: 3,
+        name: "Royal North Shore Hospital",
+        address: "Reserve Rd, St Leonards NSW 2065",
+        openCloseTimes: { thursday: "24 hrs", friday: "24 hrs", saturday: "24 hrs", sunday: "24 hrs", monday: "24 hrs", tuesday: "24 hrs", wednesday: "24 hrs" },
+        phone: "(02) 9926 7111",
+        email: "NSLHD-Chatback@health.nsw.gov.au",
+        location: { lat: -33.816065, lng: 151.1925898 },
+        vaccines: {
+            "COVID-19": 82,
+            "Polio": 9,
+            "Rubella": 26,
+        },
+        tests: {
+            "COVID-19": 72,
+        }
     }
 ]
 
@@ -112,7 +129,7 @@ export default function VaccineFinder() {
             target = target.parentElement;
         }
 
-        let clinicId = target.dataset.clinic.id;
+        let clinicId = target.dataset.internalid;
         console.log(target.dataset);
         console.log(target);
 
@@ -131,19 +148,30 @@ export default function VaccineFinder() {
     }
 
     const ClinicList = () => {
+        let numClinics = clinics.length;
+        let heightStyle = `calc(${100/numClinics}% - 7px)`
+        let style = {
+            "pharmacy-card::before": {
+                height: `${heightStyle}`
+            }
+        }
         return (
             <div id="pharmacy-list">
                 {
                     clinics.map((clinic) => (
-                        <PharmacyCard clinic={clinic} onclick={handleCardClick}></PharmacyCard>
+                        <div>
+                            <div className="pharmacy-card-before" style={{ height: heightStyle }}></div>
+                            <PharmacyCard style={style} id={clinic.id} clinic={clinic} onclick={handleCardClick}></PharmacyCard>
+                        </div>
                     ))
                 }
             </div>
         )
     }
 
-    const onMarkerClick = () => {
+    const onMarkerClick = (e) => {
         // Get the clinic-id from the marker.
+        let clinicId = e.target.dataset.internalid;
         
         // Scroll in the scroll-list until that element.
 
@@ -178,7 +206,7 @@ export default function VaccineFinder() {
                             options={getAllVaccines()}
                             value={selectedVaccines}
                             onChange={setSelectedVaccines}
-                            labelledBy="Select"
+                            labelledBy="Select BOB"
                         ></MultiSelect>
                         <MultiSelect
                             className="multiselect test-multiselect"

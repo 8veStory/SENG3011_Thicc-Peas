@@ -105,7 +105,7 @@ body {
     /* background-color: red; */
     justify-content: space-around;
     display: flex;
-    background-color: var(--neutral_color_1);
+    background-color: white;
 }
 
 .choice div {
