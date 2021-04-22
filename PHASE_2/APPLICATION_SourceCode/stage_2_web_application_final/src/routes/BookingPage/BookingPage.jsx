@@ -6,9 +6,11 @@ import backArrow from './../../images/arrow-back.svg';
 
 import './BookingPage.css';
 
-export default function BookingPage() {
+export default function BookingPage(props) {
   const [login_status, set_login_status] = useState(false);
   let BookingFormWithRouter = withRouter((props) => <EmailPhoneForm {...props} set_login_status={set_login_status}/>);
+
+  console.log(props.location.state.clinic);
 
   let history = useHistory();
   const handleBack = () => {
