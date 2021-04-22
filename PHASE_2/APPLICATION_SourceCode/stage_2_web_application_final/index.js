@@ -57,6 +57,19 @@ function setClinic(clinicjson) {
 
 /**
  * 
+ * @returns Outcome in a json file with the argument `result`
+ */
+ function getClinics() {
+  const clinics = await db.collection(FS_CLINICS_COLLECTION).get();
+  var final = []
+  clinics.forEach(doc => {
+    final.push(doc.data());
+  });
+  return final
+}
+
+/**
+ * 
  * @param {*} individualjson A JSON containing individual information to add / edit
  * @returns Outcome in a json file with the argument `result`
  */
@@ -84,13 +97,13 @@ function getIndividual(individual_id) {
 /**
  * 
  * @param {*} inventoryjson The JSON to be added to the document
- * @param {*} clinic_id 
+ * @param {*} clinic_id id of clinic needed
+ * @param {*} quantity amount of vaccines needed
  * @returns 
  */
 function setInventory(inventoryjson, clinic_id, quantity) {
   const inventory = db.collection(FS_INVENTORY_COLLECTION).doc(inventoryjson.inventory_id);
   const hasinventory = db.collection(FS_HASINVENTORY_COLLECTION).doc(`hasInventory/${inventoryjson.inventory_id}/${clinic_id}/`)
-  const clinic = await db.collection(FS_CLINIC_COLLECTION).doc(clinic_id).get();
   var result = "Success";
   try {
     await inventory.set(inventoryjson);
@@ -105,11 +118,38 @@ function setInventory(inventoryjson, clinic_id, quantity) {
   return {result: result};
 }
 
-/*
-function getInventory() {
-
+/**
+ * 
+ * @param {*} inventory_id id of inventory element to get
+ * @returns json of inventory
+ */
+function getInventoryByClinic(clinic_id) {
+  const clinic_inventory = await db.collection(FS_HASINVENTORY_COLLECTION).where('clinic_id', '==', clinic_id).get()
+  var inventory = []
+  clinic_inventory.forEach(doc => {
+    var item = await db.colelction(FS_INVENTORY_COLLECTION).doc(clinic_inventory.clinic_id);
+    inventory.push({
+      name: item.inventory_name,
+      quantity: clinic_inventory.quantity,
+      type: item.type
+    });
+  });
+  const 
 }
-*/
+
+/**
+ * 
+ * @returns
+ */
+function getInventoryType(type) {
+  const inventory = await db.collection(FS_CLINICS_COLLECTION).where("type", "==", type).get();
+  var final = []
+  clinics.forEach(doc => {
+    final.push(doc.data());
+  });
+  return final
+}
+
 
 // ENDPOINTS
 /**
@@ -217,10 +257,63 @@ app.get('/article/:articleid', (req, res) => {
     .then(response => res.json(response.json()));
 })
 
-app.post('/addclinic', (req, res) => {
-  const clinicdetails = req.params.clinicjson
 
-})
+app.get('/signup', (req, res) => {
+  
+  const email = req.params.email;
+  const clinic_name = req.params.clinic_name;
+  const password = req.params.password;
+  const address = req.params.address;
+  const country = req.params.country;
+  const state = req.params.state;
+
+  var clinic = {
+    contact_email: email,
+    password: hash(password),
+    address: `${address},  ${state}, ${country}`,
+    clinic_id: hash(email),
+    opening_time: "9am",
+    closing_time: "6pm",
+    clinic_name: clinic_name
+  }
+  res.json(setClinic(clinic))
+});
+
+app.get('/login', (req, res) => {
+
+  const email = req.params.email;
+  const password = req.params.password;
+  var response = getClinic(hash(email));
+  var json = null;
+  var result = "Invalid email or password"
+  if (response.email == email && response.password == hash(password)) {
+    result = "Success";
+    json = response;
+  }
+  res.json({
+    result: result,
+    json: json
+  });
+});
+
+app.get('/getclinics', (req, res) => {
+  res.json({
+    clinics: getClinics()
+  });
+});
+
+app.get('/getvaccines', (req, res) => {
+  res.json({
+    vaccines: getInventoryType("vaccine")
+  });
+});
+
+app.get('/gettests', (req, res) => {
+  res.json({
+    vaccines: getInventoryType("test")
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
