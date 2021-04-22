@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import BookingPage from './../../../BookingPage/BookingPage';
+import BookingPage from './../../../BookingPage/EmailPhoneForm';
 
 import './PharmacyCard.css';
 
