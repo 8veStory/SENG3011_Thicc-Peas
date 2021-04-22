@@ -206,7 +206,7 @@ export default function VaccineFinder() {
                             options={getAllVaccines()}
                             value={selectedVaccines}
                             onChange={setSelectedVaccines}
-                            labelledBy="Select"
+                            labelledBy="Select BOB"
                         ></MultiSelect>
                         <MultiSelect
                             className="multiselect test-multiselect"

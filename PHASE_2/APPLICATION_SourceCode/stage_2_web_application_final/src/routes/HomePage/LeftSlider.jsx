@@ -88,7 +88,7 @@ export default function LeftSlider(props) {
             >
               <Tab label="Vaccine Finder" {...a11yProps(0)} />
               <Tab label="Symptom Checker" {...a11yProps(1)} />
-              <Tab label="Local Outbreaks" {...a11yProps(2)} />
+              {/* <Tab label="Local Outbreaks" {...a11yProps(2)} /> */}
             </Tabs>
             {/* <TabPanel value={value} index={0} style={{height: '100%', width: 'auto', backgroundColor: '#DCE9FB'}}> */}
             <TabPanel value={value} index={0} style={{height: '100%', width: '100%'}}>
