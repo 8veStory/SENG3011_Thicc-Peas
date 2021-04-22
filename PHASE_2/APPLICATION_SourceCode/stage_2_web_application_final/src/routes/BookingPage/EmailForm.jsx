@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+
 import { useHistory } from 'react-router-dom';
+import emailjs from 'emailjs-com';
+
 import registerImg from "../../images/LoginRegisterLogo.svg";
 import "./EmailForm.css";
 
@@ -14,10 +17,17 @@ export default function EmailForm(props) {
 
   let history = useHistory();
 
-  const handleSubmit = (e) => {
+  const sendEmail = (e) => {
     e.preventDefault();
 
-    console.table({ name: name, email: email, phone: phone, date: date });
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
+      .then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+      });
+
+    // console.table({ name: name, email: email, phone: phone, date: date });
 
     // Check all fields are not empty...
     // if (!name)
@@ -29,14 +39,14 @@ export default function EmailForm(props) {
     // else if (!date)
     //   alert("Date cannot be empty.");
 
-    console.log("Send email through backend...")
+    // console.log("Send email through backend...")
     // props.set_login_status(true);
     // console.log("Successful signup");
     // history.pushState("/clinic");
   }
 
   return (
-    <form className="base-container" onSubmit={handleSubmit}>
+    <form className="base-container" onSubmit={sendEmail}>
       <div className="header">Email Booking</div>
       <div className="content">
         <div className="login-image">
