@@ -12,7 +12,7 @@ import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
 import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 import VaccineFinder from '../VaccineFinder/VaccineFinder';
 import BookingPage from '../BookingPage/BookingPage';
-
+import ClinicBookingPage from '../ClinicDashboardPage/ClinicBookingPage';
 /**
  * The main React component that links to the others.
  */
@@ -35,7 +35,9 @@ export default function App(props) {
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
                 <Route path='/vaccinefinder' exact component={withRouter(VaccineFinder)} />
                 <Route path='/book' exact component={withRouter(BookingPage)} />
+                <Route path='/booking' exact component={withRouter(ClinicBookingPage)} />
             </Switch>
         </div>
     );
 }
+
