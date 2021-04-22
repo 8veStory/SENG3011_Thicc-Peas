@@ -2,23 +2,26 @@ import React, { useState } from 'react';
 
 import './PharmacyCard.css';
 
-export default function PharmacyCard({ pharmacyId, name, image, location,  openCloseTimes, phone, email}) {
+export default function PharmacyCard({ id, name, image, address, openCloseTimes, phone, email, onclick}) {
     if (!name)
         name = " TEST NAME";
-    if (!location)
-        location = "TEST ADDRESS";
+    if (!address)
+        address = "TEST ADDRESS";
     if (!openCloseTimes)
         openCloseTimes = "TEST TIMES";
+    if (!onclick) {
+        onclick = () => {};
+    }
 
     console.log(openCloseTimes);
 
     return (
-        <div className="pharmacy-card">
+        <div data-internalid={id} onClick={onclick} className="pharmacy-card">
             <div className="pharmacy-name">
                 <b>{name}</b>
             </div>
             <div className="pharmacy-location">
-                <i>{location}</i>
+                <i>{address}</i>
             </div>
 
             <div className="pharmacy-contact-info">
