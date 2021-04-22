@@ -1,6 +1,7 @@
 
 .pharmacy-card {
     /* background-color: var(--neutral_color_1); */
+    word-wrap: break-word;
     display: block;
     width: 100%;
     height: fit-content;
