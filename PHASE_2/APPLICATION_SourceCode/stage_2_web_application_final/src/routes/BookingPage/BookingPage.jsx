@@ -10,7 +10,8 @@ export default function BookingPage(props) {
   const [login_status, set_login_status] = useState(false);
   let BookingFormWithRouter = withRouter((props) => <EmailPhoneForm {...props} set_login_status={set_login_status}/>);
 
-  console.log(props.location.state.clinic);
+  let clinicInfo = props.location.state.clinic;
+  console.log(clinicInfo);
 
   let history = useHistory();
   const handleBack = () => {
@@ -23,7 +24,7 @@ export default function BookingPage(props) {
         <img src={backArrow} />
       </div>
       <div className="booking-form">
-        <BookingFormWithRouter />
+        <BookingFormWithRouter clinicInfo={clinicInfo}/>
       </div>
     </div>
   );
