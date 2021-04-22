@@ -47,7 +47,14 @@ export default function EmailForm(props) {
 
   return (
     <form className="base-container" onSubmit={sendEmail}>
-      <div className="header">Email Booking</div>
+      <div className="header">
+        <div>
+          Email Booking
+        </div>
+        <div>
+          {props.clinicInfo.name}
+        </div>
+      </div>
       <div className="content">
         <div className="login-image">
           <img src={registerImg} alt="A doctor" />
@@ -63,10 +70,10 @@ export default function EmailForm(props) {
             <input type="email" name="email" placeholder="Email" />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="phone" onChange={e => setPhone(e.target.value)}>Phone</label>
             <input type="tel" name="phone" placeholder="Phone" pattern="\+[0-9]{2} ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}|[0-9]{4} ?[0-9]{3} ?[0-9]{3}" />
-          </div>
+          </div> */}
 
           <div className="form-group">
             <label htmlFor="date" onChange={e => setDate(e.target.value)}>Date</label>
