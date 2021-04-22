@@ -1,0 +1,26 @@
+.layout {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.back-arrow {
+    /* background-color: red; */
+    width: 10%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.back-arrow img {
+    /* background-color: green; */
+    height: 100%;
+    padding-left: 30%;
+    padding-right: 50%;
+}
+
+.booking-form {
+    width: 90%;
+    height: 100%;
+    /* background-color: yellow; */
+    padding-right: 10%;
+}

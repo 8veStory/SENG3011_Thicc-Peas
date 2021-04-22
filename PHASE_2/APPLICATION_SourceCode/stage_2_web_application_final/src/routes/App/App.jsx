@@ -1,19 +1,18 @@
 import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
-import React from 'react';
+import React,{useState} from 'react';
 
 import './App.css';
+import '../../common/Shared.css';
 import NavBar from '../../components/NavBar/NavBar';
-import SideMenu from '../../components/SideMenu/SideMenu';
 
 import HomePage from '../HomePage/HomePage';
-import LoginPage from '../LoginPage/LoginPage';
-import SignUpPage from '../SignUpPage/SignUpPage';
+import HomePagev2 from '../HomePageV2/HomePage';
 import ClinicPage from '../ClinicDashboardPage/ClinicDashboardPage';
 import CheckSymptomsPage from '../CheckSymptomsPage/CheckSymptomsPage';
-import LoginForm from '../../components/LoginRegisterForm/LoginForm';
-import RegisterForm from '../../components/LoginRegisterForm/RegisterForm';
-import LoginRegisterForm from '../../components/LoginRegisterForm/LoginRegisterForm';
-
+import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
+import VaccineFinder from '../VaccineFinder/VaccineFinder';
+import BookingPage from '../BookingPage/BookingPage';
+import ClinicBookingPage from '../ClinicDashboardPage/ClinicBookingPage';
 /**
  * The main React component that links to the others.
  */
@@ -21,22 +20,24 @@ export default function App(props) {
     console.log(useHistory);
     let history = useHistory();
     console.log(history);
-
-    let LoginRegisterFormWithRouter = withRouter((props) => <LoginRegisterForm {...props}/>);
+    const [login_status, set_login_status] = useState(false);
+    let LoginRegisterFormWithRouter = withRouter((props) => <LoginRegisterForm {...props} set_login_status={set_login_status}/>);
 
     return (
         <div className="App">
-            <NavBar />
+            {/* <NavBar log_status={login_status} set_login_status={set_login_status}/> */}
             {/* <SideMenu /> */}
             <Switch>
                 <Route path='/' exact component={withRouter(HomePage)} />
+                <Route path='/homepagev2' exact component={withRouter(HomePagev2)} />
                 <Route path='/register' exact component={LoginRegisterFormWithRouter} />
                 <Route path='/clinic' exact component={withRouter(ClinicPage)} />
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
-                <Route path='/login' exact component={withRouter(LoginForm)} />
-                <Route path='/signup' exact component={withRouter(RegisterForm)} />
-                <Route path='/loginregistertest' exact component={withRouter(LoginRegisterForm)} />
+                <Route path='/vaccinefinder' exact component={withRouter(VaccineFinder)} />
+                <Route path='/book' exact component={withRouter(BookingPage)} />
+                <Route path='/booking' exact component={withRouter(ClinicBookingPage)} />
             </Switch>
         </div>
     );
 }
+

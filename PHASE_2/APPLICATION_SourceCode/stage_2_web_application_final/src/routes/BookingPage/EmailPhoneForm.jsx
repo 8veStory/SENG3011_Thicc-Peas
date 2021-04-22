@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import PhoneForm from "./PhoneForm";
+import EmailForm from "./EmailForm";
 import { usePrevious} from "../../utils/Helper";
-import "./LoginRegisterForm.css";
+import "./EmailPhoneForm.css";
 
 /**
  * The login and register from. Only one is visible at a time and can be
@@ -10,23 +10,36 @@ import "./LoginRegisterForm.css";
  * 
  * We use React 'refs'. This is a [good guide](https://reactjs.org/docs/refs-and-the-dom.html#:~:text=Refs%20provide%20a%20way%20to,created%20in%20the%20render%20method.&text=The%20child%20to%20be%20modified,React%20provides%20an%20escape%20hatch.) if you don't know how it works.
  */
-export default function LoginRegisterForm(props) {
-    let fromLogIn = props.location.state.fromLogIn;
-    // console.log(fromLogIn);
+export default function EmailPhoneForm(props) {
+    // State variable passed from <Link> tags in NavBar.
+    let fromLogIn;
+    let cameFromLink;
+    if (props.location.state) {
+        fromLogIn = props.location.state.fromLogIn;
+        cameFromLink = props.location.state.cameFromLink;
+    }
 
+    // React state
     const [isLogInActive, setIsLogInActive] = useState(false);
-    // if (isLogInActive !== fromLogIn) {
-    //     // If we click 'Log In' or 'Sign Up' on the the register page, make the
-    //     // form update.
-    //     console.log(fromLogIn);
+
+    // if ((fromLogIn != null || fromLogIn != undefined)) {
     //     setIsLogInActive(fromLogIn);
     // }
 
-    const currentInactive = isLogInActive ? "Register" : "Login";
-    const currentActive = isLogInActive ? "Login" : "Register";
+    if (fromLogIn !== undefined && cameFromLink && isLogInActive !== fromLogIn) {
+        // If we click 'Log In' or 'Sign Up' on the the register page, make the
+        // form update.
+        setIsLogInActive(fromLogIn);
+    }
+
+    const currentInactive = isLogInActive ? "Email" : "Phone";
+    const currentActive = isLogInActive ? "Phone" : "Email";
     let toggleFormButton;
 
     const changeForm = () => {
+        if (props.location.state) {
+            props.location.state.cameFromLink = false;
+        }
         setIsLogInActive(!isLogInActive);
     }
 
@@ -50,10 +63,10 @@ export default function LoginRegisterForm(props) {
 
     return (
         <div className="login-register-form">
-            <div className="container">
-                <div className="form-container">
-                    {isLogInActive && <LoginForm />}
-                    {!isLogInActive && <RegisterForm />}
+            <div className="form-container">
+                <div className="input-container">
+                    {isLogInActive && <PhoneForm set_login_status={props.set_login_status}/>}
+                    {!isLogInActive && <EmailForm set_login_status={props.set_login_status}/>}
                 </div>
                 <ToggleFormButton containerRef={ref => toggleFormButton = ref} onClick={changeForm.bind(this)} textContent={currentInactive}></ToggleFormButton>
             </div>
