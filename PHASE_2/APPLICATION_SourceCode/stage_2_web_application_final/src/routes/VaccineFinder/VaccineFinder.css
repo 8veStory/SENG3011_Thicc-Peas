@@ -98,6 +98,59 @@
     outline: none;
 }
 
+/** CARD ANIMATION **/
+#pharmacy-list {
+    position: relative;
+    overflow: hidden;
+}
+
+#pharmacy-list .pharmacy-card {
+    transition-duration: 0.4s
+}
+
+.pharmacy-card-before {
+    content: "";
+    background: var(--secondary-color);
+    display: block;
+    position: absolute;
+    margin-top: -5px;
+    margin-left: -10px;
+    padding-right: 100%;
+    height: calc(50% - 10px);
+    opacity: 0;
+    transition: all 0.8s;
+    border-radius: 10px;
+}
+
+.pharmacy-card-before:active {
+    padding: 0;
+    /* margin: 0; */
+    opacity: 1;
+    transition: 0s
+}
+
+/* #pharmacy-list .pharmacy-card:before {
+    content: "";
+    background: var(--secondary-color);
+    display: block;
+    position: absolute;
+    margin-top: -5px;
+    margin-left: -10px;
+    padding-right: 100%;
+    height: calc(50% - 10px);
+    opacity: 0;
+    transition: all 0.8s;
+    border-radius: 10px;
+} */
+
+/* #pharmacy-list .pharmacy-card:active:before {
+    padding: 0;
+    /* margin: 0; */
+    /* opacity: 1;
+    transition: 0s
+} */
+
+/* MULTISELECT */
 .multiselect .dropdown-container {
     /* overflow: hidden; */
 }

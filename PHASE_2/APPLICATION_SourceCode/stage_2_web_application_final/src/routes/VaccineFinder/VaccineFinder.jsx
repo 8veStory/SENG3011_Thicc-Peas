@@ -12,7 +12,7 @@ const clinicsData = [
         address: "Shop 38/92 Parramatta Rd, Lidcombe NSW 2141",
         openCloseTimes: { thursday: "9am–5pm", friday: "9am–5pm", saturday: "9am–3pm", sunday: "Closed", monday: "9am–5pm", tuesday: "9am–5pm", wednesday: "9am–5pm" },
         phone: "(02) 8022 8442",
-        emai: "lidcomefamilyhealthcentre@outlook.com",
+        email: "lidcomefamilyhealthcentre@outlook.com",
         location: { lat: -33.849427, lng: 151.0491153 },
         vaccines: {
             "COVID-19": 23,
@@ -31,6 +31,23 @@ const clinicsData = [
         phone: "(02) 9395 0444",
         email: "redfernhealthcentre@outlook.com",
         location: { lat: -33.89307240000001, lng: 151.2033416 },
+        vaccines: {
+            "COVID-19": 82,
+            "Polio": 9,
+            "Rubella": 26,
+        },
+        tests: {
+            "COVID-19": 72,
+        }
+    },
+    {
+        id: 3,
+        name: "Royal North Shore Hospital",
+        address: "Reserve Rd, St Leonards NSW 2065",
+        openCloseTimes: { thursday: "24 hrs", friday: "24 hrs", saturday: "24 hrs", sunday: "24 hrs", monday: "24 hrs", tuesday: "24 hrs", wednesday: "24 hrs" },
+        phone: "(02) 9926 7111",
+        email: "NSLHD-Chatback@health.nsw.gov.au",
+        location: { lat: -33.816065, lng: 151.1925898 },
         vaccines: {
             "COVID-19": 82,
             "Polio": 9,
@@ -59,6 +76,7 @@ export default function VaccineFinder() {
     - [x] Location markers for each clinic.
     - [x] Click each card to locate each clinic on google map.
     - [ ] Click each marker for the clinic list to scroll to the correct clinic.
+    - [ ] Only show clinics in a certain radius.
     - [ ] Actually filter lmao.
     */
 
@@ -130,15 +148,34 @@ export default function VaccineFinder() {
     }
 
     const ClinicList = () => {
+        let numClinics = clinics.length;
+        let heightStyle = `calc(${100/numClinics}% - 7px)`
+        let style = {
+            "pharmacy-card::before": {
+                height: `${heightStyle}`
+            }
+        }
         return (
             <div id="pharmacy-list">
                 {
                     clinics.map((clinic) => (
-                        <PharmacyCard id={clinic.id} onclick={handleCardClick} name={clinic.name} address={clinic.address} openCloseTimes={clinic.openCloseTimes} email={clinic.email} phone={clinic.phone}></PharmacyCard>
+                        <div>
+                            <div className="pharmacy-card-before" style={{ height: heightStyle }}></div>
+                            <PharmacyCard style={style} id={clinic.id} clinic={clinic} onclick={handleCardClick}></PharmacyCard>
+                        </div>
                     ))
                 }
             </div>
         )
+    }
+
+    const onMarkerClick = (e) => {
+        // Get the clinic-id from the marker.
+        let clinicId = e.target.dataset.internalid;
+        
+        // Scroll in the scroll-list until that element.
+
+        // 
     }
 
     const populateMapAndListWithClinics = (e) => {
@@ -169,7 +206,7 @@ export default function VaccineFinder() {
                             options={getAllVaccines()}
                             value={selectedVaccines}
                             onChange={setSelectedVaccines}
-                            labelledBy="Select"
+                            labelledBy="Select BOB"
                         ></MultiSelect>
                         <MultiSelect
                             className="multiselect test-multiselect"

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+
 import { useHistory } from 'react-router-dom';
+import emailjs from 'emailjs-com';
+
 import registerImg from "../../images/LoginRegisterLogo.svg";
 import "./EmailForm.css";
 
@@ -14,10 +17,21 @@ export default function EmailForm(props) {
 
   let history = useHistory();
 
-  const handleSubmit = (e) => {
+  const sendEmail = (e) => {
     e.preventDefault();
+    console.log(type);
+    console.log(name);
+    console.log(date);
+    console.log(props.clinicInfo.email);
+    console.log(email);
+    emailjs.send('gmail', 'appointment', {type: type, name: name, date: date, clinic_email: 'maxemersonowen@gmail.com', client_email: email}, 'user_A8yNOUVbToXNXYZSDHypj')
+      .then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text);
+      });
 
-    console.table({ name: name, email: email, phone: phone, date: date });
+    // console.table({ name: name, email: email, phone: phone, date: date });
 
     // Check all fields are not empty...
     // if (!name)
@@ -29,38 +43,45 @@ export default function EmailForm(props) {
     // else if (!date)
     //   alert("Date cannot be empty.");
 
-    console.log("Send email through backend...")
+    // console.log("Send email through backend...")
     // props.set_login_status(true);
     // console.log("Successful signup");
     // history.pushState("/clinic");
   }
 
   return (
-    <form className="base-container" onSubmit={handleSubmit}>
-      <div className="header">Email Booking</div>
+    <form className="base-container" onSubmit={sendEmail}>
+      <div className="header">
+        <div>
+          Email Booking
+        </div>
+        <div>
+          {props.clinicInfo.name}
+        </div>
+      </div>
       <div className="content">
         <div className="login-image">
           <img src={registerImg} alt="A doctor" />
         </div>
         <div className="form">
           <div className="form-group">
-            <label htmlFor="name" onChange={e => setName(e.target.value)}>Name</label>
-            <input type="name" name="name" placeholder="Name" />
+            <label htmlFor="name">Name</label>
+            <input type="name" name="name" placeholder="Name" onChange={e => setName(e.target.value)} />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email" onChange={e => setEmail(e.target.value)}>Email</label>
-            <input type="email" name="email" placeholder="Email" />
+            <label htmlFor="email">Email</label>
+            <input type="email" name="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="phone" onChange={e => setPhone(e.target.value)}>Phone</label>
             <input type="tel" name="phone" placeholder="Phone" pattern="\+[0-9]{2} ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}|[0-9]{4} ?[0-9]{3} ?[0-9]{3}" />
-          </div>
+          </div> */}
 
           <div className="form-group">
-            <label htmlFor="date" onChange={e => setDate(e.target.value)}>Date</label>
-            <input type="text" name="date" placeholder="Date" />
+            <label htmlFor="date">Date</label>
+            <input type="text" name="date" placeholder="Date" onChange={e => setDate(e.target.value)} />
           </div>
 
           <div className="form-group">

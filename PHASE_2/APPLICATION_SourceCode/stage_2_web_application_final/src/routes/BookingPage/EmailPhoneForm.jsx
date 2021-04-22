@@ -65,8 +65,8 @@ export default function EmailPhoneForm(props) {
         <div className="login-register-form">
             <div className="form-container">
                 <div className="input-container">
-                    {isLogInActive && <PhoneForm set_login_status={props.set_login_status}/>}
-                    {!isLogInActive && <EmailForm set_login_status={props.set_login_status}/>}
+                    {isLogInActive && <PhoneForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
+                    {!isLogInActive && <EmailForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
                 </div>
                 <ToggleFormButton containerRef={ref => toggleFormButton = ref} onClick={changeForm.bind(this)} textContent={currentInactive}></ToggleFormButton>
             </div>
