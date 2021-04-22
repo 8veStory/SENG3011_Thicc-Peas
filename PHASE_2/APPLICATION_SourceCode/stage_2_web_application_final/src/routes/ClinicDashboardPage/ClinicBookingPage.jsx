@@ -7,22 +7,7 @@ import { v4 as uuid } from 'uuid';
 
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
-var inventory = [
-  {
-    Amount: 20,
-    Type: 'Test',
-    Disease: 'Covid'
-  },
-  {
-    Amount: 50,
-    Type: 'Vaccine',
-    Disease: 'Covid'
-  }, {
-    Amount: 15,
-    Type: 'Vaccine',
-    Disease: 'Flu'
-  }
-]
+
 function select_count(book){
     var count = 0;
     var i;
@@ -172,25 +157,21 @@ function SubmitButton(props){
     var disease = props.disease;
     var setBook = props.setBook;
 
-    function HandleSubmit(){
-        var newArr = [...book];
+    function HandleSubmit(e){
+      //e.preventDefault();
+ 
         
-
-        newArr[book.length] = {
-            id: book.length + 1,
+        setBook([...book,{
+          id: book.length + 1,
             name: amo,
             Type: type,
             Disease: disease,
             remove: false
-
-        };
-        console.log(newArr);
-        
-        setBook(newArr);
+        }]);
     }
     return(
         <div>
-            <button type="submit" className="addbtn" onClick={HandleSubmit}>Add</button>
+            <button  className="addbtn" onClick={HandleSubmit}>Add</button>
         </div>
     );
 }
