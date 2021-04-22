@@ -173,7 +173,7 @@ function SubmitButton(props){
         
         setInv([...inv,{
           id: inv.length + 1,
-            name: amo,
+            Amount: amo,
             Type: type,
             Disease: disease,
             remove: false
@@ -267,14 +267,14 @@ export default function ClinicDashboard(props) {
           <div className="clinic-inventorybox">
             <form id="add-to-inv-form">
               <label htmlFor="disease"><b>Disease</b></label>
-              <input type="text" placeholder="Enter Disease" name="disease" required></input>
+              <input type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
               <label htmlFor="Type"><b>Type</b></label>
-              <select name="type" id="type">
+              <select name="type" id="type" onChange={e => setType(e.target.value)}>
                 <option value="Test">Test</option>
                 <option value="Vaccine">Vaccine</option>
               </select>
               <label htmlFor="amount"><b>Amount</b></label>
-              <input type="number" placeholder="1234" name="amount" required></input>
+              <input type="number" placeholder="1234" name="amount" onChange={e => setAmo(e.target.value)} required></input>
               <ClearButtion inv={inv} setInv={setInv}/>
               <SubmitButton inv={inv} type={type} setInv={setInv} amo={amo} disease={disease}/>
               
