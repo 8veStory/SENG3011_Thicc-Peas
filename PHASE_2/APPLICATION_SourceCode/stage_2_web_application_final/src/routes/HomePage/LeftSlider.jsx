@@ -4,6 +4,7 @@ import './LeftSlider.css';
 import forwardArrow from './../../images/arrow-forward.svg';
 
 import Check from './../CheckSymptomsPage/CheckSymptomsPage';
+import VaccineFinder from '../VaccineFinder/VaccineFinder';
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -78,6 +79,7 @@ export default function LeftSlider(props) {
             <Tabs
               orientation="vertical"
               // variant="scrollable"
+              variant="fullWidth"
               value={value}
               onChange={handleChange}
               aria-label="Vertical tabs example"
@@ -88,14 +90,15 @@ export default function LeftSlider(props) {
               <Tab label="Symptom Checker" {...a11yProps(1)} />
               <Tab label="Local Outbreaks" {...a11yProps(2)} />
             </Tabs>
-            <TabPanel value={value} index={0}>
-              Vaccine Finder
+            {/* <TabPanel value={value} index={0} style={{height: '100%', width: 'auto', backgroundColor: '#DCE9FB'}}> */}
+            <TabPanel value={value} index={0} style={{height: '100%', width: '100%'}}>
+              <VaccineFinder/>
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={value} index={1} style={{height: '100%', width: '100%'}}>
               Symptom Checker
               <Check/>
             </TabPanel>
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={2} style={{height: '100%', width: '100%'}}>
               Local Outbreaks
             </TabPanel>
           </div>

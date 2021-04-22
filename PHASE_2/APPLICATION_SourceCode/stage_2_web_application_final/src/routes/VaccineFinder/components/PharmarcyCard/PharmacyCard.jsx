@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+
+import BookingPage from './../../../BookingPage/BookingPage';
 
 import './PharmacyCard.css';
 
@@ -11,6 +14,12 @@ export default function PharmacyCard({ pharmacyId, name, image, location,  openC
         openCloseTimes = "TEST TIMES";
 
     console.log(openCloseTimes);
+
+    let history = useHistory();
+    const handleBook = (e) => {
+        history.push("/book");
+        // window.location.href = "/clinic";
+    }
 
     return (
         <div className="pharmacy-card">
@@ -43,6 +52,8 @@ export default function PharmacyCard({ pharmacyId, name, image, location,  openC
                     <li>Saturday: {openCloseTimes.saturday}</li>
                 </ul>
             </div>
+
+            <button className="book-btn" onClick={handleBook}>Book</button>
         </div>
     );
 }
