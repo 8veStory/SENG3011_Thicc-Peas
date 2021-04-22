@@ -19,8 +19,12 @@ export default function EmailForm(props) {
 
   const sendEmail = (e) => {
     e.preventDefault();
-
-    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target, 'YOUR_USER_ID')
+    console.log(type);
+    console.log(name);
+    console.log(date);
+    console.log(props.clinicInfo.email);
+    console.log(email);
+    emailjs.send('gmail', 'appointment', {type: type, name: name, date: date, clinic_email: 'maxemersonowen@gmail.com', client_email: email}, 'user_A8yNOUVbToXNXYZSDHypj')
       .then((result) => {
         console.log(result.text);
       }, (error) => {
@@ -61,13 +65,13 @@ export default function EmailForm(props) {
         </div>
         <div className="form">
           <div className="form-group">
-            <label htmlFor="name" onChange={e => setName(e.target.value)}>Name</label>
-            <input type="name" name="name" placeholder="Name" />
+            <label htmlFor="name">Name</label>
+            <input type="name" name="name" placeholder="Name" onChange={e => setName(e.target.value)} />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email" onChange={e => setEmail(e.target.value)}>Email</label>
-            <input type="email" name="email" placeholder="Email" />
+            <label htmlFor="email">Email</label>
+            <input type="email" name="email" placeholder="Email" onChange={e => setEmail(e.target.value)} />
           </div>
 
           {/* <div className="form-group">
@@ -76,8 +80,8 @@ export default function EmailForm(props) {
           </div> */}
 
           <div className="form-group">
-            <label htmlFor="date" onChange={e => setDate(e.target.value)}>Date</label>
-            <input type="text" name="date" placeholder="Date" />
+            <label htmlFor="date">Date</label>
+            <input type="text" name="date" placeholder="Date" onChange={e => setDate(e.target.value)} />
           </div>
 
           <div className="form-group">
