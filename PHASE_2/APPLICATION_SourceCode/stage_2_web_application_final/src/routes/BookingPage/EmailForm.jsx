@@ -19,12 +19,20 @@ export default function EmailForm(props) {
 
   const sendEmail = (e) => {
     e.preventDefault();
-    console.log(type);
+
+    if (!name)
+      alert("Name cannot be empty.");
+    else if (!email)
+      alert("Email cannot be empty.");
+    else if (!date)
+      alert("Date cannot be empty.");
+
+    console.log(vaccTest);
     console.log(name);
     console.log(date);
     console.log(props.clinicInfo.email);
     console.log(email);
-    emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email }, 'user_A8yNOUVbToXNXYZSDHypj')
+    emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email, verif: makeid(30) }, 'user_A8yNOUVbToXNXYZSDHypj')
       .then((result) => {
         console.log(result.text);
       }, (error) => {
@@ -47,9 +55,11 @@ export default function EmailForm(props) {
     // props.set_login_status(true);
     // console.log("Successful signup");
     // history.pushState("/clinic");
+
+    alert('Booking email sent successfully!');
   }
 
-  const VaccTestList = ({info}) => {
+  const VaccTestList = ({ info }) => {
     let tests = [];
     for (let test in info.tests) {
       console.log(test);
@@ -67,7 +77,17 @@ export default function EmailForm(props) {
     return tests;
   }
 
-  console.log(props.clinicInfo);
+  function makeid(length) {
+    var result = [];
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+    }
+    return result.join('');
+  }
+
+  console.log(makeid(30));
 
   return (
     <form className="base-container" onSubmit={sendEmail}>
@@ -110,7 +130,7 @@ export default function EmailForm(props) {
           <div className="form-group">
             <label htmlFor="vacctest">Vaccine / Test</label>
             <select name="types" id="vacctest" value={vaccTest} onChange={e => setVaccTest(e.target.value)}>
-              <VaccTestList info={props.clinicInfo}/>
+              <VaccTestList info={props.clinicInfo} />
             </select>
           </div>
         </div>
