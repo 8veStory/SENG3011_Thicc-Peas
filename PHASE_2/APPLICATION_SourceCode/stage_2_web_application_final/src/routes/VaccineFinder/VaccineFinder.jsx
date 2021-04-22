@@ -112,7 +112,7 @@ export default function VaccineFinder() {
             target = target.parentElement;
         }
 
-        let clinicId = target.dataset.clinic.id;
+        let clinicId = target.dataset.internalid;
         console.log(target.dataset);
         console.log(target);
 
