@@ -59,16 +59,16 @@ export default function Check() {
   const HIV = [fever, laryngitis, viral_rash].filter((v) => v).length >= 2;
   const covid_onclick = () => {
     if (covid === true) {
-      alert("you may have coivd, please book an appointment at nearest hospital");
+      alert("You may have COVID-19. Please use the Vaccine Finder to find a test or vaccine.");
     } else {
-      alert("You are safe~");
+      alert("You do not appear to be suffering from a majority COVID-19 symptoms. You are most likely safe.");
     }
   }
   const HIVonclick = () => {
     if (HIV === true) {
-      alert("you may have HIV, please book an appointment at nearest hospital");
+      alert("You may have HIV. Please use the Vaccine Finder to find a test near you.");
     } else {
-      alert("You are safe~");
+      alert("You do not appear to be suffering from a majority HIV symptoms. You are most likely safe.");
     }
   }
 
@@ -104,7 +104,7 @@ export default function Check() {
               />
             </FormGroup>
             <Button variant="contained" color="primary" onClick={covid_onclick}>
-              Primary
+              Check
             </Button>
           </FormControl>
         </Menu>
@@ -137,7 +137,7 @@ export default function Check() {
               />
             </FormGroup>
             <Button variant="contained" color="primary" onClick={HIVonclick}>
-              Primary
+              Check
             </Button>
           </FormControl>
         </Menu>

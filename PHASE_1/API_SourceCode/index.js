@@ -142,7 +142,7 @@ function create_article_result(articleData) {
 /**
  * Listen on $PORT for JSON.
  */
-app.use(express.json())
+app.use(cors(), express.json())
 
 /**
  * Endpoint: GET '/log'

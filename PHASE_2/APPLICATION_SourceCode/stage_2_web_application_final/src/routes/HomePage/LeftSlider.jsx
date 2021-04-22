@@ -12,6 +12,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import LocalOutbreaks from '../LocalOutbreaks/LocalOutbreaks';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,7 +89,7 @@ export default function LeftSlider(props) {
             >
               <Tab label="Vaccine Finder" {...a11yProps(0)} />
               <Tab label="Symptom Checker" {...a11yProps(1)} />
-              {/* <Tab label="Local Outbreaks" {...a11yProps(2)} /> */}
+              <Tab label="Local Outbreaks" {...a11yProps(2)} />
             </Tabs>
             {/* <TabPanel value={value} index={0} style={{height: '100%', width: 'auto', backgroundColor: '#DCE9FB'}}> */}
             <TabPanel value={value} index={0} style={{height: '100%', width: '100%'}}>
@@ -98,9 +99,10 @@ export default function LeftSlider(props) {
               Symptom Checker
               <Check/>
             </TabPanel>
-            {/* <TabPanel value={value} index={2} style={{height: '100%', width: '100%'}}>
+            <TabPanel value={value} index={2} style={{height: '100%', width: '100%'}}>
               Local Outbreaks
-            </TabPanel> */}
+              <LocalOutbreaks></LocalOutbreaks>
+            </TabPanel>
           </div>
         </div>
         <div className="forward-arrow" onClick={props.hide}>
