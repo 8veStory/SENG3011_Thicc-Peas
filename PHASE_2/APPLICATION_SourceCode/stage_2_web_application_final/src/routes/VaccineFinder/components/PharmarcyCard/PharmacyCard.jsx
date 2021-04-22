@@ -5,7 +5,7 @@ import BookingPage from './../../../BookingPage/EmailPhoneForm';
 
 import './PharmacyCard.css';
 
-export default function PharmacyCard({clinic, onclick}) {
+export default function PharmacyCard({style, clinic, onclick}) {
     let name           = clinic.name;
     let address        = clinic.address;
     let openCloseTimes = clinic.openCloseTimes;
@@ -32,7 +32,7 @@ export default function PharmacyCard({clinic, onclick}) {
     }
 
     return (
-        <div data-internalid={clinic.id} onClick={onclick} className="pharmacy-card">
+        <div data-content={style} data-internalid={clinic.id} onClick={onclick} className="pharmacy-card">
             <div className="pharmacy-name">
                 <b>{name}</b>
             </div>
