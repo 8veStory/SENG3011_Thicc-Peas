@@ -79,7 +79,8 @@ var bookings = [
 function ClearButtion(props) {
     var book = props.book;
     var setBook = props.setBook;
-    function clearBook(){
+    function clearBook(e){
+        e.preventDefault();
         var i = 0;
         var count = 0;
         var newArr = [];
@@ -89,9 +90,21 @@ function ClearButtion(props) {
                 count++;
             }
         }
-        setBook(newArr);
+        var newArrReID = [];
+        for(i = 0; i < newArr.length;i++){
+        newArrReID[i] = 
+            {
+            id: i + 1,
+            name: newArr[i].name,
+            Type: newArr[i].Type,
+            Disease: newArr[i].Disease,
+            remove: false
+        };
+        
     }
-
+        setBook(newArrReID);
+    }
+    
     
     if(select_count(book) !== 0){
         return(
@@ -162,7 +175,7 @@ function SubmitButton(props){
  
         
         setBook([...book,{
-          id: book.length + 1,
+            id: book.length + 1,
             name: amo,
             Type: type,
             Disease: disease,
@@ -175,6 +188,7 @@ function SubmitButton(props){
         </div>
     );
 }
+
 export default function ClinicBooking(props) {
   // React state
 
@@ -191,6 +205,7 @@ export default function ClinicBooking(props) {
     };
     
     
+    
   return (
     <div>
       <ul>
@@ -199,7 +214,7 @@ export default function ClinicBooking(props) {
         <li styles="float:right"><a className="auth" href="loginPage.html">Login</a></li>
         <li styles="float:right"><a className="auth" href="signUpPage.html">Sign Up</a></li>
       </ul>
-      <h1 className="title">Clinic Dashboard</h1>
+      <h1 className="title">Clinic Booking</h1>
       <div className="clinic-container">
         <div className="clinic-column clinic-columnleft">
           <h2 className="clinic-heading">Recent Bookings</h2>
