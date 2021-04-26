@@ -8,14 +8,16 @@
  */
 
 // IMPORTS
-const admin   = require('firebase-admin');
-const express = require('express');
-const fs      = require('fs');
-const { exit } = require('process');
-const { promises } = require('dns');
-const { response } = require('express');
-const { create } = require('domain');
-const app     = express();
+const admin         = require('firebase-admin');
+const express       = require('express');
+const fs            = require('fs');
+const { exit }      = require('process');
+const { promises }  = require('dns');
+const { response }  = require('express');
+const { create }    = require('domain');
+const app           = express();
+
+var hash            = require('object-hash')
 
 
 // CONSTANTS
@@ -42,7 +44,6 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 })
 const db = admin.firestore();
-
 
 // POLYFILLS
 if (!Object.entries)

@@ -4,7 +4,9 @@ import MultiSelect from "react-multi-select-component";
 import './VaccineFinder.css';
 import VaccineMap from './components/VaccineMap/VaccineMap';
 import PharmacyCard from './components/PharmarcyCard/PharmacyCard';
+import getClinics from '../../../backend'
 
+/*
 const clinicsData = [
     {
         id: 1,
@@ -57,7 +59,10 @@ const clinicsData = [
             "COVID-19": 72,
         }
     }
-]
+]*/
+
+const clinicsData = getClinics()
+console.log(clinicsData)
 
 export default function VaccineFinder() {
     const [addresses, setAddresses] = useState();
