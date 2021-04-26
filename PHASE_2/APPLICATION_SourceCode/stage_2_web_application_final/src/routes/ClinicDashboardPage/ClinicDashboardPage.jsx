@@ -168,8 +168,7 @@ function SubmitButton(props){
     var setInv = props.setInv;
 
     function HandleSubmit(e){
-      //e.preventDefault();
- 
+      e.preventDefault();
         
         setInv([...inv,{
           id: inv.length + 1,
@@ -256,9 +255,9 @@ export default function ClinicDashboard(props) {
                 }
               
             })}
-
           </table>
-          <TenFunction ten_count={ten_count} setten_count={setten_count} leng={inv.length}/>
+
+          {/* <TenFunction ten_count={ten_count} setten_count={setten_count} leng={inv.length}/> */}
         </div>
 
         <div className="clinic-column clinic-columnright">
