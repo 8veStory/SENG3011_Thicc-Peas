@@ -181,6 +181,12 @@ export default function ClinicBooking(props) {
     const [disease, setDis] = useState('');
     const [type, setType] = useState('Test');
 
+    const [chkBox, setChk] = useState(true);
+
+    const handleChangeChk = () => {
+        setChk(!chkBox);
+    }
+
 
     const [ten_count, setten_count] = useState(0);
     const handleChange = (event, item, index) => {
@@ -283,8 +289,15 @@ export default function ClinicBooking(props) {
                     </div>
 
                 </div>
+                <div className="clinic-column clinic-columnright clinic-opt-in">
+                    <label htmlFor="Type"><b>Opt into promotion</b></label>
+                    <p>By ticking this, your clinic will be shown on the Vaccine Finder.</p>
+                    <input type="checkbox" class="chk-checkbox" defaultChecked={chkBox} onChange={handleChangeChk}></input>
+                </div>
 
             </div>
+
+
         </div>
     );
 }

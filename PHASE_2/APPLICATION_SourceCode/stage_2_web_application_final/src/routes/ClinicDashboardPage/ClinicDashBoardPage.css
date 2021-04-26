@@ -62,3 +62,12 @@
   width: 100%;
 }
 
+.clinic-opt-in {
+  float: right;
+  padding-left: 10px;
+  text-align: center;
+}
+
+.chk-checkbutton {
+  float: left;
+}
