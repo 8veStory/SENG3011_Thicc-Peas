@@ -69,12 +69,13 @@ var bookings = [
 function ClearButtion(props) {
     var book = props.book;
     var setBook = props.setBook;
-    function clearBook(){
+    function clearBook(e) {
+        e.preventDefault();
         var i = 0;
         var count = 0;
         var newArr = [];
-        for(i = 0;i < book.length;i++){
-            if(book[i].remove !== true){
+        for (i = 0; i < book.length; i++) {
+            if (book[i].remove !== true) {
                 newArr[count] = book[i];
                 count++;
             }
@@ -82,65 +83,65 @@ function ClearButtion(props) {
         setBook(newArr);
     }
 
-    
-    if(select_count(book) !== 0){
-        return(
+
+    if (select_count(book) !== 0) {
+        return (
             <div>
-            <button type="button" className="clearbtn" onClick={
-                clearBook
-              }>Clear</button>
+                <button type="button" className="clearbtn" onClick={
+                    clearBook
+                }>Clear</button>
             </div>
         );
-    }else{
+    } else {
         return null;
     }
 }
 function TenFunction(props) {
-    
-    
-  const ten_count = props.ten_count;
-  const setten_count = props.setten_count;
-  const leng = props.leng;
 
-    
-  function decreateCount(){
+
+    const ten_count = props.ten_count;
+    const setten_count = props.setten_count;
+    const leng = props.leng;
+
+
+    function decreateCount() {
         setten_count(ten_count - 1);
     }
-    function incrementCount(){
+    function incrementCount() {
         setten_count(ten_count + 1);
     }
-  if(ten_count === 0 && leng <= 10){
-      return(null);
-  }
-  if (ten_count === 0) {
-    return (
-        <div>
-        <button type="button" className="clearbtn" onClick={
-            incrementCount
-        }>next ten</button>
-        </div>
-    );
-  }else if((leng - ten_count * 10) > 10 && ten_count > 0){
-      return (
-          <div>
-        <button type="button" className="clearbtn" onClick={incrementCount}>next ten</button>
-        <button type="button" className="clearbtn" onClick={
-            decreateCount
-        }>last ten</button>
-        </div>
-    );
-  }else{
-     return (
-         <div>
-        <button type="button" className="clearbtn" onClick={
-            decreateCount
-        }>last ten</button>
-        </div>
-    ); 
-  }
-  
+    if (ten_count === 0 && leng <= 10) {
+        return (null);
+    }
+    if (ten_count === 0) {
+        return (
+            <div>
+                <button type="button" className="clearbtn" onClick={
+                    incrementCount
+                }>next ten</button>
+            </div>
+        );
+    } else if ((leng - ten_count * 10) > 10 && ten_count > 0) {
+        return (
+            <div>
+                <button type="button" className="clearbtn" onClick={incrementCount}>next ten</button>
+                <button type="button" className="clearbtn" onClick={
+                    decreateCount
+                }>last ten</button>
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                <button type="button" className="clearbtn" onClick={
+                    decreateCount
+                }>last ten</button>
+            </div>
+        );
+    }
+
 }
-function SubmitButton(props){
+function SubmitButton(props) {
     var book = props.book;
     var name = props.name;
     var DOB = props.DOB;
@@ -149,106 +150,108 @@ function SubmitButton(props){
     var disease = props.disease;
     var setBook = props.setBook;
 
-    function HandleSubmit(e){
-      e.preventDefault();
-        
-        setBook([...book,{
-          id: book.length + 1,
+    function HandleSubmit(e) {
+        e.preventDefault();
+
+        setBook([...book, {
+            id: book.length + 1,
             name: name,
             DOB: DOB,
-            phone: phone,
+            Phone: phone,
             Type: type,
             Disease: disease,
             remove: false
         }]);
     }
-    return(
+    return (
         <div>
-            <button  className="addbtn" onClick={HandleSubmit}>Add</button>
+            <button className="addbtn" onClick={HandleSubmit}>Add</button>
         </div>
     );
 }
+
 export default function ClinicBooking(props) {
-  // React state
+    // React state
 
-  const [book, setBook] = useState(bookings);
+    const [book, setBook] = useState(bookings);
 
-  const [name, setName] = useState('John Doe');
-  const [phone, setPhone] = useState('0402 382 321');
-  const [DOB, setDOB] = useState('01/01/2000');
-  const [disease, setDis] = useState('');
-  const [type, setType] = useState('Test');
+    const [name, setName] = useState('John Doe');
+    const [phone, setPhone] = useState('0402 382 321');
+    const [DOB, setDOB] = useState('01/01/2000');
+    const [disease, setDis] = useState('');
+    const [type, setType] = useState('Test');
 
 
     const [ten_count, setten_count] = useState(0);
-    const handleChange = (event,item,index) => {
+    const handleChange = (event, item, index) => {
 
         let newArr = [...book];
         newArr[index].remove = event.target.checked;
         setBook(newArr);
     };
-    
-    
-  return (
-    <div>
-    <NavBar></NavBar>
 
-      <h1 className="title">Clinic Dashboard</h1>
-      <div className="clinic-container">
-        <div className="clinic-column clinic-columnmiddle">
-          <h2 className="clinic-heading">Recent Bookings</h2>
 
-          <table className="clinic-table">
-            <tbody key={uuid()}>
-                <tr>
-                <th>No.</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>DOB</th>
-                <th>Type</th>
-                <th>Disease</th>
-                </tr>
-            </tbody>
-            {book.map((item, index) => {
-                console.log(book);
-                
-                console.log(index);
-                var uid = uuid();
-                console.log(uid);
-                
-              
-                if(index >= (ten_count * 10) && index < (10 + ten_count * 10)){
 
-                    
-                    return (
-                        <tbody key={uid}>
-                            <tr >
-                            <td className="clinic-tablerow">{item.id}</td>
-                            <td className="clinic-tablerow">{item.name}</td>
-                            <td className="clinic-tablerow">{item.Phone}</td>
-                            <td className="clinic-tablerow">{item.DOB}</td>
-                            <td className="clinic-tablerow">{item.Type}</td>
-                            <td className="clinic-tablerow">{item.Disease}</td>
-                            <td className="clinic-tablerow">
-                                <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={item.remove} onChange={(evt) => handleChange(evt, item,index)}  />
-                            </td>
-                            
+    return (
+        <div>
+            <NavBar></NavBar>
+
+            <h1 className="title">Clinic Dashboard</h1>
+            <div className="clinic-container">
+                <div className="clinic-column clinic-columnmiddle">
+                    <h2 className="clinic-heading">Recent Bookings</h2>
+
+                    <table className="clinic-table">
+                        <tbody key={uuid()}>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>DOB</th>
+                                <th>Type</th>
+                                <th>Disease</th>
                             </tr>
                         </tbody>
-                    );
-                }else{
-                    
-                    return(null);
-                }
-              
-            })}
+                        {book.map((item, index) => {
+                            console.log(book);
 
-          </table>
+                            console.log(index);
+                            var uid = uuid();
+                            console.log(uid);
 
 
-        <TenFunction ten_count={ten_count} setten_count={setten_count} leng={bookings.length}/>
+                            if (index >= (ten_count * 10) && index < (10 + ten_count * 10)) {
 
-        </div>
+
+                                return (
+                                    <tbody key={uid}>
+                                        <tr >
+                                            <td className="clinic-tablerow">{item.id}</td>
+                                            <td className="clinic-tablerow">{item.name}</td>
+                                            <td className="clinic-tablerow">{item.Phone}</td>
+                                            <td className="clinic-tablerow">{item.DOB}</td>
+                                            <td className="clinic-tablerow">{item.Type}</td>
+                                            <td className="clinic-tablerow">{item.Disease}</td>
+                                            <td className="clinic-tablerow">
+                                                <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={item.remove} onChange={(evt) => handleChange(evt, item, index)} />
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                );
+                            } else {
+
+                                return (null);
+                            }
+
+                        })}
+
+                    </table>
+
+
+                    <TenFunction ten_count={ten_count} setten_count={setten_count} leng={bookings.length} />
+
+                </div>
                 <div className="clinic-column clinic-columnright">
                     <h2 className="clinic-heading">Add to Booking</h2>
 
