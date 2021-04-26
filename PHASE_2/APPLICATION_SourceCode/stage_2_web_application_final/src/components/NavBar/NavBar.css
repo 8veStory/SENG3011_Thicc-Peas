@@ -59,11 +59,23 @@ li a:hover {
   float: right;
 }
 
+ul li {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.Home-Text {
+  color: white;
+}
+
 .Login-Text {
+  color: white;
 }
 
 .Signup-Text {
+  color: white;
 }
 
 .Logout-Text {
+  color: white;
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import { v4 as uuid } from 'uuid';
 import "./ClinicDashBoardPage.css";
 import Checkbox from '@material-ui/core/Checkbox';
+import NavBar from '../../components/NavBar/NavBarClinic';
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
 var inventory = [
@@ -218,6 +219,8 @@ export default function ClinicDashboard(props) {
 
   return (
     <div>
+      <NavBar></NavBar>
+
       <h1 className="title">Clinic Dashboard</h1>
       <div className="clinic-container">
         

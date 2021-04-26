@@ -4,6 +4,7 @@ import React from 'react';
 import "./ClinicBookingPage.css";
 import Checkbox from '@material-ui/core/Checkbox';
 import { v4 as uuid } from 'uuid';
+import NavBar from '../../components/NavBar/NavBarClinic';
 
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
@@ -21,58 +22,47 @@ function select_count(book){
 var bookings = [
     {
         id: 1,
-        name: 'John Doe',
+        name: "Giuseppe Macklemore",
+        DOB: new Date("08/12/1953").toLocaleDateString(),
         Type: 'Vaccine',
-        Disease: 'Covid',
+        Disease: "Covid",
+        Phone: "0421 513 231",
         remove: false
     },
     {
         id: 2,
-        name: 'John Doe',
+        name: "Sarah Jones",
+        DOB: new Date("02/02/2002").toLocaleDateString(),
         Type: 'Vaccine',
-        Disease: 'Covid',
+        Disease: "Covid",
+        Phone: "0482 953 172",
         remove: false
     },
     {
         id: 3,
-        name: 'John Doe',
+        name: "Chun Li",
+        DOB: new Date("01/03/1968").toLocaleDateString(),
         Type: 'Vaccine',
-        Disease: 'Covid',
+        Disease: "Covid",
+        Phone: "0451 925 231",
         remove: false
     },
     {
         id: 4,
-        name: 'John Doe',
+        name: "Johnny Appleseed",
+        DOB: new Date("07/09/1987").toLocaleDateString(),
         Type: 'Vaccine',
-        Disease: 'Covid',
+        Disease: "Covid",
+        Phone: "0492 981 682",
         remove: false
     },
     {
         id: 5,
-        name: 'John Doe',
+        name: "Barackus Pangborn",
+        DOB: new Date("12/03/2001").toLocaleDateString(),
         Type: 'Vaccine',
-        Disease: 'Covid',
-        remove: false
-    },
-    {
-        id: 6,
-        name: 'John Doe',
-        Type: 'Vaccine',
-        Disease: 'Covid',
-        remove: false
-    },
-    {
-        id: 7,
-        name: 'John Doe',
-        Type: 'Vaccine',
-        Disease: 'Covid',
-        remove: false
-    },
-    {
-        id: 8,
-        name: 'John Doe',
-        Type: 'Vaccine',
-        Disease: 'Covid',
+        Disease: "Covid",
+        Phone: "0481 421 862",
         remove: false
     }
 ];
@@ -152,18 +142,21 @@ function TenFunction(props) {
 }
 function SubmitButton(props){
     var book = props.book;
-    var amo = props.amo;
+    var name = props.name;
+    var DOB = props.DOB;
+    var phone = props.phone;
     var type = props.type;
     var disease = props.disease;
     var setBook = props.setBook;
 
     function HandleSubmit(e){
-      //e.preventDefault();
- 
+      e.preventDefault();
         
         setBook([...book,{
           id: book.length + 1,
-            name: amo,
+            name: name,
+            DOB: DOB,
+            phone: phone,
             Type: type,
             Disease: disease,
             remove: false
@@ -179,9 +172,14 @@ export default function ClinicBooking(props) {
   // React state
 
   const [book, setBook] = useState(bookings);
+
+  const [name, setName] = useState('John Doe');
+  const [phone, setPhone] = useState('0402 382 321');
+  const [DOB, setDOB] = useState('01/01/2000');
   const [disease, setDis] = useState('');
   const [type, setType] = useState('Test');
-  const [amo, setAmo] = useState(0);
+
+
     const [ten_count, setten_count] = useState(0);
     const handleChange = (event,item,index) => {
 
@@ -193,15 +191,11 @@ export default function ClinicBooking(props) {
     
   return (
     <div>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="localOutbreak.html">Local Outbreaks</a></li>
-        <li styles="float:right"><a className="auth" href="loginPage.html">Login</a></li>
-        <li styles="float:right"><a className="auth" href="signUpPage.html">Sign Up</a></li>
-      </ul>
+    <NavBar></NavBar>
+
       <h1 className="title">Clinic Dashboard</h1>
       <div className="clinic-container">
-        <div className="clinic-column clinic-columnleft">
+        <div className="clinic-column clinic-columnmiddle">
           <h2 className="clinic-heading">Recent Bookings</h2>
 
           <table className="clinic-table">
@@ -209,6 +203,8 @@ export default function ClinicBooking(props) {
                 <tr>
                 <th>No.</th>
                 <th>Name</th>
+                <th>Phone</th>
+                <th>DOB</th>
                 <th>Type</th>
                 <th>Disease</th>
                 </tr>
@@ -229,6 +225,8 @@ export default function ClinicBooking(props) {
                             <tr >
                             <td className="clinic-tablerow">{item.id}</td>
                             <td className="clinic-tablerow">{item.name}</td>
+                            <td className="clinic-tablerow">{item.Phone}</td>
+                            <td className="clinic-tablerow">{item.DOB}</td>
                             <td className="clinic-tablerow">{item.Type}</td>
                             <td className="clinic-tablerow">{item.Disease}</td>
                             <td className="clinic-tablerow">
@@ -249,37 +247,41 @@ export default function ClinicBooking(props) {
 
 
         <TenFunction ten_count={ten_count} setten_count={setten_count} leng={bookings.length}/>
-                
-   
-         
-          
-        </div>
-        
-
-        <div className="clinic-column clinic-columnright">
-          <h2 className="clinic-heading">Add to Booking</h2>
-
-          <div className="clinic-inventorybox">
-            <form id="add-to-inv-form">
-              <label htmlFor="disease"><b>Disease</b></label>
-              <input type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
-              <label htmlFor="Type"><b>Type</b></label>
-              <select name="type" id="type" onChange={e => setType(e.target.value)}>
-                <option value="Test">Test</option>
-                <option value="Vaccine">Vaccine</option>
-              </select>
-              <label htmlFor="amount"><b>Name</b></label>
-              <input type="text"  name="amount" onChange={e => setAmo(e.target.value)} required></input>
-              <ClearButtion book={book} setBook={setBook}/>
-              
-              <SubmitButton book={book} type={type} setBook={setBook} amo={amo} disease={disease}/>
-              <h5> {select_count(book)} bookings selected</h5>
-            </form>
-          </div>
 
         </div>
+                <div className="clinic-column clinic-columnright">
+                    <h2 className="clinic-heading">Add to Booking</h2>
 
-      </div>
-    </div>
-  );
+                    <div className="clinic-inventorybox">
+                        <form id="add-to-inv-form">
+                            <label htmlFor="name"><b>Name</b></label>
+                            <input type="text" name="name" placeholder="Enter Name" onChange={e => setName(e.target.value)} required></input>
+
+                            <label htmlFor="DOB"><b>DOB</b></label>
+                            <input type="text" name="DOB" placeholder="Enter DOB (e.g. 19/02/2000)" onChange={e => setDOB(e.target.value)} required></input>
+
+                            <label htmlFor="Phone"><b>Phone</b></label>
+                            <input type="text" name="Phone" placeholder="Enter phone" onChange={e => setPhone(e.target.value)} required></input>
+
+                            <label htmlFor="disease"><b>Disease</b></label>
+                            <input type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
+
+                            <label htmlFor="Type"><b>Type</b></label>
+                            <select name="type" id="type" onChange={e => setType(e.target.value)}>
+                                <option value="Test">Test</option>
+                                <option value="Vaccine">Vaccine</option>
+                            </select>
+
+                            <ClearButtion book={book} setBook={setBook} />
+
+                            <SubmitButton book={book} setBook={setBook} name={name} DOB={DOB} phone={phone} type={type} disease={disease} />
+                            <h5> {select_count(book)} bookings selected</h5>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    );
 }

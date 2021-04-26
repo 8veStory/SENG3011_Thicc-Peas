@@ -11,7 +11,6 @@ export default function BookingPage(props) {
   let BookingFormWithRouter = withRouter((props) => <EmailPhoneForm {...props} set_login_status={set_login_status}/>);
 
   let clinicInfo = props.location.state.clinic;
-  console.log(clinicInfo);
 
   let history = useHistory();
   const handleBack = () => {
