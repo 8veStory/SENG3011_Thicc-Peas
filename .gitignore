@@ -5,3 +5,4 @@ PHASE_1/Scraper_SourceCode/.vscode
 PHASE_1/Scraper_SourceCode/__pycache__
 .eslintcache
 node_modules
+log.txt
