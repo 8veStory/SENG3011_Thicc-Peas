@@ -2,7 +2,7 @@
 ## How to Run
 Following commands start only the front-end. Back-end is still in development.
 1. In this directory, run ```npm install```.
-2. Run ```npm run```.
+2. Run ```npm run start```.
 
 The front-end should not be running on port 3000. Access it via ```localhost:3000```.
 ## Technologies
