@@ -20,27 +20,27 @@ export default function EmailPhoneForm(props) {
     }
 
     // React state
-    const [isLogInActive, setIsLogInActive] = useState(false);
+    const [isPhoneActive, setIsPhoneActive] = useState(false);
 
     // if ((fromLogIn != null || fromLogIn != undefined)) {
     //     setIsLogInActive(fromLogIn);
     // }
 
-    if (fromLogIn !== undefined && cameFromLink && isLogInActive !== fromLogIn) {
+    if (fromLogIn !== undefined && cameFromLink && isPhoneActive !== fromLogIn) {
         // If we click 'Log In' or 'Sign Up' on the the register page, make the
         // form update.
-        setIsLogInActive(fromLogIn);
+        setIsPhoneActive(fromLogIn);
     }
 
-    const currentInactive = isLogInActive ? "Email" : "Phone";
-    const currentActive = isLogInActive ? "Phone" : "Email";
+    const currentInactive = isPhoneActive ? "Email" : "Phone";
+    const currentActive = isPhoneActive ? "Phone" : "Email";
     let toggleFormButton;
 
     const changeForm = () => {
         if (props.location.state) {
             props.location.state.cameFromLink = false;
         }
-        setIsLogInActive(!isLogInActive);
+        setIsPhoneActive(!isPhoneActive);
     }
 
     /**
@@ -52,21 +52,21 @@ export default function EmailPhoneForm(props) {
      * clicked.
      */
     useEffect(() => {
-        if (!isLogInActive) {
+        if (!isPhoneActive) {
             toggleFormButton.classList.remove("right");
             toggleFormButton.classList.add("left");
         } else {
             toggleFormButton.classList.remove("left");
             toggleFormButton.classList.add("right");
         }
-    }, [isLogInActive]);
+    }, [isPhoneActive]);
 
     return (
         <div className="login-register-form">
             <div className="form-container">
                 <div className="input-container">
-                    {isLogInActive && <PhoneForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
-                    {!isLogInActive && <EmailForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
+                    {isPhoneActive && <PhoneForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
+                    {!isPhoneActive && <EmailForm set_login_status={props.set_login_status} clinicInfo={props.clinicInfo}/>}
                 </div>
                 <ToggleFormButton containerRef={ref => toggleFormButton = ref} onClick={changeForm.bind(this)} textContent={currentInactive}></ToggleFormButton>
             </div>
