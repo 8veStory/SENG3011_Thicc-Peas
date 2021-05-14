@@ -88,6 +88,9 @@ app.post('/login', async (req, res) => {
   }
 
   if (clinic.contact_email === email && compareAgainstHashedPasswordSync(password, clinic.password)) {
+    // TODO: Implement JWT for user authentication.
+    // Return clinic object without password hash
+    delete clinic.password;
     res.status(httpCodes.SUCCESS_200).json({
       success: true,
       clinic: clinic
