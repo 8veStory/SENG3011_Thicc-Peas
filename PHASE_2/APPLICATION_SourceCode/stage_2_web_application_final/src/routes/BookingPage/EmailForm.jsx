@@ -17,6 +17,10 @@ export default function EmailForm(props) {
 
   let history = useHistory();
 
+  /**
+   * Sends an email to the clinic to either confirm or deny.
+   * @param {*} e 
+   */
   const sendEmail = (e) => {
     e.preventDefault();
 
@@ -32,6 +36,7 @@ export default function EmailForm(props) {
     console.log(date);
     console.log(props.clinicInfo.email);
     console.log(email);
+
     emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email, verif: makeid(30) }, 'user_A8yNOUVbToXNXYZSDHypj')
       .then((result) => {
         console.log(result.text);
@@ -105,8 +110,8 @@ export default function EmailForm(props) {
         </div>
         <div className="form">
           <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input type="name" name="name" placeholder="Name" onChange={e => setName(e.target.value)} />
+            <label htmlFor="name">Full Name</label>
+            <input type="name" name="name" placeholder="Full Name" onChange={e => setName(e.target.value)} />
           </div>
 
           <div className="form-group">
