@@ -13,6 +13,7 @@ import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 import VaccineFinder from '../VaccineFinder/VaccineFinder';
 import BookingPage from '../BookingPage/BookingPage';
 import ClinicBookingPage from '../ClinicDashboardPage/ClinicBookingPage';
+
 /**
  * The main React component that links to the others.
  */
