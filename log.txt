@@ -1,0 +1,17 @@
+2021-05-14T11:08:25.391Z | ::1 requested '/reports' - Status Code: 200
+2021-05-14T13:06:05.780Z | ::1 requested '/signup' - Status Code: 200
+2021-05-14T13:36:51.555Z | ::1 requested '400 /signup'
+2021-05-14T13:37:23.945Z | ::1 requested '400 /signup'
+2021-05-14T13:39:23.787Z | ::1 requested '/signup' - 400
+2021-05-14T13:42:07.036Z | ::1 requested 'POST' - 400
+2021-05-14T13:42:46.667Z | ::1 requested 'POST' - 400
+2021-05-14T13:54:27.699Z | ::1 requested 'POST' - 400
+2021-05-14T13:55:17.884Z | ::1 requested POST '/signup' - 400
+2021-05-14T15:48:00.429Z | ::1 requested POST '/signup' - 201
+2021-05-14T15:51:25.457Z | ::1 requested POST '/signup' - 201
+2021-05-14T15:52:28.913Z | ::1 requested POST '/signup' - 201
+2021-05-14T15:54:10.784Z | ::1 requested POST '/signup' - 201
+2021-05-14T15:55:47.694Z | ::1 requested POST '/signup' - 201
+2021-05-14T15:58:45.880Z | ::1 requested POST '/signup' - 201
+2021-05-14T16:04:47.525Z | ::1 requested POST '/signup' - 400
+2021-05-14T16:09:31.059Z | ::1 requested POST '/login' - 400
