@@ -5,9 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Frontend",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "cwd": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\frontend"
+        },
+        {
+            "name": "Backend",
             "type": "pwa-node",
             "request": "launch",
-            "name": "Backend",
             "skipFiles": [
                 "<node_internals>/**"
             ],
