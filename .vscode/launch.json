@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\backend\\index.js"
+            "program": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\backend\\server.js"
         }
     ]
 }
