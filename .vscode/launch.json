@@ -7,6 +7,7 @@
         {
             "name": "Frontend",
             "request": "launch",
+            "type": "pwa-node",
             "runtimeArgs": [
                 "run",
                 "start"
@@ -15,17 +16,21 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node",
             "cwd": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\frontend"
         },
         {
             "name": "Backend",
-            "type": "pwa-node",
             "request": "launch",
+            "type": "pwa-node",
+            "runtimeArgs": [
+                "run",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\backend\\server.js"
+            "cwd": "${workspaceFolder}\\PHASE_2\\APPLICATION_SourceCode\\stage_2_web_application_final\\backend"
         }
     ]
 }
