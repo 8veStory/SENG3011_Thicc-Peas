@@ -30,17 +30,13 @@ class FirestoreDBLink {
         console.log("Successfully connected to FireStore ✅");
     }
 
-    getClinicID(clinicEmail) {
-        return hashSHA256(clinicEmail);
-    }
-
     /**
      * 
      * @param {*} clinicjson A JSON containing clinic information to add / edit
      * @returns Outcome in a json file with the argument `result`
      */
     async setClinicAsync(contact_email, password, clinic_name, address, country, state, opening_time, closing_time) {
-        let clinicID = hashSHA256(contact_email);
+        let clinicID = this._createClinicID(contact_email);
         const clinic = this.db.collection(FS_CLINICS_COLLECTION).doc(clinicID);
 
         const clinicJSON = {
@@ -55,7 +51,7 @@ class FirestoreDBLink {
             closing_time:  closing_time
         }
 
-        if (await this.clinicExistsAsync(clinicID)) {
+        if (await this._clinicExistsAsync(clinicID)) {
             // Check if duplicate clinic.
             throw new Error(`Clinic with email ${contact_email} already exists.`);
         }
@@ -70,7 +66,12 @@ class FirestoreDBLink {
      * @param {*} clinicID A string containing the clinic's ID 
      * @returns An object of the clinic's information
      */
-    async getClinicAsync(clinicID) {
+    async getClinicAsync(email) {
+        let clinicID = this._createClinicID(email);
+        return await this._getClinicAsync(clinicID);
+    }
+
+    async _getClinicAsync(clinicID) {
         const clinic = (await this.db.collection(FS_CLINICS_COLLECTION).doc(clinicID).get()).data();
         return clinic;
     }
@@ -171,9 +172,18 @@ class FirestoreDBLink {
         return final;
     }
 
-    async clinicExistsAsync(clinicID) {
-        let clinic = (await this.getClinicAsync(clinicID));
+    async clinicExistsAsync(email) {
+        let clinicID = this._createClinicID(email);
+        return await this._clinicExistsAsync(clinicID);
+    }
+
+    async _clinicExistsAsync(clinicID) {
+        let clinic = (await this._getClinicAsync(clinicID));
         return clinic ? true : false;
+    }
+
+    _createClinicID(email) {
+        return hashSHA256(email);
     }
 }
 

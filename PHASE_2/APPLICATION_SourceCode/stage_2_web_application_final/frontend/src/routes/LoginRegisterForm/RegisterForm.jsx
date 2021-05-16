@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import registerImg from "../../images/LoginRegisterLogo.svg";
+import { signUpClinicAsync } from '../../utils/BackendLink';
 import "./RegisterForm.css";
 
 export default function RegisterForm(props) {
   // React States
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
-  const [checkPwd, setCheck] = useState('');
+  const [checkPwd, setCheckPwd] = useState('');
+  const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [country, setCountry] = useState('Australia');
   const [state, setState] = useState('New South Wales');
+  const [country, setCountry] = useState('Australia');
 
   let history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.table({ pwd: pwd, checkPwd: checkPwd, address: address, country: country, state: state, email: email });
 
     // Check all fields are not empty...
+    if (!name)
+      alert("Name cannot be empty.");
     if (!email)
       alert("Email cannot be empty.");
     else if (!pwd)
@@ -31,10 +35,14 @@ export default function RegisterForm(props) {
     else if (!country)
       alert("Country cannot be empty.");
 
-    console.log("Make API call here and check that signup is successful...")
-    props.set_login_status(true);
-    console.log("Successful signup");
-    history.pushState("/clinic");
+    let result = await signUpClinicAsync(name, email, pwd, checkPwd, address, state, country);
+    if (result.success) {
+      // TODO: Pass JWT/ClinicID to props...
+      props.set_login_status(true);
+      history.push("/clinic");
+    } else {
+      console.error(result.error);
+    }
   }
 
   return (
@@ -46,23 +54,40 @@ export default function RegisterForm(props) {
         </div>
         <div className="form">
           <div className="form-group">
-            <label htmlFor="email" onChange={e => setEmail(e.target.value)}>Email</label>
-            <input type="email" name="email" placeholder="Email" />
+            <label htmlFor="email">Email</label>
+            <input type="email" name="email" placeholder="Email" onChange={e => setEmail(e.target.value)}/>
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" onChange={e => setPwd(e.target.value)}>Password</label>
-            <input type="password" name="password" placeholder="Password" />
+            <label htmlFor="password">Password</label>
+            <input type="password" name="password" placeholder="Password" onChange={e => setPwd(e.target.value)}/>
           </div>
 
           <div className="form-group">
-            <label htmlFor="repeatPassword" onChange={e => setCheck(e.target.value)}>Repeat Password</label>
-            <input type="password" name="repeatPassword" placeholder="Repeat your password" />
+            <label htmlFor="repeatPassword">Repeat Password</label>
+            <input type="password" name="repeatPassword" placeholder="Repeat your password" onChange={e => setCheckPwd(e.target.value)}/>
           </div>
 
           <div className="form-group">
-            <label htmlFor="address" onChange={e => setAddress(e.target.value)}>Clinic Address</label>
-            <input type="text" name="clinicAddress" placeholder="123 John Street, Flemington, 2532, Sydney" />
+            <label htmlFor="name">Clinic Name</label>
+            <input type="text" name="clinicAddress" placeholder="Flemington Medical Clinic" onChange={e => setName(e.target.value)}/>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="address">Clinic Address</label>
+            <input type="text" name="clinicAddress" placeholder="123 John Street, Flemington, 2532, Sydney" onChange={e => setAddress(e.target.value)}/>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="state">Clinic State</label>
+            <select name="states" id="states" value={state} onChange={e => setState(e.target.value)}>
+              <option value="New South Wales">New South Wales</option>
+              <option value="Queensland">Queensland</option>
+              <option value="South Autralia">South Autralia</option>
+              <option value="Victoria">Victoria</option>
+              <option value="Western Australia">Western Australia</option>
+              <option value="Tasmania">Tasmania</option>
+            </select>
           </div>
 
           <div className="form-group">
@@ -72,18 +97,6 @@ export default function RegisterForm(props) {
               <option value="United States of America">United States of America</option>
               <option value="Japan">Japan</option>
               <option value="United Kingdom">United Kingdom</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="state">Clinic State</label>
-            <select name="states" id="states" value={state} onChange={f => setState(f.target.value)}>
-              <option value="New South Wales">New South Wales</option>
-              <option value="Queensland">Queensland</option>
-              <option value="South Autralia">South Autralia</option>
-              <option value="Victoria">Victoria</option>
-              <option value="Western Australia">Western Australia</option>
-              <option value="Tasmania">Tasmania</option>
             </select>
           </div>
         </div>

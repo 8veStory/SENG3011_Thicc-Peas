@@ -14,15 +14,16 @@ const { BACKEND_URL } = require('../config');
  * @param {String} country
  * @param {String} state
  */
-export async function signUpClinicAsync(name, email, password, address, country, state) {
+export async function signUpClinicAsync(name, email, password, passwordCheck, address, state, country) {
     // We're legit sending passwords over http because we're such a g.
     const body = {
         email: email,
         password: password,
+        password_check: passwordCheck,
         name: name,
         address: address,
-        country: country,
-        state: state
+        state: state,
+        country: country
     };
 
     console.log(BACKEND_URL);
@@ -32,8 +33,8 @@ export async function signUpClinicAsync(name, email, password, address, country,
                         method: "post",
                         body: JSON.stringify(body),
                         headers: { "Content-Type": "application/json" }
-                      }).json()
-    );
+                        })
+                 ).json();
 }
 
 /**
@@ -60,7 +61,7 @@ export async function logInClinicAsync(email, password) {
                         body: JSON.stringify(body),
                         headers: { "Content-Type": "application/json" }
                       }
-    )).json();
+                 )).json();
 }
 
 // TODO: add a dropdown to the book screen.

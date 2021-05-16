@@ -71,8 +71,14 @@ app.post('/signup', async (req, res) => {
   }
 
   // Validation checks
-
-  console.log(`Signing up a clinic with details: ${req.body}`);
+  if (await dbLink.clinicExistsAsync(email)) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: 'A clinic using email ${email} already exists.', success: false });
+    return;
+  }
+  if (password != password_check) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: "Passwords do not match.", success: false });
+    return;
+  }
 
   // Set clinic in DB
   let result;

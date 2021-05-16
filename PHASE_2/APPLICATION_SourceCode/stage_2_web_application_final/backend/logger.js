@@ -104,6 +104,7 @@ class Logger {
 
             // Replace all passwords with '*'s.
             passwordProperties.forEach(pProp => {
+                console.log(clonedObject[pProp]);
                 if (typeof clonedObject[pProp] === 'string' || clonedObject[pProp] instanceof String)
                     clonedObject[pProp] = passwordReplacement.repeat(clonedObject[pProp].length);
              });
