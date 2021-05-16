@@ -1,4 +1,5 @@
 const fs = require('fs');
+const chalk = require('chalk');
 const { cloneDeep } = require('lodash');
 
 const LOGFILEPATH = "./log.txt";
@@ -26,20 +27,45 @@ class Logger {
      */
     static log(req, res, extraMessage = "") {
         let utcTime = new Date().toJSON();
-        let result = `${utcTime} | ${req.ip} requested ${req.method} '${req.url}' - ${res.statusCode}\n`;
+        let result = '';
+        // Log request
+        result += `${utcTime} | ${req.ip} requested ${req.method} '${req.url}' - ${res.statusCode}\n`;
+        result += "\tExtra message:\n";
+        result += '\t\t' + extraMessage ? extraMessage : "N/A\n";
+
+        // Log request params/body
+        result += '\t' + "Request Params:\n";
+        result += '\t\t' + JSON.stringify(removeSensitiveData(req.params)) + '\n';
+        result += '\t' + "Request Body:\n";
+        result += '\t\t' + JSON.stringify(removeSensitiveData(req.body)) + '\n';
+
+        // Log response
+        result += '\t' + "Response body:\n";
+        result += '\t\t' + JSON.stringify(removeSensitiveData(Logger._getLastResponseBody())) + '\n';
+
         fs.appendFile(LOGFILEPATH, result, () => {
-            console.log(`${result.trimEnd() + extraMessage}`);
+            // Print to console in pretty format.
+            console.log(chalk.bold(`${utcTime} | ${req.ip} requested ${req.method} '${req.url}' - ${res.statusCode}`));
+            console.log(chalk.italic("  Extra message:"));
+            console.log(extraMessage ? '    ' + extraMessage : '  ' + 'N/A');
+            console.log();
 
-            // Log request
-            console.log("Request Params:");
-            console.log(removeSensitiveData(req.params));
-            console.log("Request Body (application/json):");
-            console.log(removeSensitiveData(req.body));
+            console.log(chalk.italic("  Request Params:"));
+            console.group();
+            console.log(JSON.stringify(removeSensitiveData(req.params), null, 4));
+            console.groupEnd();
+            console.log();
 
-            // Log response
-            console.log("Response body:");
-            console.log(removeSensitiveData(Logger._getLastResponseBody()));
+            console.log(chalk.italic("  Request Body:"));
+            console.group();
+            console.log(JSON.stringify(removeSensitiveData(req.body), null, 4));
+            console.groupEnd();
+            console.log();
 
+            console.log(chalk.italic("  Response body:"));
+            console.group();
+            console.log(JSON.stringify(removeSensitiveData(Logger._getLastResponseBody()), null, 4));
+            console.groupEnd();
             console.log();
         });
 
