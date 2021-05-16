@@ -73,27 +73,44 @@ class Logger {
          * Receives an object and redacts any sensitive properties.
          * E.g. any prop with 'password' in it.
          * @param {Object} object 
+         * @returns {Object} A new version of the object with sensitive properties
+         * redacted.
          */
         function removeSensitiveData(targetObject) {
             let clonedObject = cloneDeep(targetObject);
 
             const sensitiveDataReplacement = 'SENSITIVE DATA SCRUBBED';
-            const regexes = [
+            const passwordReplacement = '*';
+
+            const passwordRegexes = [
                 '.*password.*',
+            ]
+            const sensitiveRegexes = [
+                // more regexes here...
             ];
 
-            let sensitiveProperties = Object.keys(clonedObject).filter(prop => {
-                for (let regex of regexes) {
-                    if (prop.toLowerCase().match(regex))
-                        return true;
+            let passwordProperties  = [];
+            let sensitiveProperties = [];
+            for (let prop of Object.keys(clonedObject)) {
+                for (let pRegex of passwordRegexes) {
+                    if (prop.toLowerCase().match(pRegex))
+                        passwordProperties.push(prop);
                 }
-                return false;
-            });
-
-            // Replace all sensitive data.
-            for (let sensitiveProp of sensitiveProperties) {
-                clonedObject[sensitiveProp] = sensitiveDataReplacement;
+                for (let sRegex of sensitiveRegexes) {
+                    if (prop.toLowerCase().match(sRegex))
+                        sensitiveProperties.push(prop);
+                }
             }
+
+            // Replace all passwords with '*'s.
+            passwordProperties.forEach(pProp => {
+                if (typeof clonedObject[pProp] === 'string' || clonedObject[pProp] instanceof String)
+                    clonedObject[pProp] = passwordReplacement.repeat(clonedObject[pProp].length);
+             });
+
+             // Redact all sensitive properties.
+            sensitiveProperties.forEach(sProp => clonedObject[sProp] = sensitiveDataReplacement);
+
             return clonedObject;
         }
     }
