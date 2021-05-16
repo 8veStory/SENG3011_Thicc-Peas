@@ -80,7 +80,7 @@ app.post('/login', async (req, res) => {
   const clinic = await dbLink.getClinicAsync(hashSHA256(email));
 
   if (!clinic) {
-    res.status(httpCodes.BAD_REQUEST_400).json({
+    res.status(httpCodes.UNAUTHORIZED_401).json({
       success: false,
       error: 'Invalid email or password.'
     });
@@ -96,7 +96,7 @@ app.post('/login', async (req, res) => {
       clinic: clinic
     });
   } else {
-    res.status(httpCodes.BAD_REQUEST_400).json({
+    res.status(httpCodes.UNAUTHORIZED_401).json({
       success: false,
       error: 'Invalid email or password.'
     });

@@ -2,9 +2,8 @@
  * Exposes functions that interface with the backend.
  */
 
-const fetch = require("node-fetch");
-
-const BACKEND_URL = "http://localhost:3001";
+const fetch = require('node-fetch');
+const { BACKEND_URL } = require('../config');
 
 /**
  * Signs up a clinic given the details.
@@ -26,12 +25,14 @@ export async function signUpClinicAsync(name, email, password, address, country,
         state: state
     };
 
-    return await fetch(BACKEND_URL + "/signup",
+    console.log(BACKEND_URL);
+
+    return await (await fetch(BACKEND_URL + "/signup",
                       {
                         method: "post",
                         body: JSON.stringify(body),
                         headers: { "Content-Type": "application/json" }
-                      }
+                      }).json()
     );
 }
 
@@ -47,14 +48,19 @@ export async function logInClinicAsync(email, password) {
         email: email,
         password: password
     };
+    console.log(BACKEND_URL);
+    console.log(BACKEND_URL);
+    console.log(BACKEND_URL);
+    console.log(BACKEND_URL);
+    console.log(process.env);
 
-    return await fetch(BACKEND_URL + "/login",
+    return await (await fetch(BACKEND_URL + "/login",
                       {
                         method: "post",
                         body: JSON.stringify(body),
                         headers: { "Content-Type": "application/json" }
                       }
-    );
+    )).json();
 }
 
 // TODO: add a dropdown to the book screen.

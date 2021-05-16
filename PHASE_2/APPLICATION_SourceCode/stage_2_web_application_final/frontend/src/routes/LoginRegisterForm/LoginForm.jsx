@@ -1,5 +1,6 @@
 import "./LoginForm.css";
 import React, { useState } from "react";
+import { logInClinicAsync } from '../../utils/BackendLink';
 import { useHistory } from "react-router-dom";
 import loginImg from "../../images/LoginRegisterLogo.svg";
 
@@ -8,16 +9,19 @@ export default function LoginForm(props) {
   const [pwd, setPwd] = useState('');
   let history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Log-in details:", {email: email, password: pwd});
 
-    console.log("Make API call here and check if details are correct...");
+    let results = await logInClinicAsync(email, pwd);
+    if (results.success) {
+      console.log("Successful login");
+      props.set_login_status(true);
 
-    console.log("Successful login");
-    props.set_login_status(true);
-    history.push("/clinic");
-    // window.location.href = "/clinic";
+      history.push("/clinic");
+    } else {
+      console.error("Unsuccessful login");
+      console.error(`${results.error}`);
+    }
   }
 
   return (
