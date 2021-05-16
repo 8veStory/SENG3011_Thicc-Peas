@@ -30,6 +30,10 @@ class FirestoreDBLink {
         console.log("Successfully connected to FireStore ✅");
     }
 
+    getClinicID(clinicEmail) {
+        return hashSHA256(clinicEmail);
+    }
+
     /**
      * 
      * @param {*} clinicjson A JSON containing clinic information to add / edit
@@ -40,10 +44,10 @@ class FirestoreDBLink {
         const clinic = this.db.collection(FS_CLINICS_COLLECTION).doc(clinicID);
 
         const clinicJSON = {
-            clinic_id:     clinicID,
+            id:            clinicID,
             contact_email: contact_email,
             password:      await saltAndHashPassword(password),
-            clinic_name:   clinic_name,
+            name:          clinic_name,
             address:       address,
             country:       country,
             state:         state,

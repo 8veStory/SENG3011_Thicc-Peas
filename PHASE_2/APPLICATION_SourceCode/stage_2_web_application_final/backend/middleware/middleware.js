@@ -1,5 +1,5 @@
 const express = require('express');
-const { log } = require('../logger');
+const { log, _setLastResponseBody } = require('../logger');
 
 /**
  * ExpressJS Middleware that calls the logger.
@@ -8,6 +8,29 @@ const { log } = require('../logger');
  * @param {NextFunction} next
  */
 function logger(req, res, next) {
+    // Intercept response data.
+    const oldWrite = res.write;
+    const oldEnd = res.end;
+
+    let chunks = [];
+
+    res.write = function (chunk) {
+        chunks.push(Buffer.from(chunk));
+
+        oldWrite.apply(res, arguments);
+    };
+
+    res.end = function (chunk) {
+        if (chunk) {
+            chunks.push(Buffer.from(chunk));
+        }
+
+        let body = Buffer.concat(chunks).toString('utf8');
+        _setLastResponseBody(JSON.parse(body));
+
+        oldEnd.apply(res, arguments);
+    };
+
     res.on('finish', () => {
         log(req, res);
     })

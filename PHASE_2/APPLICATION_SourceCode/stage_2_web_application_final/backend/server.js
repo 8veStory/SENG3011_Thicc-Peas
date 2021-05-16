@@ -54,11 +54,23 @@ app.get('/log', (req, res) => {
  * Signs up a clinic.
  */
 app.post('/signup', async (req, res) => {
-  const { name, email, password, address, country, state } = req.body;
+  const { name, email, password, password_check, address, country, state } = req.body;
+
+  let validationErrors = [];
+  if (!name)           validationErrors.push('\'Name\' cannot be empty.');
+  if (!email)          validationErrors.push('\'Email\' cannot be empty.');
+  if (!password)       validationErrors.push('\'Password\' cannot be empty.');
+  if (!password_check) validationErrors.push('\'Repeat\' password cannot be empty.');
+  if (!address)        validationErrors.push('\'Address\' cannot be empty.');
+  if (!country)        validationErrors.push('\'Country\' cannot be empty.');
+  if (!state)          validationErrors.push('\'State\' cannot be empty.');
+
   if (!name || !email || !password || !address || !country || !state) {
-    res.status(httpCodes.BAD_REQUEST_400).json({ error: 'Invalid arguments.', success: false });
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: validationErrors.join("\n"), success: false });
     return;
   }
+
+  // Validation checks
 
   console.log(`Signing up a clinic with details: ${req.body}`);
 
@@ -90,10 +102,9 @@ app.post('/login', async (req, res) => {
   if (clinic.contact_email === email && compareAgainstHashedPasswordSync(password, clinic.password)) {
     // TODO: Implement JWT for user authentication.
     // Return clinic object without password hash
-    delete clinic.password;
     res.status(httpCodes.SUCCESS_200).json({
       success: true,
-      clinic: clinic
+      token: clinic.id
     });
   } else {
     res.status(httpCodes.UNAUTHORIZED_401).json({
