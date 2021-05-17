@@ -1,4 +1,4 @@
-# VaccTracker
+# VaccTracc
 ## How To Run
 ### Running on any OS
 1. Change to the ```backend``` directory and run ```npm run start```.
