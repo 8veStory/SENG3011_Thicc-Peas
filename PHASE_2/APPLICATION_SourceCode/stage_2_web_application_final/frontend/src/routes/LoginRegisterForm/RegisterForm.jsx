@@ -22,18 +22,24 @@ export default function RegisterForm(props) {
     console.table({ pwd: pwd, checkPwd: checkPwd, address: address, country: country, state: state, email: email });
 
     // Check all fields are not empty...
-    if (!name)
-      alert("Name cannot be empty.");
-    if (!email)
-      alert("Email cannot be empty.");
-    else if (!pwd)
-      alert("Password cannot be empty.");
-    else if (!address)
-      alert("Address cannot be empty.");
-    else if (!state)
-      alert("State cannot be empty.");
-    else if (!country)
-      alert("Country cannot be empty.");
+    // if (!name) {
+    //   alert("Name cannot be empty.");
+    // }
+    // if (!email) {
+    //   alert("Email cannot be empty.");
+    // }
+    // if (!pwd) {
+    //   alert("Password cannot be empty."); 
+    // }
+    // if (!address) {
+    //   alert("Address cannot be empty.");
+    // }
+    // if (!state) {
+    //   alert("State cannot be empty.");
+    // }
+    // if (!country) {
+    //   alert("Country cannot be empty.");
+    // }
 
     let result = await signUpClinicAsync(name, email, pwd, checkPwd, address, state, country);
     if (result.success) {
