@@ -9,7 +9,7 @@ const FS_INVENTORY_COLLECTION = "inventory";
 const FS_HASINVENTORY_COLLECTION = "hasInventory";
 
 /**
- * Exposes methods to access VaccTracker's FS database.
+ * Exposes methods to access VaccTracc's FS database.
  */
 class FirestoreDBLink {
     constructor(keyPath) {

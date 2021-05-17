@@ -8,12 +8,14 @@ const cors            = require('cors');
 const express         = require('express');
 const httpCodes       = require('./utilities/statusCodes');
 const FireStoreDBLink = require('./firestore-db-link');
+const sendEmailAsync  = require('./email/emailer').sendMailAsync;
 const { log }         = require('./logger');
 const { hashSHA256 }      = require('./utilities/crypto');
 const { logger, errorHandler } = require('./middleware/middleware');
 const { compareAgainstHashedPasswordSync } = require('./utilities/crypto');
 
 const fetch           = require('node-fetch');
+const { templateSettings } = require('lodash');
 
 // Constants
 const PORT = process.env.PORT || 3001;
@@ -65,7 +67,7 @@ app.post('/signup', async (req, res) => {
   if (!country)        validationErrors.push('\'Country\' cannot be empty.');
   if (!state)          validationErrors.push('\'State\' cannot be empty.');
 
-  if (!name || !email || !password || !address || !country || !state) {
+  if (validationErrors.length > 0) {
     res.status(httpCodes.BAD_REQUEST_400).json({ error: validationErrors.join("\n"), success: false });
     return;
   }
@@ -123,9 +125,35 @@ app.post('/login', async (req, res) => {
 /**
  * Books a client with a given clinic.
  */
-app.post('/book', (req, res) => {
-  const clientEmail =  req.params.clientEmail;
-  const clientName = req.params.clientName;
+app.post('/book', async (req, res) => {
+  const { clinic_id, email, name, date, medicare_num, tests, vaccines } = req.body;
+
+  // Validate
+  let validationErrors = [];
+  if (!clinic_id)           validationErrors.push('\'Clinic ID\' cannot be empty.');
+  if (!name)           validationErrors.push('\'Name\' cannot be empty.');
+  if (!email)          validationErrors.push('\'Email\' cannot be empty.');
+  if (!date)           validationErrors.push('\'Date\' cannot be empty.');
+  if (!medicare_num)   validationErrors.push('\'Medicare Number\' cannot be empty.');
+  if ((tests.isArray() && tests.length === 0) &&
+      (vaccines.isArray() && vaccines.length === 0)) {
+      validationErrors.push('At least one test or vaccine should be selected.');
+  }
+
+  if (validationErrors.length > 0) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: validationErrors.join("\n"), success: false });
+    return;
+  }
+
+  // TODO: Add to 'pending' bookings of that clinic.
+  let clinic = await dbLink._getClinicAsync(clinic_id);
+
+  let subject =  `VaccTraccc appointment for ${name}`;
+  let htmlBody = ``;
+  await sendEmailAsync(clinic.email, subject, html=htmlBody);
+
+  // Send booking email to clinic.
+
 });
 
 /**
