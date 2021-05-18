@@ -32,18 +32,5 @@ h3 {
 
 .book-btn {
     grid-area: button;
-    font-size: 18;
-    border-radius: 5px;
-    transition: all 250ms ease-in-out;
-    background-color: var(--secondary-color);
-    box-shadow: 1px 3px 3px -1px rgba(15, 15, 15, 0.4);
     width: 98%; /* i dont know how to center this evenly on both sides so thisll have to do */
-}
-
-.book-btn:hover {
-    background-color: #3e5bff;
-}
-
-.book-btn:focus {
-    outline: none;
 }

@@ -1,0 +1,40 @@
+.mail-sent-image { 
+    margin-top: 20px;
+    width: 10em;
+    margin: 15px;
+}
+
+.mail-sent-image img { 
+    width: 100%;
+    height: 100%;
+}
+
+.return-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-self: center;
+    background-color: var(--neutral_color_1);
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 15px;
+    border-radius: 15px;
+    margin: auto;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.return-text {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.return-button {
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}

@@ -11,6 +11,7 @@ import LoginRegisterForm from '../LoginRegisterForm/LoginRegisterForm';
 import VaccineFinder from '../VaccineFinder/VaccineFinder';
 import BookingPage from '../BookingPage/BookingPage';
 import CancelBookingPage from '../CancelBookingPage/CancelBookingPage';
+import DoneBookingPage from '../DoneBookingPage/DoneBookingPage';
 import ClinicBookingPage from '../ClinicBookingPage/ClinicBookingPage';
 
 /**
@@ -36,6 +37,7 @@ export default function App(props) {
                 <Route path='/check' exact component={withRouter(CheckSymptomsPage)} />
 
                 <Route path='/cancelbooking' exact component={withRouter(CancelBookingPage)} />
+                <Route path='/donebooking' exact component={withRouter(DoneBookingPage)} />
 
                 <Route path='/vaccinefinder' exact component={withRouter(VaccineFinder)} />
                 <Route path='/book' exact component={withRouter(BookingPage)} />

@@ -63,7 +63,7 @@ export default function PharmacyCard({style, clinic, onclick}) {
                 </ul>
             </div>
 
-            <button className="book-btn" onClick={handleBook}>Book</button>
+            <button className="vt-main-button book-btn" onClick={handleBook}>Book</button>
         </div>
     );
 }

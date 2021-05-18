@@ -200,7 +200,9 @@ export default function VaccineFinder() {
                         </div>
                     </div>
 
+                    <p className="filter-text-intro">Find clinics that have...</p>
                     <div className="buttons">
+                        <span className="filter-text">Vaccines:</span>
                         <MultiSelect
                             className="multiselect vaccine-multiselect"
                             options={getAllVaccines()}
@@ -208,6 +210,8 @@ export default function VaccineFinder() {
                             onChange={setSelectedVaccines}
                             labelledBy="Select BOB"
                         ></MultiSelect>
+
+                        <span className="filter-text">Tests:</span>
                         <MultiSelect
                             className="multiselect test-multiselect"
                             options={getAllTests()}
@@ -216,7 +220,7 @@ export default function VaccineFinder() {
                             labelledBy="Select"
                         ></MultiSelect>
 
-                        <button className="btn" id="addressbutton" onClick={populateMapAndListWithClinics} >Find Available Clinics</button>
+                        <button className="vt-main-button" id="addressbutton" onClick={populateMapAndListWithClinics} >Find Available Clinics</button>
                     </div>
                 </div>
 

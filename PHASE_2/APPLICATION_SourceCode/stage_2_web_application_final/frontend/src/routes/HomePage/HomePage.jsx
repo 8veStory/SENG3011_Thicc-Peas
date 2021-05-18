@@ -49,8 +49,8 @@ export default function HomePage(props) {
 
   return (
     <body>
-      <LeftSlider show={leftSliderOpen} hide={backClickHandler}/>
-      <RightSlider show={rightSliderOpen} hide={backClickHandler}/>
+      <LeftSlider show={leftSliderOpen} hide={backClickHandler} />
+      <RightSlider show={rightSliderOpen} hide={backClickHandler} />
       {/* <LoginRegisterForm/> */}
       {/* {leftSlider} */}
       {/* {backdrop} */}
@@ -61,12 +61,16 @@ export default function HomePage(props) {
       </div>
       <div className="choice">
         <div className="individual-box" onClick={leftSliderHandler}>
-          <img src={individualLogo}/>
-          <h2>Individual</h2>
+          <div className="big-btn individual-button">
+            <img src={individualLogo} alt="Person" />
+            <h2>Individual</h2>
+          </div>
         </div>
         <div className="clinic-box" onClick={rightSliderHandler}>
-          <img src={clinicLogo}/>
-          <h2>Clinic</h2>
+          <div className="big-btn clinic-button">
+            <img src={clinicLogo} alt="Doctor diagnosing patient"/>
+            <h2>Clinic</h2>
+          </div>
         </div>
       </div>
     </body>

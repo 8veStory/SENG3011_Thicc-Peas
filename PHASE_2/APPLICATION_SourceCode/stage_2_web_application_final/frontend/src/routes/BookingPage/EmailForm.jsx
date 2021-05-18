@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 
-import registerImg from "../../images/LoginRegisterLogo.svg";
+import registerImg from "../../images/mail.svg";
 import "./EmailForm.css";
 import { bookAsync } from '../../utils/BackendLink';
 
@@ -153,7 +153,7 @@ export default function EmailForm(props) {
       </div>
 
       <div className="buttons">
-        <button type="submit" className="btn">Book</button>
+        <button type="submit" className="vt-main-button">Book</button>
       </div>
     </form>
   );

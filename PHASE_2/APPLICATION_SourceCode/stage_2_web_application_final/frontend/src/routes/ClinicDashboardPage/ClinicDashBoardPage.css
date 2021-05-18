@@ -5,38 +5,62 @@
 .title {
   text-align: center;
   font-size: 64px;
-  padding-bottom: 1%;
+  margin-top: 16px;
 }
 
-.clinic-container {
+.clinic-main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   margin-left: 10%;
   margin-right: 10%;
 }
 
-.clinic-container:after {
-  content: "";
-  display: table;
-  clear: both;
+.clinic-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
 }
 
-.clinic-column {
-  float: left;
-  border: 3px solid grey;
-  border-radius: 10px;
+.clinic-container:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
 
-.clinic-columnleft, .clinic-columnright {
-  width: 30%;
+.clinic-container h2 {
+  margin-top: 10px;
+  margin-bottom: 7px;
 }
 
-.clinic-columnmiddle {
-  width: 30%;
-  margin-left: 5%;
-  margin-right: 5%;
+.clinic-inventory-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.clinic-add-inventory-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.clinic-inventory-container tr {
+  margin-bottom: 5px;
 }
 
 .clinic-heading {
-  margin-left: 3%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: black;
 }
 
 .clinic-break {
@@ -45,14 +69,11 @@
 
 .clinic-table {
   width: 100%;
-  /* border-top: 3px solid grey; */
   text-align: center;
-  padding: 0% 1% 1% 1%;
 }
 
-.clinic-tablerow {
-  border: 1px solid grey;
-  border-radius: 10px;
+.clearbtn {
+  background-color: #fa3c26;
 }
 
 .clinic-inventorybox {
@@ -70,4 +91,28 @@
 
 .chk-checkbutton {
   float: left;
+}
+
+.clinic-container td {
+  vertical-align: middle;
+}
+
+tr:hover {
+  background-color: var(--neutral_color_2);
+  transition: all 0.2s ease-in-out;
+}
+
+.addbtn {
+  background-color: #4CAF50;
+  color: var(--neutral_color_1);
+  cursor: pointer;
+}
+.addbtn:focus {
+  background-color: #4CAF50;
+  color: var(--neutral_color_1);
+}
+.addbtn:active {
+  background-color: #4CAF50;
+  color: var(--neutral_color_1);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 20px 30px -12px inset, rgba(0, 0, 0, 0.3) 0px 8px 16px -18px inset;
 }

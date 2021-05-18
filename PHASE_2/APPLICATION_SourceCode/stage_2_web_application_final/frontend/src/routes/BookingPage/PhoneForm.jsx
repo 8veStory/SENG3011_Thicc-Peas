@@ -1,7 +1,7 @@
 import "./PhoneForm.css";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import loginImg from "../../images/LoginRegisterLogo.svg";
+import loginImg from "../../images/phone_call.svg";
 
 export default function PhoneForm(props) {
   return (

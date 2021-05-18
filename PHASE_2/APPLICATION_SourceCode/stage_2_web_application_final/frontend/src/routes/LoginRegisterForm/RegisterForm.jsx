@@ -109,7 +109,7 @@ export default function RegisterForm(props) {
       </div>
 
       <div className="buttons">
-        <button type="submit" className="btn">Register</button>
+        <button type="submit" className="vt-main-button">Register</button>
       </div>
     </form>
   );

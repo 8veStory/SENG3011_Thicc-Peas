@@ -12,11 +12,11 @@ import { useHistory } from 'react-router-dom';
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
 
-function select_count(book){
+function select_count(book) {
     var count = 0;
     var i;
-    for(i = 0;i < book.length;i++){
-        if(book[i].remove === true){
+    for (i = 0; i < book.length; i++) {
+        if (book[i].remove === true) {
             count++;
         }
     }
@@ -92,7 +92,7 @@ function ClearButtion(props) {
             <div>
                 <button type="button" className="clearbtn" onClick={
                     clearBook
-                }>Clear</button>
+                }>Delete</button>
             </div>
         );
     } else {
@@ -155,6 +155,10 @@ function SubmitButton(props) {
     function HandleSubmit(e) {
         e.preventDefault();
 
+        if (!name || !DOB || !phone || !type || !disease) {
+            return;
+        }
+
         setBook([...book, {
             id: book.length + 1,
             name: name,
@@ -167,7 +171,7 @@ function SubmitButton(props) {
     }
     return (
         <div>
-            <button className="addbtn" onClick={HandleSubmit}>Add</button>
+            <input type="submit" className="addbtn" onClick={HandleSubmit} value="Add"></input>
         </div>
     );
 }
@@ -221,17 +225,17 @@ export default function ClinicBooking(props) {
         });
     }
 
-  if (!clinicID) {
-    history.push('/');
-  }
+    if (!clinicID) {
+        history.push('/');
+    }
 
     return (
-        <div>
+        <div className="clinic-booking-main-container">
             <NavBar clinicID={clinicID}></NavBar>
 
-            <h1 className="title">Clinic Dashboard</h1>
-            <div className="clinic-container">
-                <div className="clinic-column clinic-columnmiddle">
+            <h1 className="title">Clinic Bookings</h1>
+            <div className="clinic-main-container">
+                <div className="clinic-container">
                     <h2 className="clinic-heading">Recent Bookings</h2>
 
                     <table className="clinic-table">
@@ -243,6 +247,7 @@ export default function ClinicBooking(props) {
                                 <th>DOB</th>
                                 <th>Type</th>
                                 <th>Disease</th>
+                                <th>Select</th>
                             </tr>
                         </tbody>
                         {book.map((item, index) => {
@@ -279,22 +284,23 @@ export default function ClinicBooking(props) {
                     <TenFunction ten_count={ten_count} setten_count={setten_count} leng={bookings.length} />
 
                 </div>
-                <div className="clinic-column clinic-columnright">
+
+                <div className="clinic-container">
                     <h2 className="clinic-heading">Add to Booking</h2>
 
                     <div className="clinic-inventorybox">
-                        <form id="add-to-inv-form">
+                        <form id="add-to-inv-form" onSubmit={(e) => e.preventDefault()}>
                             <label htmlFor="name"><b>Name</b></label>
-                            <input type="text" name="name" placeholder="Enter Name" onChange={e => setName(e.target.value)} required></input>
+                            <input required type="text" name="name" placeholder="Enter Name" onChange={e => setName(e.target.value)} required></input>
 
                             <label htmlFor="DOB"><b>DOB</b></label>
-                            <input type="text" name="DOB" placeholder="Enter DOB (e.g. 19/02/2000)" onChange={e => setDOB(e.target.value)} required></input>
+                            <input required type="text" name="DOB" placeholder="Enter DOB (e.g. 19/02/2000)" onChange={e => setDOB(e.target.value)} required></input>
 
                             <label htmlFor="Phone"><b>Phone</b></label>
-                            <input type="text" name="Phone" placeholder="Enter phone" onChange={e => setPhone(e.target.value)} required></input>
+                            <input required type="text" name="Phone" placeholder="Enter phone" onChange={e => setPhone(e.target.value)} required></input>
 
                             <label htmlFor="disease"><b>Disease</b></label>
-                            <input type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
+                            <input required type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
 
                             <label htmlFor="Type"><b>Type</b></label>
                             <select name="type" id="type" onChange={e => setType(e.target.value)}>
@@ -308,9 +314,11 @@ export default function ClinicBooking(props) {
                             <h5> {select_count(book)} bookings selected</h5>
                         </form>
                     </div>
-
                 </div>
-                <div className="clinic-column clinic-columnright clinic-opt-in">
+
+                <div className="clinic-container clinic-opt-in">
+                    <h2 className="clinic-heading">Promotion Options</h2>
+
                     <label htmlFor="Type"><b>Opt into promotion</b></label>
                     <p>By ticking this, your clinic will be shown on the Vaccine Finder.</p>
                     <input type="checkbox" className="chk-checkbox" defaultChecked={chkBox} onChange={handleChangeChk}></input>

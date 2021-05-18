@@ -50,17 +50,3 @@
 .buttons {
     background-color: none;
 }
-
-.buttons .btn {
-    font-size: 18;
-    transition: all 250ms ease-in-out;
-    background-color: var(--secondary-color);
-}
-
-.buttons .btn:hover {
-    background-color: #3e5bff;
-}
-
-.buttons .btn:focus {
-    outline: none;
-}

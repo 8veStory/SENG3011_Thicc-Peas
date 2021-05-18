@@ -41,7 +41,7 @@ export default function LoginForm(props) {
             <input type="password" name="password" placeholder="Password" onChange={e => setPwd(e.target.value)}/>
           </div>
           <div className="buttons">
-            <button type="submit" className="btn">Login</button>
+            <button type="submit" className="btn vt-main-button">Login</button>
           </div>
         </form>
       </div>

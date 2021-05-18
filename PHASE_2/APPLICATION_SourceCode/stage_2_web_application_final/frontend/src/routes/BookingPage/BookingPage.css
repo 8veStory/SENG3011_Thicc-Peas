@@ -9,6 +9,15 @@
     width: 10%;
     height: 100%;
     cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.back-arrow:hover {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px inset;
+}
+
+.back-arrow:active {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 18px 0px inset;
 }
 
 .back-arrow img {
