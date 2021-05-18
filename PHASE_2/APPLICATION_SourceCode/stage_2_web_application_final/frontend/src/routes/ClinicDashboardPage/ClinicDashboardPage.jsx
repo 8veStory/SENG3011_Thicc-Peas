@@ -202,7 +202,7 @@ export default function ClinicDashboard(props) {
   const [inv, setInv] = useState(inventory);
 
   const [disease, setDis] = useState('');
-  const [type, setType] = useState('Test');
+  const [type, setType] = useState('');
   const [amo, setAmo] = useState(0);
   const [ten_count, setten_count] = useState(0);
 
@@ -286,6 +286,7 @@ export default function ClinicDashboard(props) {
             <form id="add-to-inv-form">
               <label htmlFor="disease"><b>Disease</b></label>
               <select name="disease" id="disease" onChange={e => setDis(e.target.value)}>
+                <option disabled selected value>Select a disease</option>
                 <option value="COVID-19">COVID-19</option>
                 <option value="Measles">Measles</option>
                 <option value="Flu">Flu</option>

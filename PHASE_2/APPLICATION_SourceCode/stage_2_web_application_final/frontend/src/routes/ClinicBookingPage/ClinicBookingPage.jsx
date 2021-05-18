@@ -300,7 +300,23 @@ export default function ClinicBooking(props) {
                             <input required type="text" name="Phone" placeholder="Enter phone" onChange={e => setPhone(e.target.value)} required></input>
 
                             <label htmlFor="disease"><b>Disease</b></label>
-                            <input required type="text" placeholder="Enter Disease" name="disease" onChange={e => setDis(e.target.value)} required></input>
+                            <select name="disease" id="disease" onChange={e => setDis(e.target.value)}>
+                                <option disabled selected value>Select a disease</option>
+                                <option value="COVID-19">COVID-19</option>
+                                <option value="Measles">Measles</option>
+                                <option value="Flu">Flu</option>
+                                <option value="Hepatitis">Hepatitis B</option>
+                                <option value="Rotavirus">Rotavirus</option>
+                                <option value="Meningococcal">Meningococcal ACWY</option>
+                                <option value="Penumonococcal">Penumonococcal</option>
+                                <option value="Pertussis">Pertussis</option>
+                                <option value="Tetanus">Tetanus</option>
+                                <option value="Diphtheria">Diphtheria</option>
+                                <option value="Shingles (herpes zoster">Shingles (Herpes Zoster)</option>
+                                <option value="Polio">Polio</option>
+                                <option value="Mumps">Mumps</option>
+                                <option value="Rubella">Rubella</option>
+                            </select>
 
                             <label htmlFor="Type"><b>Type</b></label>
                             <select name="type" id="type" onChange={e => setType(e.target.value)}>
