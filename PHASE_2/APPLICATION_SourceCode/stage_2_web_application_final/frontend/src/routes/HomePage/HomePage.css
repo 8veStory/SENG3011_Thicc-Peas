@@ -88,13 +88,15 @@ body {
     padding: 3px;
     /* margin: auto; */
     /* vertical-align: middle; */
-    background-color: var(--background-color);
+    background-color: var(--main-color);
+    color: var(--neutral_color_1);
+    margin: 0;
+    padding: 0;
 }
 
 .header h1 {
     height: 100%;
     width: 100%;
-    /* background-color: green; */
     font-size: 100px;
     display: table-cell;
     vertical-align: middle;

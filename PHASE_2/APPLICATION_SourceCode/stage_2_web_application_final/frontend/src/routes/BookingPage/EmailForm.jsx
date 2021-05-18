@@ -5,13 +5,19 @@ import emailjs from 'emailjs-com';
 
 import registerImg from "../../images/LoginRegisterLogo.svg";
 import "./EmailForm.css";
+import { bookAsync } from '../../utils/BackendLink';
 
 export default function EmailForm(props) {
+  console.log(props.clinicInfo);
+  const clinicInfo = props.clinicInfo;
+
   // React States
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
+  const [medicareNum, setMedicareNum] = useState('');
+
+  const [phone, setPhone] = useState('');
   const [type, setType] = useState('Test');
   const [vaccTest, setVaccTest] = useState('');
 
@@ -21,15 +27,8 @@ export default function EmailForm(props) {
    * Sends an email to the clinic to either confirm or deny.
    * @param {*} e 
    */
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
-
-    if (!name)
-      alert("Name cannot be empty.");
-    else if (!email)
-      alert("Email cannot be empty.");
-    else if (!date)
-      alert("Date cannot be empty.");
 
     console.log(vaccTest);
     console.log(name);
@@ -37,12 +36,21 @@ export default function EmailForm(props) {
     console.log(props.clinicInfo.email);
     console.log(email);
 
-    emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email, verif: makeid(30) }, 'user_A8yNOUVbToXNXYZSDHypj')
-      .then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text);
-      });
+    let result = await bookAsync(clinicInfo.id, email, date, name, medicareNum, ['1'], ['2']);
+    if (result.success) {
+      alert('Booking email sent successfully!');
+    } else {
+      // Error checking
+      console.log(result);
+      alert(result.error);
+    }
+
+    // emailjs.send('gmail', 'appointment', { type: vaccTest, name: name, date: date, clinic_email: 'ryanface2516@gmail.com', client_email: email, verif: makeid(30) }, 'user_A8yNOUVbToXNXYZSDHypj')
+    //   .then((result) => {
+    //     console.log(result.text);
+    //   }, (error) => {
+    //     console.log(error.text);
+    //   });
 
     // console.table({ name: name, email: email, phone: phone, date: date });
 
@@ -60,8 +68,6 @@ export default function EmailForm(props) {
     // props.set_login_status(true);
     // console.log("Successful signup");
     // history.pushState("/clinic");
-
-    alert('Booking email sent successfully!');
   }
 
   const VaccTestList = ({ info }) => {
@@ -122,6 +128,11 @@ export default function EmailForm(props) {
           <div className="form-group">
             <label htmlFor="date">Date</label>
             <input type="text" name="date" placeholder="Date" onChange={e => setDate(e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="medicareNum">First four digits of your Medicare number</label>
+            <input maxlength="4" type="text" name="medicareNum" placeholder="First four digits of your Medicare number" onChange={e => setMedicareNum(e.target.value)} />
           </div>
 
           {/* <div className="form-group">

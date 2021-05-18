@@ -9,8 +9,6 @@ export default function NavBar(props) {
     props.set_login_status(false);
   }
 
-  console.log(props.log_status);
-
   if (props.log_status === true) {
     return (
       <div className="Nav-Bar">
@@ -31,8 +29,9 @@ export default function NavBar(props) {
           <li><Link className="Home-Text" to={{ pathname: "/" }}>Home</Link></li>
         </ul>
         <ul className='Right-List' style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <li><Link className="Login-Text" to={{ pathname: "/register", state: { fromLogIn: true, cameFromLink: true } }}>Log In</Link></li>
-          <li><Link className="Signup-Text" to={{ pathname: "/register", state: { fromLogIn: false, cameFromLink: true } }}>Sign Up</Link></li>
+          <li><Link className="Logout-Text" to={{ pathname: "/"}}>Logout</Link></li>
+          <li><Link className="inventory-text" to={{ pathname: "/clinic", state: { clinicID: props.clinicID }}}>Inventory</Link></li>
+          <li><Link className="bookings-text" to={{ pathname: "/clinicbooking", state: { clinicID: props.clinicID }}}>Bookings</Link></li>
         </ul>
       </div>
     );

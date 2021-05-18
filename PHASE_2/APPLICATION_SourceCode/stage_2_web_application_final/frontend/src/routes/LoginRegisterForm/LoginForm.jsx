@@ -17,7 +17,7 @@ export default function LoginForm(props) {
       console.log("Successful login");
       props.set_login_status(true);
 
-      history.push("/clinic");
+      history.push("/clinic", { clinicID: results.token });
     } else {
       console.error("Unsuccessful login");
       console.error(`${results.error}`);

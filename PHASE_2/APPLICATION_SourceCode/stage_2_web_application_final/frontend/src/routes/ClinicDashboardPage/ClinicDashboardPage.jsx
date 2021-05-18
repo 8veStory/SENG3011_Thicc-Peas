@@ -3,7 +3,8 @@ import React from 'react';
 import { v4 as uuid } from 'uuid';
 import "./ClinicDashBoardPage.css";
 import Checkbox from '@material-ui/core/Checkbox';
-import NavBar from '../../components/NavBar/NavBarClinic';
+import NavBar from '../../components/NavBar/NavBar';
+import { Redirect, useHistory } from 'react-router-dom';
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
 var inventory = [
@@ -186,6 +187,13 @@ function SubmitButton(props){
     );
 }
 export default function ClinicDashboard(props) {
+  const history = useHistory();
+  const clinicID = props.location.state ? props.location.state.clinicID : props.clinicID;
+
+  console.log(history);
+  console.log(props);
+  console.log(clinicID);
+
   // React state
   const [inv, setInv] = useState(inventory);
 
@@ -217,9 +225,13 @@ export default function ClinicDashboard(props) {
     );
   }
 
+  if (!clinicID) {
+    history.push('/');
+  }
+
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar clinicID={clinicID}></NavBar>
 
       <h1 className="title">Clinic Dashboard</h1>
       <div className="clinic-container">

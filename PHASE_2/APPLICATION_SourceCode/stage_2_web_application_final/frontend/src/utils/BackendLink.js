@@ -49,11 +49,6 @@ export async function logInClinicAsync(email, password) {
         email: email,
         password: password
     };
-    console.log(BACKEND_URL);
-    console.log(BACKEND_URL);
-    console.log(BACKEND_URL);
-    console.log(BACKEND_URL);
-    console.log(process.env);
 
     return await (await fetch(BACKEND_URL + "/login",
                       {
@@ -74,22 +69,39 @@ export async function logInClinicAsync(email, password) {
  * @param {Array<String>} testIDs Array of tests being booked.
  * @returns 
  */
-export async function bookAsync(fullName, email, date, vaccineIDs, testIDs) {
+export async function bookAsync(clinic_id, email, date, name, medicare_num, vaccineIDs, testIDs) {
     const body = {
-        name: fullName,
+        clinic_id: clinic_id,
+        name: name,
         email: email,
         date: date,
-        vaccineIDs: vaccineIDs,
-        testIDs: testIDs
+        medicare_num: medicare_num,
+        tests: testIDs,
+        vaccines: vaccineIDs,
     };
 
-    return await fetch(BACKEND_URL + "/book",
+    return await (await fetch(BACKEND_URL + "/book",
                       {
                         method: "post",
                         body: JSON.stringify(body),
                         headers: { "Content-Type": "application/json" }
                       }
-    );
+    )).json();
+}
+
+export async function acceptBookAsync(clinicID, pendingBookingID) {
+    const body = {
+        clinic_id: clinicID,
+        pending_booking_id: pendingBookingID
+    };
+
+    return await (await fetch(BACKEND_URL + "/bookaccept",
+                      {
+                        method: "post",
+                        body: JSON.stringify(body),
+                        headers: { "Content-Type": "application/json" }
+                      }
+    )).json();
 }
 
 export async function getClinicsAsync() {

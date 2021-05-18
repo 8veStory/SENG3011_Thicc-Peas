@@ -4,7 +4,10 @@ import React from 'react';
 import "./ClinicBookingPage.css";
 import Checkbox from '@material-ui/core/Checkbox';
 import { v4 as uuid } from 'uuid';
-import NavBar from '../../components/NavBar/NavBarClinic';
+import NavBar from '../../components/NavBar/NavBar';
+import { parseHTMLQueryString } from '../../utils/Helper';
+import { acceptBookAsync } from '../../utils/BackendLink';
+import { useHistory } from 'react-router-dom';
 
 // TODO: Get rid of these inventory and bookings arrays. Instead, get this data
 // by making an API request to the back-end.
@@ -96,9 +99,8 @@ function ClearButtion(props) {
         return null;
     }
 }
+
 function TenFunction(props) {
-
-
     const ten_count = props.ten_count;
     const setten_count = props.setten_count;
     const leng = props.leng;
@@ -139,8 +141,8 @@ function TenFunction(props) {
             </div>
         );
     }
-
 }
+
 function SubmitButton(props) {
     var book = props.book;
     var name = props.name;
@@ -171,8 +173,11 @@ function SubmitButton(props) {
 }
 
 export default function ClinicBooking(props) {
-    // React state
+    // Variables
+    const history = useHistory();
+    let clinicID = props.location.state ? props.location.state.clinicID : props.clinicID;
 
+    // React state
     const [book, setBook] = useState(bookings);
 
     const [name, setName] = useState('John Doe');
@@ -195,20 +200,34 @@ export default function ClinicBooking(props) {
         setChk3(!chkBox3);
     }
 
-
     const [ten_count, setten_count] = useState(0);
     const handleChange = (event, item, index) => {
-
         let newArr = [...book];
         newArr[index].remove = event.target.checked;
         setBook(newArr);
     };
 
+    let queryParams = parseHTMLQueryString(props.location.search);
 
+    // Accept/reject a pending booking if in query parameter.
+    if (queryParams.clinic_id) {
+        clinicID = queryParams.clinic_id;
+    }
+    if (queryParams.accept) {
+        let resultPromise = acceptBookAsync(clinicID, queryParams.accept);
+        resultPromise.then(val => {
+            console.log("HOI TEM");
+            console.log(val);
+        });
+    }
+
+  if (!clinicID) {
+    history.push('/');
+  }
 
     return (
         <div>
-            <NavBar></NavBar>
+            <NavBar clinicID={clinicID}></NavBar>
 
             <h1 className="title">Clinic Dashboard</h1>
             <div className="clinic-container">
@@ -227,15 +246,9 @@ export default function ClinicBooking(props) {
                             </tr>
                         </tbody>
                         {book.map((item, index) => {
-                            console.log(book);
-
-                            console.log(index);
                             var uid = uuid();
-                            console.log(uid);
-
 
                             if (index >= (ten_count * 10) && index < (10 + ten_count * 10)) {
-
 
                                 return (
                                     <tbody key={uid}>
@@ -300,15 +313,15 @@ export default function ClinicBooking(props) {
                 <div className="clinic-column clinic-columnright clinic-opt-in">
                     <label htmlFor="Type"><b>Opt into promotion</b></label>
                     <p>By ticking this, your clinic will be shown on the Vaccine Finder.</p>
-                    <input type="checkbox" class="chk-checkbox" defaultChecked={chkBox} onChange={handleChangeChk}></input>
+                    <input type="checkbox" className="chk-checkbox" defaultChecked={chkBox} onChange={handleChangeChk}></input>
 
                     <label htmlFor="Type"><b>Show phone number</b></label>
                     <p>By ticking this, your clinic's phone number will be shown.</p>
-                    <input type="checkbox" class="chk-checkbox" defaultChecked={chkBox2} onChange={handleChangeChk2}></input>
+                    <input type="checkbox" className="chk-checkbox" defaultChecked={chkBox2} onChange={handleChangeChk2}></input>
 
                     <label htmlFor="Type"><b>Show email</b></label>
                     <p>By ticking this, your email will be shown.</p>
-                    <input type="checkbox" class="chk-checkbox" defaultChecked={chkBox3} onChange={handleChangeChk3}></input>
+                    <input type="checkbox" className="chk-checkbox" defaultChecked={chkBox3} onChange={handleChangeChk3}></input>
                 </div>
 
             </div>

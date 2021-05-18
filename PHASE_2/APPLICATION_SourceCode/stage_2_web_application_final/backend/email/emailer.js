@@ -25,14 +25,15 @@ class Emailer {
      * @param {String} html 
      * @returns {SentMessageInfo} Information about the email that was sent.
      */
-    static async sendMailAsync(toEmail, subject, plainText='', html='') {
+    static async sendMailAsync(toEmail, subject, html='') {
         let mailDetails = {
             from: VACCTRACC_GMAIL,
             to: toEmail,
             subject: subject,
-            text: plainText,
             html: html
         };
+
+        console.log(mailDetails);
 
         return await mailTransporter.sendMail(mailDetails);
     }

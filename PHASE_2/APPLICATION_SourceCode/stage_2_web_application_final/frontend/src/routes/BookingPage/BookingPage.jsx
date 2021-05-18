@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, Route, withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 
 import EmailPhoneForm from './EmailPhoneForm';
 import backArrow from './../../images/arrow-back.svg';

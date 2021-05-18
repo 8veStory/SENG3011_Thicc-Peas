@@ -3,14 +3,16 @@
  */
 
 // Imports
-const fs              = require('fs');
-const cors            = require('cors');
-const express         = require('express');
-const httpCodes       = require('./utilities/statusCodes');
-const FireStoreDBLink = require('./firestore-db-link');
-const sendEmailAsync  = require('./email/emailer').sendMailAsync;
-const { log }         = require('./logger');
-const { hashSHA256 }      = require('./utilities/crypto');
+const fs                       = require('fs');
+const cors                     = require('cors');
+const express                  = require('express');
+const httpCodes                = require('./utilities/statusCodes');
+const FireStoreDBLink          = require('./firestore-db-link');
+const sendEmailAsync           = require('./email/emailer').sendMailAsync;
+const BookingEmail             = require('./email/booking-email/booking-email');
+const BookingConfirmationEmail = require('./email/booking-confirmation-email-template/booking-confirmation-email');
+const { log }                  = require('./logger');
+const { hashSHA256 }           = require('./utilities/crypto');
 const { logger, errorHandler } = require('./middleware/middleware');
 const { compareAgainstHashedPasswordSync } = require('./utilities/crypto');
 
@@ -97,7 +99,7 @@ app.post('/signup', async (req, res) => {
  */
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const clinic = await dbLink.getClinicAsync(hashSHA256(email));
+  const clinic = await dbLink.getClinicAsync(email);
 
   if (!clinic) {
     res.status(httpCodes.UNAUTHORIZED_401).json({
@@ -135,8 +137,8 @@ app.post('/book', async (req, res) => {
   if (!email)          validationErrors.push('\'Email\' cannot be empty.');
   if (!date)           validationErrors.push('\'Date\' cannot be empty.');
   if (!medicare_num)   validationErrors.push('\'Medicare Number\' cannot be empty.');
-  if ((tests.isArray() && tests.length === 0) &&
-      (vaccines.isArray() && vaccines.length === 0)) {
+  if ((Array.isArray(tests) && tests.length === 0) &&
+      (Array.isArray(vaccines) && vaccines.length === 0)) {
       validationErrors.push('At least one test or vaccine should be selected.');
   }
 
@@ -145,15 +147,101 @@ app.post('/book', async (req, res) => {
     return;
   }
 
-  // TODO: Add to 'pending' bookings of that clinic.
-  let clinic = await dbLink._getClinicAsync(clinic_id);
+  // Add to 'pending' bookings of that clinic.
+  let result = await dbLink.setPendingBookingAsync(clinic_id, name, email, medicare_num, date, tests, vaccines);
+  if (!result.success) {
+    res.status(httpCodes.BAD_REQUEST_400).json(result);
+    return;
+  }
 
-  let subject =  `VaccTraccc appointment for ${name}`;
-  let htmlBody = ``;
-  await sendEmailAsync(clinic.email, subject, html=htmlBody);
+  // Construct email that allows acceptance or rejection.
+  let clinic = await dbLink._getClinicAsync('ac42c2ec467886b05f669c572115f3699ba42908fed072c0ee777f1b1c0f689c');
+  let subject =  `VaccTracc appointment for ${name}`;
+  let htmlBody = new BookingEmail('ac42c2ec467886b05f669c572115f3699ba42908fed072c0ee777f1b1c0f689c', result.pending_booking_id, clinic.name, name, medicare_num, email, date, vaccines, tests).toString2();
 
   // Send booking email to clinic.
+  await sendEmailAsync(clinic.contact_email, subject, html=htmlBody);
 
+  res.status(httpCodes.SUCCESS_200).json({
+    success: true,
+  });
+});
+
+app.get('/test1', async (req, res) => {
+  console.log(await dbLink.getPendingBookingAsync('XF3Dq5804ltepFyohcB0'));
+})
+
+app.post('/bookaccept', async (req, res) => {
+  const { clinic_id, pending_booking_id } = req.body;
+
+  let validationErrors = [];
+  if (!clinic_id)           validationErrors.push('\'Clinic ID\' cannot be empty.');
+  if (!pending_booking_id)  validationErrors.push('\'Pending Booking ID\' cannot be empty.');
+
+  if (validationErrors.length > 0) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: validationErrors.join("\n"), success: false });
+    return;
+  }
+
+  // Get pending booking
+  let pendingBooking = await dbLink.getPendingBookingAsync(pending_booking_id);
+  if (!pendingBooking) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: `Pending Booking ID ${pending_booking_id} is invalid.`, success: false });
+    return;
+  }
+
+  // Get clinic
+  let clinic = await dbLink._getClinicAsync(clinic_id);
+  if (!clinic) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: `Clinic ID ${clinic_id} is invalid.`, success: false });
+    return;
+  }
+
+  // Change from pending booking to actual booking in DB.
+  await dbLink.changePendingBookingToBooking(pending_booking_id);
+
+  // Get booking
+  let bookingID = pending_booking_id;
+  let booking = await dbLink.getBookingAsync(bookingID);
+
+  // Construct booking confirmation email to client.
+  let subject =  `VaccTracc Appointment Confirmation`;
+  let htmlBody = new BookingConfirmationEmail(clinic_id,
+                                              bookingID,
+                                              booking.client_name, clinic.name,
+                                              clinic.phone,
+                                              clinic.contact_email,
+                                              [clinic.address, clinic.state, clinic.country].join(', '),
+                                              booking.date,
+                                              booking.vaccines,
+                                              booking.tests
+                                            ).toString();
+
+  // Send confirmation email to client.
+  await sendEmailAsync(clinic.contact_email, subject, html=htmlBody);
+
+  res.status(httpCodes.SUCCESS_200).json({
+    success: true,
+  });
+});
+
+app.post('/bookreject', (req, res) => {
+  const { clinic_id, pending_booking_id } = req.body;
+
+  let validationErrors = [];
+  if (!clinic_id)           validationErrors.push('\'Clinic ID\' cannot be empty.');
+  if (!pending_booking_id)  validationErrors.push('\'Pending Booking ID\' cannot be empty.');
+
+  if (validationErrors.length > 0) {
+    res.status(httpCodes.BAD_REQUEST_400).json({ error: validationErrors.join("\n"), success: false });
+    return;
+  }
+
+  // TODO: Get the pending booking's information.
+
+  // Remove pending booking from DB.
+
+  // TODO: Notify client of booking rejection.
 });
 
 /**

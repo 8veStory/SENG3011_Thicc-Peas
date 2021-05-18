@@ -7,6 +7,7 @@ const FS_CLINICS_COLLECTION = "clinic";
 const FS_INDIVIDUALS_COLLECTION = "individual";
 const FS_INVENTORY_COLLECTION = "inventory";
 const FS_HASINVENTORY_COLLECTION = "hasInventory";
+const FS_BOOKING_COLLECTION = "bookings";
 
 /**
  * Exposes methods to access VaccTracc's FS database.
@@ -72,8 +73,12 @@ class FirestoreDBLink {
     }
 
     async _getClinicAsync(clinicID) {
-        const clinic = (await this.db.collection(FS_CLINICS_COLLECTION).doc(clinicID).get()).data();
-        return clinic;
+        const clinic = (await this.db.collection(FS_CLINICS_COLLECTION).doc(clinicID).get());
+        
+        if (clinic)
+            return clinic.data();
+        else
+            return clinic;
     }
 
     /**
@@ -114,6 +119,76 @@ class FirestoreDBLink {
     async getIndividualAsync(individual_id) {
         const individual = await this.db.collection(FS_INDIVIDUALS_COLLECTION).doc(individual_id).get();
         return individual;
+    }
+
+    /**
+     * 
+     * @param {String} pending_booking_id The ID of the pending booking.
+     * @returns The pending booking object.
+     */
+    async getPendingBookingAsync(pending_booking_id) {
+        const pendingBooking = (await this.db.collection(FS_BOOKING_COLLECTION).doc(pending_booking_id).get()).data();
+
+        // Check if it's actually pending or not LMAO
+        if (pendingBooking.is_pending) {
+            return pendingBooking;
+        } else {
+            return undefined;
+        }
+    }
+
+    /**
+     * 
+     * @param {String} booking_id The ID of the booking.
+     * @returns The booking object.
+     */
+    async getBookingAsync(booking_id) {
+        const booking = (await this.db.collection(FS_BOOKING_COLLECTION).doc(booking_id).get()).data();
+
+        // Check if it's actually pending or not LMAO
+        if (!booking.is_pending) {
+            return booking;
+        } else {
+            return undefined;
+        }
+    }
+
+    /**
+     * 
+     * @param {*} clinic_id 
+     * @param {*} client_name 
+     * @param {*} client_email 
+     * @param {*} client_medicare_num 
+     * @param {*} date 
+     * @param {*} tests 
+     * @param {*} vaccines 
+     * @returns JSON object with a 'success' property.
+     */
+    async setPendingBookingAsync(clinic_id, client_name, client_email, client_medicare_num, date, tests, vaccines) {
+        const pendingBookings = this.db.collection(FS_BOOKING_COLLECTION).doc();
+
+        let results = { success: true }
+        try {
+            await pendingBookings.set({
+                clinic_id: clinic_id,
+                client_name: client_name,
+                client_email: client_email,
+                client_medicare_num: client_medicare_num,
+                is_pending: true,
+                date: date,
+                tests: tests,
+                vaccines: vaccines
+            });
+            results.pending_booking_id = pendingBookings.id;
+        } catch (err) {
+            results.success = false;
+            results.error = `${err}`;
+        }
+        return results;
+    }
+
+    async changePendingBookingToBooking(pending_booking_id) {
+        return await this.db.collection(FS_BOOKING_COLLECTION).doc(pending_booking_id).update({is_pending: false});
     }
 
     /**

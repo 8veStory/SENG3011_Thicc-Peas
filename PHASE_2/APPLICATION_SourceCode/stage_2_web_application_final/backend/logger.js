@@ -35,13 +35,14 @@ class Logger {
 
         // Log request params/body
         result += '\t' + "Request Params:\n";
-        result += '\t\t' + JSON.stringify(removeSensitiveData(req.params)) + '\n';
+        result += '\t\t' + JSON.stringify(removeSensitiveData(req.params ? req.params : {})) + '\n';
         result += '\t' + "Request Body:\n";
-        result += '\t\t' + JSON.stringify(removeSensitiveData(req.body)) + '\n';
+        result += '\t\t' + JSON.stringify(removeSensitiveData(req.body ? req.body : {})) + '\n';
 
         // Log response
+        let lastResponseBody = Logger._getLastResponseBody()
         result += '\t' + "Response body:\n";
-        result += '\t\t' + JSON.stringify(removeSensitiveData(Logger._getLastResponseBody())) + '\n';
+        result += '\t\t' + JSON.stringify(removeSensitiveData(lastResponseBody ? lastResponseBody : {})) + '\n';
 
         fs.appendFile(LOGFILEPATH, result, () => {
             // Print to console in pretty format.
@@ -52,19 +53,19 @@ class Logger {
 
             console.log(chalk.italic("  Request Params:"));
             console.group();
-            console.log(JSON.stringify(removeSensitiveData(req.params), null, 4));
+            console.log(JSON.stringify(removeSensitiveData(req.params ? req.params : {}), null, 4));
             console.groupEnd();
             console.log();
 
             console.log(chalk.italic("  Request Body:"));
             console.group();
-            console.log(JSON.stringify(removeSensitiveData(req.body), null, 4));
+            console.log(JSON.stringify(removeSensitiveData(req.body ? req.body : {}), null, 4));
             console.groupEnd();
             console.log();
 
             console.log(chalk.italic("  Response body:"));
             console.group();
-            console.log(JSON.stringify(removeSensitiveData(Logger._getLastResponseBody()), null, 4));
+            console.log(JSON.stringify(removeSensitiveData(lastResponseBody ? lastResponseBody : {}), null, 4));
             console.groupEnd();
             console.log();
         });
@@ -77,6 +78,8 @@ class Logger {
          * redacted.
          */
         function removeSensitiveData(targetObject) {
+            if (targetObject === null) return null;
+
             let clonedObject = cloneDeep(targetObject);
 
             const sensitiveDataReplacement = 'SENSITIVE DATA SCRUBBED';
@@ -104,7 +107,6 @@ class Logger {
 
             // Replace all passwords with '*'s.
             passwordProperties.forEach(pProp => {
-                console.log(clonedObject[pProp]);
                 if (typeof clonedObject[pProp] === 'string' || clonedObject[pProp] instanceof String)
                     clonedObject[pProp] = passwordReplacement.repeat(clonedObject[pProp].length);
              });

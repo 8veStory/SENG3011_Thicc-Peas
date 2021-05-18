@@ -26,7 +26,11 @@ function logger(req, res, next) {
         }
 
         let body = Buffer.concat(chunks).toString('utf8');
-        _setLastResponseBody(JSON.parse(body));
+        try {
+            _setLastResponseBody(JSON.parse(body));
+        } catch {
+            _setLastResponseBody({body: body});
+        }
 
         oldEnd.apply(res, arguments);
     };
