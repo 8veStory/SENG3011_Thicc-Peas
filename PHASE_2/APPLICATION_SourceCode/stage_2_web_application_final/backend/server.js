@@ -244,6 +244,10 @@ app.post('/bookreject', (req, res) => {
   // TODO: Notify client of booking rejection.
 });
 
+app.post('/bookcancel', (req, res) => {
+
+})
+
 /**
  * Returns all clinics in database.
  */

@@ -18,7 +18,7 @@ class BookingConfirmationEmail {
         this.bookedTests = bookedTests;
 
         // Cancel link
-        this.cancelLink = `${FRONTEND_URL}/clinicbooking?clinic_id=${this.clinicID}&reject=${this.bookingID}`;
+        this.cancelLink = `${FRONTEND_URL}/cancelbooking?clinic_id=${this.clinicID}&cancel=${this.bookingID}`;
     }
 
     toString() {
